@@ -14,6 +14,16 @@ public class GameState implements Drawable {
     private final Leaf leaf = new Leaf();
     private final ScoreBoard scoreBoard = new ScoreBoard();
 
+    @Override
+    public void update(float delta) {
+        background.update(delta);
+        leaf.update(delta);
+        for (final Enemy enemy : this.enemies) {
+            enemy.update(delta);
+        }
+        player.update(delta);
+        scoreBoard.update(delta);
+    }
 
     @Override
     public void draw(SpriteBatch spriteBatch) {

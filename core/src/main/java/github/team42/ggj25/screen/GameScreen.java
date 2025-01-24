@@ -27,6 +27,7 @@ public class GameScreen extends ScreenAdapter {
         batch.draw(image, 140, 210);
         batch.end();
         batch.begin();
+        gameState.update(delta);
         gameState.draw(batch);
         batch.end();
     }

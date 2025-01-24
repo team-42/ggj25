@@ -6,5 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Something that can be drawn onto the screen.
  */
 public interface Drawable {
-    void draw (SpriteBatch spriteBatch);
+    default void update(float delta) {
+    }
+
+    void draw(SpriteBatch spriteBatch);
 }
