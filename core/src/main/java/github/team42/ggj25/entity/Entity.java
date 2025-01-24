@@ -11,7 +11,7 @@ import github.team42.ggj25.Drawable;
  * A map object with a position and orientation.
  */
 public class Entity implements Drawable, Disposable {
-    private final Rectangle boundingBox;
+    protected final Rectangle boundingBox;
     private final Texture texture;
 
     Entity(final String textureFile, Rectangle boundingBox) {
