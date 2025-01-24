@@ -9,6 +9,6 @@ import github.team42.ggj25.Constants;
 public class Frog extends Entity {
 
     public Frog(){
-        super("libgdx.png", new Rectangle(Constants.WIDTH / 2f, Constants.HEIGHT / 2f, 50, 50));
+        super("frog.png", new Rectangle(Constants.WIDTH / 2f, Constants.HEIGHT / 2f, 96, 54));
     }
 }
