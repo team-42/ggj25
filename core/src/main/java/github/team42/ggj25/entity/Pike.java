@@ -33,34 +33,34 @@ public class Pike extends Entity {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float deltaInSeconds) {
         if (isPreparingToAttack) {
-            cooldown += delta;
+            cooldown += deltaInSeconds;
             if (cooldown >= attackCooldown) {
                 isPreparingToAttack = false;
                 cooldown = 0;
             }
         } else {
-            cooldown += delta * 10;
+            cooldown += deltaInSeconds * 10;
             if (cooldown >= attackCooldown) {
                 isPreparingToAttack = true;
                 cooldown = 0;
             }
         }
         if (goingRight) {
-            this.setPosition(getX() + speed * delta, getY());
+            this.setPosition(getX() + speed * deltaInSeconds, getY());
         } else {
-            this.setPosition(getX() - speed * delta, getY());
+            this.setPosition(getX() - speed * deltaInSeconds, getY());
         }
         if (goingUp) {
-            this.setPosition(getX(), getY() + speed * delta);
+            this.setPosition(getX(), getY() + speed * deltaInSeconds);
         } else {
-            this.setPosition(getX(), getY() - speed * delta);
+            this.setPosition(getX(), getY() - speed * deltaInSeconds);
         }
-        if (getX() - speed * delta < 0 || getX() + speed * delta > Constants.WIDTH) {
+        if (getX() - speed * deltaInSeconds < 0 || getX() + speed * deltaInSeconds > Constants.WIDTH) {
             goingRight = !goingRight;
         }
-        if (getY() - speed * delta < 0 || getY() + speed * delta > Constants.HEIGHT) {
+        if (getY() - speed * deltaInSeconds < 0 || getY() + speed * deltaInSeconds > Constants.HEIGHT) {
             goingUp = !goingUp;
         }
 

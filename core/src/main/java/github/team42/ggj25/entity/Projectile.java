@@ -47,11 +47,11 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float deltaInSeconds) {
         // TODO this is still vector pfusch, fix plz
-        this.setPosition(getX() + speed * delta * vector.x, getY() + speed * delta * vector.y);
-        remainingRange -= speed * delta;
-        super.update(delta);
+        this.setPosition(getX() + speed * deltaInSeconds * vector.x, getY() + speed * deltaInSeconds * vector.y);
+        remainingRange -= speed * deltaInSeconds;
+        super.update(deltaInSeconds);
     }
 
     public boolean isActive() {

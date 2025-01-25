@@ -24,7 +24,7 @@ public class Frog extends Entity {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float deltaInSeconds) {
         final EnumSet<Direction> directions = EnumSet.noneOf(Direction.class);
         for (final Direction d : Direction.values()) {
             if (Gdx.input.isKeyPressed(d.key) || Gdx.input.isKeyPressed(d.alternateKey)) {
@@ -32,25 +32,25 @@ public class Frog extends Entity {
             }
         }
         if (EnumSet.of(Direction.Up).equals(directions)) {
-            this.setPosition(getX(), getY() + speed * delta);
+            this.setPosition(getX(), getY() + speed * deltaInSeconds);
         } else if (EnumSet.of(Direction.Right).equals(directions)) {
-            this.setPosition(this.getX() + speed * delta, getY());
+            this.setPosition(this.getX() + speed * deltaInSeconds, getY());
         } else if (EnumSet.of(Direction.Down).equals(directions)) {
-            this.setPosition(getX(), getY() - speed * delta);
+            this.setPosition(getX(), getY() - speed * deltaInSeconds);
         } else if (EnumSet.of(Direction.Left).equals(directions)) {
-            this.setPosition(getX() - speed * delta, getY());
+            this.setPosition(getX() - speed * deltaInSeconds, getY());
         } else if (EnumSet.of(Direction.Up, Direction.Right).equals(directions)) {
-            this.setPosition((float) (getX() + speed * delta / Math.sqrt(2)), (float) (getY() + speed * delta / Math.sqrt(2)));
+            this.setPosition((float) (getX() + speed * deltaInSeconds / Math.sqrt(2)), (float) (getY() + speed * deltaInSeconds / Math.sqrt(2)));
         } else if (EnumSet.of(Direction.Down, Direction.Right).equals(directions)) {
-            this.setPosition((float) (getX() + speed * delta / Math.sqrt(2)), (float) (getY() - speed * delta / Math.sqrt(2)));
+            this.setPosition((float) (getX() + speed * deltaInSeconds / Math.sqrt(2)), (float) (getY() - speed * deltaInSeconds / Math.sqrt(2)));
         } else if (EnumSet.of(Direction.Up, Direction.Left).equals(directions)) {
-            this.setPosition((float) (getX() - speed * delta / Math.sqrt(2)), (float) (getY() + speed * delta / Math.sqrt(2)));
+            this.setPosition((float) (getX() - speed * deltaInSeconds / Math.sqrt(2)), (float) (getY() + speed * deltaInSeconds / Math.sqrt(2)));
         } else if (EnumSet.of(Direction.Down, Direction.Left).equals(directions)) {
-            this.setPosition((float) (getX() - speed * delta / Math.sqrt(2)), (float) (getY() - speed * delta / Math.sqrt(2)));
+            this.setPosition((float) (getX() - speed * deltaInSeconds / Math.sqrt(2)), (float) (getY() - speed * deltaInSeconds / Math.sqrt(2)));
         }
 
         for (final Weapon w : this.weapons) {
-            w.update(delta);
+            w.update(deltaInSeconds);
         }
     }
 

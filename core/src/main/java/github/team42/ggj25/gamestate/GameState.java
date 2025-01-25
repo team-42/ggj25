@@ -33,29 +33,30 @@ public class GameState implements Drawable {
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
+        this.enemies.add(new Enemy(1600,800));
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float deltaInSeconds) {
         if (!lost) {
-            background.update(delta);
-            pike.update(delta);
-            leaf.update(delta);
+            background.update(deltaInSeconds);
+            pike.update(deltaInSeconds);
+            leaf.update(deltaInSeconds);
             for (final Enemy enemy : this.enemies) {
-                enemy.update(delta);
+                enemy.update(deltaInSeconds);
             }
-            player.update(delta);
+            player.update(deltaInSeconds);
             for (Projectile p : activeProjectiles) {
-                p.update(delta);
+                p.update(deltaInSeconds);
             }
             activeProjectiles.removeIf(p -> !p.isActive());
 
-            bonusPointCooldown -= delta;
+            bonusPointCooldown -= deltaInSeconds;
             if (bonusPointCooldown <= 0) {
                 bonusPointCooldown = bonusPointsInterval;
                 scoreBoard.addPointsToScore(bonusPoints);
             }
-            scoreBoard.update(delta);
+            scoreBoard.update(deltaInSeconds);
 
             if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
                 lost = true;
