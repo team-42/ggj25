@@ -15,6 +15,10 @@ public class GameState implements Drawable {
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
 
+    private final int bonusPoints = 3;
+    private final float bonusPointsInterval = 1;
+    private float bonusPointCooldown = 1;
+
     @Override
     public void update(float delta) {
         background.update(delta);
@@ -27,6 +31,12 @@ public class GameState implements Drawable {
             p.update(delta);
         }
         activeProjectiles.removeIf(p -> !p.isActive());
+
+        bonusPointCooldown -= delta;
+        if (bonusPointCooldown <= 0) {
+            bonusPointCooldown = bonusPointsInterval;
+            scoreBoard.addPointsToScore(bonusPoints);
+        }
         scoreBoard.update(delta);
     }
 
