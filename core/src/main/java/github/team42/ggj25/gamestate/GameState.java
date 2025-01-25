@@ -123,10 +123,10 @@ public class GameState implements Drawable {
 
 
     public void renderShapes(ShapeRenderer shapes){
-        shapes.begin(ShapeRenderer.ShapeType.Line);
-        shapes.setColor(Color.RED);
-        shapes.polygon(verts); // Draw the polygon outline
-        shapes.end();
+//        shapes.begin(ShapeRenderer.ShapeType.Line);
+//        shapes.setColor(Color.RED);
+//        shapes.polygon(verts); // Draw the polygon outline
+//        shapes.end();
 
     }
 
