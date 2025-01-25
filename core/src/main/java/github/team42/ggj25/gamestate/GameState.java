@@ -1,14 +1,14 @@
 package github.team42.ggj25.gamestate;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-import github.team42.ggj25.Constants;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
+import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
@@ -16,7 +16,11 @@ import github.team42.ggj25.skills.SkillTrees;
 
 import java.util.*;
 
+import static github.team42.ggj25.gamestate.GamePhase.PLAY;
+
 public class GameState implements Drawable {
+    private GamePhase currentPhase = PLAY;
+
     private static final Random R = new Random();
     private static final float ENEMY_SPAWN_RATE_SECONDS = 3;
     private final Frog player = new Frog(this);
@@ -45,19 +49,19 @@ public class GameState implements Drawable {
         }
     }
 
-    public boolean frogInsideLeaf(float x, float y){
+    public boolean frogInsideLeaf(float x, float y) {
         List<GridPoint2> outline = background.getEdgeOfLeaf();
         List<Float> vertices = new ArrayList<Float>();
 
-        for (GridPoint2 p : outline){
+        for (GridPoint2 p : outline) {
             //shapes.setColor(Color.WHITE);
             //shapes.circle(p.x, p.y, 10); // Draw a pixel at (x, y)
-            vertices.add((float)p.x);
-            vertices.add((float)p.y);
+            vertices.add((float) p.x);
+            vertices.add((float) p.y);
         }
 
         float[] verts = new float[vertices.size()];
-        for (int i = 0 ; i < vertices.size(); i++){
+        for (int i = 0; i < vertices.size(); i++) {
             verts[i] = vertices.get(i);
         }
         Polygon polygon = new Polygon(verts);
@@ -66,32 +70,49 @@ public class GameState implements Drawable {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (!frogInsideLeaf(player.getX(), player.getY())){
+        if (!frogInsideLeaf(player.getX(), player.getY())) {
             lost = true;
         }
         if (!lost) {
-            background.update(deltaInSeconds);
-            pike.update(deltaInSeconds);
-            leaf.update(deltaInSeconds);
-            for (final Enemy enemy : this.enemies) {
-                enemy.update(deltaInSeconds);
+            switch (currentPhase) {
+                case PLAY:
+                    updatePlayPhase(deltaInSeconds);
+                    break;
+                case CUTSCENE_TO_TRANSITION:
+                    break;
+                case TRANSITION:
+                    break;
+                case CUTSCENE_FROM_TRANSITION:
+                    break;
             }
-            player.update(deltaInSeconds);
-            for (Projectile p : activeProjectiles) {
-                p.update(deltaInSeconds);
-            }
-            activeProjectiles.removeIf(p -> !p.isActive());
+        }
+    }
 
-            bonusPointCooldown -= deltaInSeconds;
-            if (bonusPointCooldown <= 0) {
-                bonusPointCooldown = bonusPointsInterval;
-                scoreBoard.addPointsToScore(bonusPoints);
-            }
-            scoreBoard.update(deltaInSeconds);
+    private void updatePlayPhase(float deltaInSeconds) {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            currentPhase = GamePhase.CUTSCENE_TO_TRANSITION;
+        }
+        background.update(deltaInSeconds);
+        pike.update(deltaInSeconds);
+        leaf.update(deltaInSeconds);
+        for (final Enemy enemy : this.enemies) {
+            enemy.update(deltaInSeconds);
+        }
+        player.update(deltaInSeconds);
+        for (Projectile p : activeProjectiles) {
+            p.update(deltaInSeconds);
+        }
+        activeProjectiles.removeIf(p -> !p.isActive());
 
-            if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
-                lost = true;
-            }
+        bonusPointCooldown -= deltaInSeconds;
+        if (bonusPointCooldown <= 0) {
+            bonusPointCooldown = bonusPointsInterval;
+            scoreBoard.addPointsToScore(bonusPoints);
+        }
+        scoreBoard.update(deltaInSeconds);
+
+        if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
+            lost = true;
 
             timeSinceLastEnemySpawnSeconds += deltaInSeconds;
             if (timeSinceLastEnemySpawnSeconds > ENEMY_SPAWN_RATE_SECONDS) {
@@ -116,6 +137,22 @@ public class GameState implements Drawable {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
+        if (!lost) {
+            switch (currentPhase) {
+                case PLAY:
+                    drawCurrentGameField(spriteBatch);
+                    break;
+                case CUTSCENE_TO_TRANSITION:
+                    break;
+                case TRANSITION:
+                    break;
+                case CUTSCENE_FROM_TRANSITION:
+                    break;
+            }
+        }
+    }
+
+    private void drawCurrentGameField(SpriteBatch spriteBatch) {
         background.draw(spriteBatch);
         leaf.draw(spriteBatch);
         for (final Enemy enemy : this.enemies) {
@@ -128,20 +165,21 @@ public class GameState implements Drawable {
             p.draw(spriteBatch);
         }
         scoreBoard.draw(spriteBatch);
+        player.draw(spriteBatch);
     }
 
 
-    public void renderShapes(ShapeRenderer shapes){
+    public void renderShapes(ShapeRenderer shapes) {
         List<GridPoint2> outline = background.getEdgeOfLeaf();
         List<Float> vertices = new ArrayList<Float>();
 
-        for (GridPoint2 p : outline){
-            vertices.add((float)p.x);
-            vertices.add((float)p.y);
+        for (GridPoint2 p : outline) {
+            vertices.add((float) p.x);
+            vertices.add((float) p.y);
         }
 
         float[] verts = new float[vertices.size() + 2];
-        for (int i = 0 ; i < vertices.size(); i++){
+        for (int i = 0; i < vertices.size(); i++) {
             verts[i] = vertices.get(i);
         }
         verts[vertices.size()] = vertices.get(0);
@@ -154,7 +192,7 @@ public class GameState implements Drawable {
         shapes.end();
 
     }
-    
+
     @Override
     public void draw(ShapeRenderer shapeRenderer) {
         background.draw(shapeRenderer);
@@ -169,7 +207,6 @@ public class GameState implements Drawable {
         }
         scoreBoard.draw(shapeRenderer);
     }
-
 
     public void addProjectile(Projectile toAdd) {
         this.activeProjectiles.add(toAdd);
