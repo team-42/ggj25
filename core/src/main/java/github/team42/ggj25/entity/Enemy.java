@@ -14,6 +14,17 @@ import java.util.Random;
  * An enemy.
  */
 public class Enemy extends TexturedEntity {
+    private enum Orientation {
+        TurningClockwise(-1),
+        TurningCounterClockwise(1),
+        StraightAhead(0);
+
+        final int turnRateFactor;
+
+        Orientation(int turnRateFactor){
+            this.turnRateFactor = turnRateFactor;
+        }
+    }
     private static final Random R = new Random();
     private static final int IMAGE_WIDTH = 1920;
     private static final int IMAGE_HEIGHT = 1080;
@@ -21,10 +32,12 @@ public class Enemy extends TexturedEntity {
     private static final Vector2 IMAGE_DIRECTION = new Vector2(0, -1);
     private static final float BASE_SPEED = 50;
     private static final float TURN_RATE_DEGREES_PER_SECOND = 20;
+    private static final float ORIENTATION_CHANGE_COOLDOWN_SECONDS = 1f;
     private final TextureRegion textureRegion;
     private float speed = BASE_SPEED;
     private final Vector2 direction;
-    private boolean rotateClockwise = true;
+    private Orientation orientation = Orientation.StraightAhead;
+    private float timeSinceLastOrientationChangeSeconds = 0;
 
     public Enemy(final float x, final float y, Vector2 initialDirection) {
         super("tortoise_swimming.png", FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * IMAGE_SCALE, IMAGE_HEIGHT * IMAGE_SCALE));
@@ -42,10 +55,12 @@ public class Enemy extends TexturedEntity {
         }
         this.setPosition(getX() + speed * deltaInSeconds * direction.x, getY() + speed * deltaInSeconds * direction.y);
         if (Constants.WORLD.contains(getBoundingBox())) {
-            if (R.nextFloat() < 0.02f) {
-                rotateClockwise = !rotateClockwise;
+            timeSinceLastOrientationChangeSeconds += deltaInSeconds;
+            if (timeSinceLastOrientationChangeSeconds > ORIENTATION_CHANGE_COOLDOWN_SECONDS && R.nextFloat() < 0.02f) {
+                timeSinceLastOrientationChangeSeconds = 0;
+                orientation = Orientation.values()[R.nextInt(3)];
             }
-            this.direction.rotateDeg(TURN_RATE_DEGREES_PER_SECOND * deltaInSeconds * (rotateClockwise ? -1 : 1));
+            this.direction.rotateDeg(TURN_RATE_DEGREES_PER_SECOND * deltaInSeconds * orientation.turnRateFactor);
         } else {
             Vector2 center = new Vector2(Constants.WIDTH / 2f, Constants.HEIGHT / 2f);
             Vector2 dirToCenter = new Vector2(getX(), getY()).sub(center);
