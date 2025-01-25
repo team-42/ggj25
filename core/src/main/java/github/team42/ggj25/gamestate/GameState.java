@@ -23,7 +23,7 @@ public class GameState implements Drawable {
     private final List<Enemy> enemies = new ArrayList<>();
     private final Background background = new Background();
     private final Leaf leaf = new Leaf();
-    private final Pike pike = new Pike();
+    private final Pike pike = new Pike(this );
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
     private final boolean debug;

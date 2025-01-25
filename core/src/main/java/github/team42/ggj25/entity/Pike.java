@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import github.team42.ggj25.Constants;
+import github.team42.ggj25.gamestate.GameState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Big bad guy.
@@ -19,18 +23,18 @@ public class Pike extends Entity {
     float posY = (float) Math.random() * Constants.HEIGHT;
     boolean goingRight;
     boolean goingUp;
+    float pike_width = 460;
+    float pike_height = 440;
+    float circle_radius = 100;
 
-    public Pike() {
-        super("pike_attacking.png",
-            new Rectangle(
-                0,
-                0,
-                460,
-                440));
 
-        this.setPosition(posX, posY);
-        circleTexture = new Texture("pike_looming.png");
-    }
+    public Pike(GameState gameState) {
+            super("pike_attacking.png",
+                new Rectangle(0f, 0f, 460, 440));
+            this.setPosition(posX, posY);
+            circleTexture = new Texture("pike_looming.png");;
+
+        }
 
     @Override
     public void update(float deltaInSeconds) {
@@ -64,8 +68,8 @@ public class Pike extends Entity {
             goingUp = !goingUp;
         }
 
-        posX = getX() - 100;
-        posY = getY() - 100;
+        posX = getX() - circle_radius;
+        posY = getY() - circle_radius;
 
 //        this.setPosition(getX() + speed * delta * Constants.upNormalized, getY() + speed * delta * vector.y);
 
@@ -75,7 +79,7 @@ public class Pike extends Entity {
     public void drawSprites(SpriteBatch spriteBatch) {
         if (isPreparingToAttack) {
             spriteBatch.setColor(1, 1, 1, cooldown / attackCooldown);
-            spriteBatch.draw(circleTexture, posX, posY, 200, 200);
+            spriteBatch.draw(circleTexture, posX, posY, circle_radius * 2, circle_radius * 2);
             spriteBatch.setColor(Color.WHITE);
         } else {
             super.drawSprites(spriteBatch);
