@@ -21,12 +21,12 @@ public class Pike extends Entity {
     boolean goingUp;
 
     public Pike() {
-        super("hechtmaul.jpg",
+        super("pike_attacking.png",
             new Rectangle(
                 0,
                 0,
-                300,
-                278));
+                460,
+                440));
 
         this.setPosition(posX, posY);
         circleTexture = new Texture("pike_looming.png");
