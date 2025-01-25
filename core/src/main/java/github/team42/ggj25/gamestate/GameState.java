@@ -90,11 +90,12 @@ public class GameState implements Drawable {
     @Override
     public void draw(SpriteBatch spriteBatch) {
         background.draw(spriteBatch);
-        pike.draw(spriteBatch);
         leaf.draw(spriteBatch);
         for (final Enemy enemy : this.enemies) {
             enemy.draw(spriteBatch);
         }
+        background.drawAmbient(spriteBatch);
+        pike.draw(spriteBatch);
         player.draw(spriteBatch);
         for (Projectile p : activeProjectiles) {
             p.draw(spriteBatch);
