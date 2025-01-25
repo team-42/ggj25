@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Drawable;
 
@@ -11,7 +12,7 @@ import github.team42.ggj25.Drawable;
  * A map object with a position and orientation.
  */
 public class Entity implements Drawable, Disposable {
-    protected final Rectangle boundingBox;
+    private final Rectangle boundingBox;
     private final Texture texture;
 
     Entity(final String textureFile, Rectangle boundingBox) {
@@ -30,5 +31,17 @@ public class Entity implements Drawable, Disposable {
     @Override
     public void dispose() {
         texture.dispose();
+    }
+
+    public float getX() {
+        return boundingBox.getCenter(new Vector2()).x;
+    }
+
+    public float getY() {
+        return boundingBox.getCenter(new Vector2()).y;
+    }
+
+    public void setPosition(float x, float y) {
+        this.boundingBox.setCenter(x, y);
     }
 }
