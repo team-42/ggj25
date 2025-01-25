@@ -9,5 +9,5 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public interface Drawable extends GameElement {
     void drawSprites(SpriteBatch spriteBatch);
 
-    default void drawShapes(ShapeRenderer shapeRenderer){}
+    default void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive){}
 }
