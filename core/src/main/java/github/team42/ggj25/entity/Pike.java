@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Big bad guy.
  */
-public class Pike extends Entity {
+public class Pike extends TexturedEntity {
     Texture circleTexture;
     private boolean isPreparingToAttack = true;
     float attackCooldown = 2;

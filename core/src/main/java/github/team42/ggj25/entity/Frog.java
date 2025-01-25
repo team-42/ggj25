@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Our frog.
  */
-public class Frog extends Entity {
+public class Frog extends TexturedEntity {
     public static final float BASE_SPEED = 100f;
     private float speed = BASE_SPEED;
     private final List<Weapon> weapons = new ArrayList<>();
@@ -54,7 +54,7 @@ public class Frog extends Entity {
         }
     }
 
-    public boolean overlapsWith(Entity entity) {
+    public boolean overlapsWith(TexturedEntity entity) {
         return this.getBoundingBox().overlaps(entity.getBoundingBox());
     }
 

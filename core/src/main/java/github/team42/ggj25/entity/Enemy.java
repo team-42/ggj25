@@ -13,7 +13,7 @@ import java.util.Random;
 /**
  * An enemy.
  */
-public class Enemy extends Entity {
+public class Enemy extends TexturedEntity {
     private static final Random R = new Random();
     private static final int IMAGE_WIDTH = 1920;
     private static final int IMAGE_HEIGHT = 1080;
