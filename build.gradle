@@ -10,9 +10,7 @@ buildscript {
   }
   dependencies {
 
-
-  }
-}
+ }
 
 allprojects {
   apply plugin: 'eclipse'
@@ -56,6 +54,8 @@ configure(subprojects) {
   }
 }
 
+  eclipse.project.name = 'GGJ2025' + '-parent'
+
 subprojects {
   version = "$projectVersion"
   ext.appName = 'GGJ2025'
@@ -67,7 +67,8 @@ subprojects {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://jitpack.io' }
+    dependencies {
+      implementation 'org.java-websocket:Java-WebSocket:1.6.0'
+    }
   }
-}
-
-eclipse.project.name = 'GGJ2025' + '-parent'
+}}
