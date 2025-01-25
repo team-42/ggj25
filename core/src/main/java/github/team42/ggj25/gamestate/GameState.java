@@ -1,6 +1,7 @@
 package github.team42.ggj25.gamestate;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
@@ -29,11 +30,11 @@ public class GameState implements Drawable {
     private final List<Skill> frogSkills = new ArrayList<>();
     private final List<Skill> projectileSkills = new ArrayList<>();
 
-    public GameState () {
+    public GameState() {
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
-        this.enemies.add(new Enemy(1600,800));
+        this.enemies.add(new Enemy(1600, 800));
     }
 
     @Override
@@ -78,6 +79,22 @@ public class GameState implements Drawable {
         }
         scoreBoard.draw(spriteBatch);
     }
+
+    @Override
+    public void draw(ShapeRenderer shapeRenderer) {
+        background.draw(shapeRenderer);
+        pike.draw(shapeRenderer);
+        leaf.draw(shapeRenderer);
+        for (final Enemy enemy : this.enemies) {
+            enemy.draw(shapeRenderer);
+        }
+        player.draw(shapeRenderer);
+        for (Projectile p : activeProjectiles) {
+            p.draw(shapeRenderer);
+        }
+        scoreBoard.draw(shapeRenderer);
+    }
+
 
     public void addProjectile(Projectile toAdd) {
         this.activeProjectiles.add(toAdd);

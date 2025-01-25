@@ -49,4 +49,8 @@ public class Entity implements Drawable, Disposable {
     protected Rectangle getBoundingBox() {
         return this.boundingBox;
     }
+
+    protected Texture getTexture() {
+        return texture;
+    }
 }

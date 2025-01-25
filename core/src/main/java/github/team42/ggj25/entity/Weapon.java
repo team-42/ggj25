@@ -1,14 +1,11 @@
 package github.team42.ggj25.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.FrogueUtil;
 import github.team42.ggj25.GameElement;
 import github.team42.ggj25.gamestate.GameState;
 import github.team42.ggj25.skills.Skill;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Weapon implements GameElement {
