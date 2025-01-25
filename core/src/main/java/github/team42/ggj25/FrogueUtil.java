@@ -97,7 +97,7 @@ public final class FrogueUtil {
     }
 
     static public Polygon getEdgePolygon(Pixmap pixmap){
-        List<GridPoint2> outline = getEdgeOfPixmap(pixmap);;
+        List<GridPoint2> outline = getEdgeOfPixmap(pixmap);
 
         List<Float> vertices = new ArrayList<Float>();
 

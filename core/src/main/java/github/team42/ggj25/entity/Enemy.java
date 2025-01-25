@@ -80,6 +80,7 @@ public class Enemy extends TexturedEntity {
 
     @Override
     public void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive) {
+        super.drawShapes(shapeRenderer, debugRenderingActive);
         if (debugRenderingActive) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.RED);

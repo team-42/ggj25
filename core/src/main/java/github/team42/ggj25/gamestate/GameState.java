@@ -203,11 +203,11 @@ public class GameState implements Drawable, Disposable {
 
     private void drawCurrentGameField(SpriteBatch spriteBatch) {
         background.drawSprites(spriteBatch);
-        leaf.drawSprites(spriteBatch);
         for (final Enemy enemy : this.enemies) {
             enemy.drawSprites(spriteBatch);
         }
         background.drawAmbient(spriteBatch);
+        leaf.drawSprites(spriteBatch);
         pike.drawSprites(spriteBatch);
         player.drawSprites(spriteBatch);
         for (Projectile p : activeProjectiles) {
@@ -232,13 +232,13 @@ public class GameState implements Drawable, Disposable {
         if (debugRenderingActive) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.RED);
-            //shapeRenderer.polygon(backgroundPolygon.getVertices()); // Draw the polygon outline
-            Rectangle box = player.getAccurateHitbox().getBoundingRectangle();
-            shapeRenderer.rect(box.x, box.y, box.width, box.height);
+            shapeRenderer.polygon(backgroundPolygon.getVertices()); // Draw the polygon outline
+//            Rectangle box = player.getAccurateHitbox().getBoundingRectangle();
+//            shapeRenderer.rect(box.x, box.y, box.width, box.height);
             //shapeRenderer.polygon(player.getAccurateHitbox().getVertices());
-            Rectangle box2 = pike.getAccurateHitbox().getBoundingRectangle();
+//            Rectangle box2 = pike.getAccurateHitbox().getBoundingRectangle();
             //shapeRenderer.polygon(pike.getAccurateHitbox().getVertices());
-            shapeRenderer.rect(box2.x, box2.y, box2.width, box2.height);
+//            shapeRenderer.rect(box2.x, box2.y, box2.width, box2.height);
             shapeRenderer.end();
         }
         scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
@@ -251,7 +251,7 @@ public class GameState implements Drawable, Disposable {
     }
 
     private Polygon buildLillypadPolygon() {
-        Polygon polygon = FrogueUtil.getEdgePolygon(background.getPixmap());
+        Polygon polygon = FrogueUtil.getEdgePolygon(leaf.getPixmap());
         return polygon;
     }
 
