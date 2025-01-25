@@ -143,6 +143,12 @@ public class GameState implements Drawable {
         }
         scoreBoard.update(deltaInSeconds);
 
+        timeSinceLastEnemySpawnSeconds += deltaInSeconds;
+        if (timeSinceLastEnemySpawnSeconds > ENEMY_SPAWN_RATE_SECONDS) {
+            timeSinceLastEnemySpawnSeconds = 0;
+            spawnEnemy();
+        }
+        
         if (!frogInsideLeaf(player.getX(), player.getY())) {
             lost = true;
         }
@@ -150,11 +156,6 @@ public class GameState implements Drawable {
         if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
             lost = true;
 
-            timeSinceLastEnemySpawnSeconds += deltaInSeconds;
-            if (timeSinceLastEnemySpawnSeconds > ENEMY_SPAWN_RATE_SECONDS) {
-                timeSinceLastEnemySpawnSeconds = 0;
-                spawnEnemy();
-            }
         }
     }
 
@@ -192,7 +193,9 @@ public class GameState implements Drawable {
     private void drawCurrentGameField(SpriteBatch spriteBatch) {
         background.drawSprites(spriteBatch);
         leaf.drawSprites(spriteBatch);
+        System.out.println("enemies: " + enemies.size());
         for (final Enemy enemy : this.enemies) {
+            System.out.println("did draw at: " + enemy.getBoundingBox());
             enemy.drawSprites(spriteBatch);
         }
         background.drawAmbient(spriteBatch);
@@ -213,34 +216,16 @@ public class GameState implements Drawable {
             enemy.drawShapes(shapeRenderer);
         }
         player.drawShapes(shapeRenderer);
-        pike.draw(spriteBatch);
         for (Projectile p : activeProjectiles) {
             p.drawShapes(shapeRenderer);
         }
-        scoreBoard.draw(spriteBatch);
-        player.draw(spriteBatch);
+        scoreBoard.drawShapes(shapeRenderer);
     }
 
     private void drawToTransition(SpriteBatch spriteBatch) {
         background.drawAmbient(spriteBatch);
-        scoreBoard.draw(spriteBatch);
-        player.draw(spriteBatch);
-    }
-
-
-    public void renderShapes(ShapeRenderer shapes) {
-//        shapes.begin(ShapeRenderer.ShapeType.Line);
-//        shapes.setColor(Color.RED);
-//        shapes.polygon(verts); // Draw the polygon outline
-//        shapes.end();
-
-        scoreBoard.drawShapes(shapeRenderer);
-        if(debug) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.polygon(verts); // Draw the polygon outline
-            shapeRenderer.end();
-        }
+        scoreBoard.drawSprites(spriteBatch);
+        player.drawSprites(spriteBatch);
     }
 
     private float[] buildLillypadPolygon() {
