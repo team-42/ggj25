@@ -17,10 +17,12 @@ public abstract class Weapon implements GameElement {
     private float projectileHeight = 5.0f;
     private float projectileWidth = 5.0f;
 
-    protected Weapon(GameState gameState, Frog frog, float fireRate) {
+    protected Weapon(GameState gameState, Frog frog, float fireRate, float initialProjectWidth, float initialProjectHeight) {
         this.gameState = gameState;
         this.frog = frog;
         this.fireRate = fireRate;
+        this.projectileHeight = initialProjectHeight;
+        this.projectileWidth = initialProjectWidth;
     }
 
     @Override

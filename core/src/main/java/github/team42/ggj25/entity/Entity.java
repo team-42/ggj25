@@ -3,7 +3,6 @@ package github.team42.ggj25.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -17,7 +16,11 @@ public class Entity implements Drawable, Disposable {
     private final Texture texture;
 
     Entity(final String textureFile, Rectangle boundingBox) {
-        this.texture = new Texture(Gdx.files.internal(textureFile));
+        this(new Texture(Gdx.files.internal(textureFile)), boundingBox);
+    }
+
+    Entity(final Texture texture, Rectangle boundingBox) {
+        this.texture = texture;
         this.boundingBox = boundingBox;
     }
 

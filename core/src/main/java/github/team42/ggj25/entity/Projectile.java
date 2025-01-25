@@ -1,5 +1,6 @@
 package github.team42.ggj25.entity;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.skills.Skill;
@@ -36,8 +37,8 @@ public class Projectile extends Entity {
         this.damage = damage;
     }
 
-    public Projectile(String textureFile, Rectangle boundingBox, Vector2 direction, float speed, float damage, float range, List<Skill> skills) {
-        super(textureFile, boundingBox);
+    public Projectile(Texture texture, Rectangle boundingBox, Vector2 direction, float speed, float damage, float range, List<Skill> skills) {
+        super(texture, boundingBox);
         this.direction = direction;
         this.speed = speed;
         this.damage = damage;
