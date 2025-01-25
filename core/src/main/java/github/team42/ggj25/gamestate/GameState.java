@@ -3,9 +3,13 @@ package github.team42.ggj25.gamestate;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.entity.*;
+import github.team42.ggj25.skills.Skill;
+import github.team42.ggj25.skills.SkillTrees;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameState implements Drawable {
     private final Frog player = new Frog(this);
@@ -14,6 +18,16 @@ public class GameState implements Drawable {
     private final Leaf leaf = new Leaf();
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
+
+    private final Map<SkillTrees, Integer> levelPerSkilltree = new EnumMap<>(SkillTrees.class);
+    private final List<Skill> frogSkills = new ArrayList<>();
+    private final List<Skill> projectileSkills = new ArrayList<>();
+
+    public GameState () {
+        for (SkillTrees val : SkillTrees.values()) {
+            levelPerSkilltree.put(val, 0);
+        }
+    }
 
     @Override
     public void update(float delta) {
@@ -46,5 +60,17 @@ public class GameState implements Drawable {
 
     public void addProjectile(Projectile toAdd) {
         this.activeProjectiles.add(toAdd);
+    }
+
+    public void addFrogSkill(Skill skill) {
+        this.frogSkills.add(skill);
+    }
+
+    public void addProjectileSkill(Skill skill) {
+        this.projectileSkills.add(skill);
+    }
+
+    public List<Skill> getProjectileSkills() {
+        return projectileSkills;
     }
 }
