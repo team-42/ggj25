@@ -3,14 +3,14 @@ package github.team42.ggj25;
 import com.badlogic.gdx.Input;
 
 public enum Direction {
-    Up(Input.Keys.UP),
-    Down(Input.Keys.DOWN),
-    Left(Input.Keys.LEFT),
-    Right(Input.Keys.RIGHT);
+    Up(Input.Keys.W),
+    Down(Input.Keys.S),
+    Left(Input.Keys.A),
+    Right(Input.Keys.D);
 
     public final int key;
 
-    Direction(int key){
+    Direction(int key) {
         this.key = key;
     }
 }
