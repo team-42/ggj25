@@ -45,7 +45,7 @@ public class Background implements Drawable {
         m_water_lily_ambient = new Texture(water_lily_ambient);
         m_water_lily = new Texture(water_lily);
 
-        m_pixmap_leaf = new Pixmap(Gdx.files.internal("water_lily.png"));
+        m_pixmap_leaf = new Pixmap(Gdx.files.internal("water_lily_no_shadow.png"));
     }
 
     @Override

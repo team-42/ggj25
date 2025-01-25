@@ -123,7 +123,7 @@ public class GameState implements Drawable {
         }
         verts[vertices.size()] = vertices.get(0);
         verts[vertices.size() + 1] = vertices.get(1);
-               
+
 
         shapes.begin(ShapeRenderer.ShapeType.Line);
         shapes.setColor(Color.RED);
