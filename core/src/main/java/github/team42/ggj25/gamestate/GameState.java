@@ -1,6 +1,10 @@
 package github.team42.ggj25.gamestate;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Polygon;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
@@ -29,14 +33,37 @@ public class GameState implements Drawable {
     private final List<Skill> frogSkills = new ArrayList<>();
     private final List<Skill> projectileSkills = new ArrayList<>();
 
+
     public GameState () {
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
     }
 
+    public boolean frogInsideLeaf(float x, float y){
+        List<GridPoint2> outline = background.getEdgeOfLeaf();
+        List<Float> vertices = new ArrayList<Float>();
+
+        for (GridPoint2 p : outline){
+            //shapes.setColor(Color.WHITE);
+            //shapes.circle(p.x, p.y, 10); // Draw a pixel at (x, y)
+            vertices.add((float)p.x);
+            vertices.add((float)p.y);
+        }
+
+        float[] verts = new float[vertices.size()];
+        for (int i = 0 ; i < vertices.size(); i++){
+            verts[i] = vertices.get(i);
+        }
+        Polygon polygon = new Polygon(verts);
+        return polygon.contains(x, y);
+    }
+
     @Override
     public void update(float delta) {
+        if (!frogInsideLeaf(player.getX(), player.getY())){
+            lost = true;
+        }
         if (!lost) {
             background.update(delta);
             pike.update(delta);
@@ -77,6 +104,30 @@ public class GameState implements Drawable {
         }
         scoreBoard.draw(spriteBatch);
     }
+
+
+    public void renderShapes(ShapeRenderer shapes){
+        List<GridPoint2> outline = background.getEdgeOfLeaf();
+        List<Float> vertices = new ArrayList<Float>();
+
+        for (GridPoint2 p : outline){
+            vertices.add((float)p.x);
+            vertices.add((float)p.y);
+        }
+
+        float[] verts = new float[vertices.size()];
+        for (int i = 0 ; i < vertices.size(); i++){
+            verts[i] = vertices.get(i);
+        }
+        //Polygon polygon = new Polygon(verts);
+
+        shapes.begin(ShapeRenderer.ShapeType.Line);
+        shapes.setColor(Color.RED);
+        shapes.polygon(verts); // Draw the polygon outline
+        shapes.end();
+
+    }
+
 
     public void addProjectile(Projectile toAdd) {
         this.activeProjectiles.add(toAdd);
