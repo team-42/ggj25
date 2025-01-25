@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Direction;
 import github.team42.ggj25.gamestate.GameState;
+import github.team42.ggj25.skills.Skill;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -64,5 +65,9 @@ public class Frog extends Entity {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public void addSkillToWeapons() {
+        weapons.forEach(weapon -> weapon.handleLeafTransition());
     }
 }

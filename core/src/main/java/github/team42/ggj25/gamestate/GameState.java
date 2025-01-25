@@ -30,6 +30,7 @@ public class GameState implements Drawable {
     private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
 
     private final Map<SkillTrees, Integer> levelPerSkilltree = new EnumMap<>(SkillTrees.class);
+    private Skill skillInLastTransition = null;
     private final List<Skill> frogSkills = new ArrayList<>();
     private final List<Skill> projectileSkills = new ArrayList<>();
 
@@ -125,11 +126,25 @@ public class GameState implements Drawable {
         this.frogSkills.add(skill);
     }
 
-    public void addProjectileSkill(Skill skill) {
-        this.projectileSkills.add(skill);
-    }
-
     public List<Skill> getProjectileSkills() {
         return projectileSkills;
+    }
+
+    public Skill getSkillInLastTransition() {
+        return skillInLastTransition;
+    }
+
+    public void finalizeTransition(Skill skill) {
+        this.applySkill(skill);
+    }
+
+    private void applySkill(Skill skill) {
+        this.skillInLastTransition = skill;
+
+        // add skill to all weapons if necessary
+        this.player.addSkillToWeapons();
+
+        // add skill to projectiles
+        this.projectileSkills.add(skill);
     }
 }
