@@ -57,6 +57,13 @@ public class Background implements Drawable {
 
         spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_white_puddle, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+        spriteBatch.draw(m_water, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+
+
+    }
+
+    public void drawAmbient(SpriteBatch spriteBatch) {
+//        spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_lily_ambient, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_lily, 0, 0, Constants.WIDTH, Constants.HEIGHT);
 

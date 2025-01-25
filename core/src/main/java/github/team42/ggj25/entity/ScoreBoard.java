@@ -37,8 +37,8 @@ public class ScoreBoard implements Drawable {
     }
 
     @Override
-    public void update(float delta) {
-        Drawable.super.update(delta);
+    public void update(float deltaInSeconds) {
+        Drawable.super.update(deltaInSeconds);
         scoreBoardLabel.setText("Highscore: " + score);
     }
 

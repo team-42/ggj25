@@ -6,8 +6,8 @@ import github.team42.ggj25.skills.Skilltree;
 public enum BubbleControl implements Skilltree {
     SWIFT_PROJECTILE(new SwiftProjectile()),
     LONG_SHOT(new LongShot()),
-    PRECISION_BURST(null),
-    SONIC_BUBBLE(null),
+    PRECISION_BURST(new PrecisionBurst()),
+    SONIC_BUBBLE(new SonicBubble()),
     INFINITE_HORIZON(null),
     ;
 
