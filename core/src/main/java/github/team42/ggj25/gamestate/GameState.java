@@ -3,6 +3,7 @@ package github.team42.ggj25.gamestate;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.GridPoint2;
@@ -103,7 +104,6 @@ public class GameState implements Drawable {
 //                1, 1);
         }
         scoreBoard.update(deltaInSeconds);
-        System.out.println("Player-Pos: " + progress);
     }
 
     private Vector2 calculateBezier(float t, Vector2 p0, Vector2 p1, Vector2 p2) {
@@ -190,9 +190,7 @@ public class GameState implements Drawable {
     private void drawCurrentGameField(SpriteBatch spriteBatch) {
         background.drawSprites(spriteBatch);
         leaf.drawSprites(spriteBatch);
-        System.out.println("enemies: " + enemies.size());
         for (final Enemy enemy : this.enemies) {
-            System.out.println("did draw at: " + enemy.getBoundingBox());
             enemy.drawSprites(spriteBatch);
         }
         background.drawAmbient(spriteBatch);
@@ -223,7 +221,7 @@ public class GameState implements Drawable {
             shapeRenderer.polygon(verts); // Draw the polygon outline
             shapeRenderer.end();
         }
-        scoreBoard.drawShapes(shapeRenderer);
+        scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
     }
 
     private void drawToTransition(SpriteBatch spriteBatch) {
