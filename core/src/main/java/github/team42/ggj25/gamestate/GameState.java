@@ -26,7 +26,6 @@ public class GameState implements Drawable {
     private final Pike pike = new Pike();
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
-    private final boolean debug;
     private final Camera camera;
     private final float[] verts;
     private final Polygon backgroundPolygon;
@@ -43,8 +42,7 @@ public class GameState implements Drawable {
     private final List<Skill> projectileSkills = new ArrayList<>();
 
 
-    public GameState(boolean debug, Camera camera) {
-        this.debug = debug;
+    public GameState(Camera camera) {
         this.camera = camera;
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
@@ -53,13 +51,13 @@ public class GameState implements Drawable {
         backgroundPolygon = new Polygon(verts);
     }
 
-    public boolean frogInsideLeaf(float x, float y){
+    public boolean frogInsideLeaf(float x, float y) {
         return backgroundPolygon.contains(x, y);
     }
 
     @Override
     public void update(float deltaInSeconds) {
-        if (!frogInsideLeaf(player.getX(), player.getY())){
+        if (!frogInsideLeaf(player.getX(), player.getY())) {
             lost = true;
         }
         if (!lost) {
@@ -124,19 +122,19 @@ public class GameState implements Drawable {
     }
 
     @Override
-    public void drawShapes(ShapeRenderer shapeRenderer) {
-        background.drawShapes(shapeRenderer);
-        pike.drawShapes(shapeRenderer);
-        leaf.drawShapes(shapeRenderer);
+    public void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive) {
+        background.drawShapes(shapeRenderer, debugRenderingActive);
+        pike.drawShapes(shapeRenderer, debugRenderingActive);
+        leaf.drawShapes(shapeRenderer, debugRenderingActive);
         for (final Enemy enemy : this.enemies) {
-            enemy.drawShapes(shapeRenderer);
+            enemy.drawShapes(shapeRenderer, debugRenderingActive);
         }
-        player.drawShapes(shapeRenderer);
+        player.drawShapes(shapeRenderer, debugRenderingActive);
         for (Projectile p : activeProjectiles) {
-            p.drawShapes(shapeRenderer);
+            p.drawShapes(shapeRenderer, debugRenderingActive);
         }
-        scoreBoard.drawShapes(shapeRenderer);
-        if(debug) {
+        scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
+        if (debugRenderingActive) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.RED);
             shapeRenderer.polygon(verts); // Draw the polygon outline
@@ -148,13 +146,13 @@ public class GameState implements Drawable {
         List<GridPoint2> outline = background.getEdgeOfLeaf();
         List<Float> vertices = new ArrayList<Float>();
 
-        for (GridPoint2 p : outline){
-            vertices.add((float)p.x);
-            vertices.add((float)p.y);
+        for (GridPoint2 p : outline) {
+            vertices.add((float) p.x);
+            vertices.add((float) p.y);
         }
 
         float[] verts = new float[vertices.size() + 2];
-        for (int i = 0 ; i < vertices.size(); i++){
+        for (int i = 0; i < vertices.size(); i++) {
             verts[i] = vertices.get(i);
         }
         verts[vertices.size()] = vertices.get(0);
