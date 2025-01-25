@@ -1,7 +1,9 @@
 package github.team42.ggj25.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.FrogueUtil;
@@ -61,11 +63,13 @@ public class Enemy extends Entity {
             1, 1, direction.angleDeg(IMAGE_DIRECTION));
     }
 
-//    @Override
-//    public void draw(ShapeRenderer shapeRenderer) {
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        shapeRenderer.setColor(Color.RED);
-//        shapeRenderer.line(getX(), getY(), getX() + direction.x * 100, getY() + direction.y * 100);
-//        shapeRenderer.end();
-//    }
+    @Override
+    public void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive) {
+        if (debugRenderingActive) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.line(getX(), getY(), getX() + direction.x * 100, getY() + direction.y * 100);
+            shapeRenderer.end();
+        }
+    }
 }

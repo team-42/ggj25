@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
+import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 
 public class ScoreBoard implements Drawable {
@@ -14,7 +15,7 @@ public class ScoreBoard implements Drawable {
     private final Label scoreBoardLabel;
     private final Label.LabelStyle scoreBoardStyle = new Label.LabelStyle();
 
-    private final int row_height = Gdx.graphics.getHeight() / 64;
+    private final int row_height = Constants.HEIGHT / 16;
     private final int textPadding = row_height / 2;
 //    int col_width = Gdx.graphics.getWidth() / 24;
 
@@ -24,11 +25,11 @@ public class ScoreBoard implements Drawable {
         scoreBoardStyle.font = new BitmapFont(Gdx.files.internal("font.fnt"));
         scoreBoardStyle.fontColor = Color.RED;
 
-        scoreBoardLabel = new Label("Highscore: 0", scoreBoardStyle);
+        scoreBoardLabel = new Label("0 QUAKS", scoreBoardStyle);
         scoreBoardLabel.setSize(Gdx.graphics.getWidth(), row_height);
-        scoreBoardLabel.setPosition(textPadding, Gdx.graphics.getHeight() - 2 * row_height);
-        scoreBoardLabel.setAlignment(Align.left);
-//        scoreBoardLabel.setFontScale(0.5f);
+        scoreBoardLabel.setPosition(textPadding, Gdx.graphics.getHeight() - row_height);
+        scoreBoardLabel.setAlignment(Align.center);
+        scoreBoardLabel.setFontScale(1.5f);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class ScoreBoard implements Drawable {
     @Override
     public void update(float deltaInSeconds) {
         Drawable.super.update(deltaInSeconds);
-        scoreBoardLabel.setText("Highscore: " + score);
+        scoreBoardLabel.setText(score + " QUAKS");
     }
 
     public int addPointsToScore(int points) {
