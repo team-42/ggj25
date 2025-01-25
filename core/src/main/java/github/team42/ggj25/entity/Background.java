@@ -49,7 +49,7 @@ public class Background implements Drawable {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch) {
+    public void drawSprites(SpriteBatch spriteBatch) {
         // store the worldWidth and worldHeight as local variables for brevity
 
         spriteBatch.draw(m_blue_background, 0, 0, Constants.WIDTH, Constants.HEIGHT);

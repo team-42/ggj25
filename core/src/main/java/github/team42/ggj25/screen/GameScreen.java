@@ -13,15 +13,14 @@ import github.team42.ggj25.gamestate.GameState;
 
 public class GameScreen extends ScreenAdapter {
     private final SpriteBatch batch = new SpriteBatch();
-    private final ShapeRenderer shapes = new ShapeRenderer(100_000);
-    private final ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private final ShapeRenderer shapeRenderer = new ShapeRenderer(100_000);
     private final Texture image = new Texture("libgdx.png");
     private final GameState gameState;
     private final Camera camera = new OrthographicCamera(Constants.WIDTH, Constants.HEIGHT);
 
-    public GameScreen() {
+    public GameScreen(boolean debug) {
         batch.enableBlending();
-        gameState = new GameState(camera);
+        gameState = new GameState(debug, camera);
     }
 
     @Override
@@ -34,20 +33,17 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
         batch.draw(image, 140, 210);
         gameState.update(delta);
-        gameState.draw(batch);
-        gameState.draw(shapeRenderer);
+        gameState.drawSprites(batch);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        gameState.drawShapes(shapeRenderer);
         batch.end();
-
-        shapes.setProjectionMatrix(camera.combined);
-        gameState.renderShapes(shapes);
-
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         image.dispose();
-        shapes.dispose();
+        shapeRenderer.dispose();
     }
 
     @Override

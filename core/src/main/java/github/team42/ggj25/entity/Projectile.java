@@ -76,7 +76,7 @@ public class Projectile extends Entity {
 
 
     @Override
-    public void draw(SpriteBatch spriteBatch) {
+    public void drawSprites(SpriteBatch spriteBatch) {
         spriteBatch.draw(this.animation.getKeyFrame(stateTime), getBoundingBox().x, getBoundingBox().y, getBoundingBox().width, getBoundingBox().height);
     }
 }

@@ -26,6 +26,7 @@ public class GameState implements Drawable {
     private final Pike pike = new Pike();
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
+    private final boolean debug;
     private final Camera camera;
     private final float[] verts;
     private final Polygon backgroundPolygon;
@@ -42,7 +43,8 @@ public class GameState implements Drawable {
     private final List<Skill> projectileSkills = new ArrayList<>();
 
 
-    public GameState(Camera camera) {
+    public GameState(boolean debug, Camera camera) {
+        this.debug = debug;
         this.camera = camera;
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
@@ -106,28 +108,40 @@ public class GameState implements Drawable {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch) {
-        background.draw(spriteBatch);
-        leaf.draw(spriteBatch);
+    public void drawSprites(SpriteBatch spriteBatch) {
+        background.drawSprites(spriteBatch);
+        leaf.drawSprites(spriteBatch);
         for (final Enemy enemy : this.enemies) {
-            enemy.draw(spriteBatch);
+            enemy.drawSprites(spriteBatch);
         }
         background.drawAmbient(spriteBatch);
-        pike.draw(spriteBatch);
-        player.draw(spriteBatch);
+        pike.drawSprites(spriteBatch);
+        player.drawSprites(spriteBatch);
         for (Projectile p : activeProjectiles) {
-            p.draw(spriteBatch);
+            p.drawSprites(spriteBatch);
         }
-        scoreBoard.draw(spriteBatch);
+        scoreBoard.drawSprites(spriteBatch);
     }
 
-
-    public void renderShapes(ShapeRenderer shapes){
-//        shapes.begin(ShapeRenderer.ShapeType.Line);
-//        shapes.setColor(Color.RED);
-//        shapes.polygon(verts); // Draw the polygon outline
-//        shapes.end();
-
+    @Override
+    public void drawShapes(ShapeRenderer shapeRenderer) {
+        background.drawShapes(shapeRenderer);
+        pike.drawShapes(shapeRenderer);
+        leaf.drawShapes(shapeRenderer);
+        for (final Enemy enemy : this.enemies) {
+            enemy.drawShapes(shapeRenderer);
+        }
+        player.drawShapes(shapeRenderer);
+        for (Projectile p : activeProjectiles) {
+            p.drawShapes(shapeRenderer);
+        }
+        scoreBoard.drawShapes(shapeRenderer);
+        if(debug) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.polygon(verts); // Draw the polygon outline
+            shapeRenderer.end();
+        }
     }
 
     private float[] buildLillypadPolygon() {
@@ -147,22 +161,6 @@ public class GameState implements Drawable {
         verts[vertices.size() + 1] = vertices.get(1);
         return verts;
     }
-
-    @Override
-    public void draw(ShapeRenderer shapeRenderer) {
-        background.draw(shapeRenderer);
-        pike.draw(shapeRenderer);
-        leaf.draw(shapeRenderer);
-        for (final Enemy enemy : this.enemies) {
-            enemy.draw(shapeRenderer);
-        }
-        player.draw(shapeRenderer);
-        for (Projectile p : activeProjectiles) {
-            p.draw(shapeRenderer);
-        }
-        scoreBoard.draw(shapeRenderer);
-    }
-
 
     public void addProjectile(Projectile toAdd) {
         this.activeProjectiles.add(toAdd);

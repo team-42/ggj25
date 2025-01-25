@@ -28,7 +28,7 @@ public class Entity implements Drawable, Disposable {
         this("libgdx.png", new Rectangle(0f, 0f, 50f, 50f));
     }
 
-    public void draw(SpriteBatch spriteBatch) {
+    public void drawSprites(SpriteBatch spriteBatch) {
         spriteBatch.draw(texture, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
     }
 

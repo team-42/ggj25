@@ -72,13 +72,13 @@ public class Pike extends Entity {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch) {
+    public void drawSprites(SpriteBatch spriteBatch) {
         if (isPreparingToAttack) {
             spriteBatch.setColor(1, 1, 1, cooldown / attackCooldown);
             spriteBatch.draw(circleTexture, posX, posY, 200, 200);
             spriteBatch.setColor(Color.WHITE);
         } else {
-            super.draw(spriteBatch);
+            super.drawSprites(spriteBatch);
         }
     }
 
