@@ -49,7 +49,7 @@ public class Entity implements Drawable, Disposable {
         this.boundingBox.setCenter(x, y);
     }
 
-    protected Rectangle getBoundingBox() {
+    public Rectangle getBoundingBox() {
         return this.boundingBox;
     }
 
