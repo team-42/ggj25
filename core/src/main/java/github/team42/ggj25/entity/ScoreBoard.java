@@ -27,14 +27,14 @@ public class ScoreBoard implements Drawable {
 
         scoreBoardLabel = new Label("0 QUAKS", scoreBoardStyle);
         scoreBoardLabel.setSize(Gdx.graphics.getWidth(), row_height);
-        scoreBoardLabel.setPosition(textPadding, Gdx.graphics.getHeight() - row_height);
+        scoreBoardLabel.setPosition(textPadding, Gdx.graphics.getHeight() - 2 * row_height);
         scoreBoardLabel.setAlignment(Align.center);
-        scoreBoardLabel.setFontScale(1.5f);
+        scoreBoardLabel.setFontScale(2.5f);
     }
 
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
-        scoreBoardLabel.draw(spriteBatch, 0.5f);
+        scoreBoardLabel.draw(spriteBatch, 1);
     }
 
     @Override

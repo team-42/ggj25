@@ -31,8 +31,9 @@ public class GameState implements Drawable {
     private final List<Enemy> enemies = new ArrayList<>();
     private final Background background = new Background();
     private final Leaf leaf = new Leaf();
-    private final Pike pike = new Pike(this );
+    private final Pike pike = new Pike(this);
     private final ScoreBoard scoreBoard = new ScoreBoard();
+    private final KillScreen killScreen = new KillScreen();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
     private final Camera camera;
     private final Polygon backgroundPolygon;
@@ -82,6 +83,8 @@ public class GameState implements Drawable {
                 case CUTSCENE_FROM_TRANSITION:
                     break;
             }
+        } else {
+
         }
     }
 
@@ -191,6 +194,9 @@ public class GameState implements Drawable {
                 case CUTSCENE_FROM_TRANSITION:
                     break;
             }
+        } else {
+            killScreen.drawSprites(spriteBatch);
+            scoreBoard.drawSprites(spriteBatch);
         }
     }
 
