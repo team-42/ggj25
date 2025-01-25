@@ -1,14 +1,14 @@
 package github.team42.ggj25.gamestate;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-import github.team42.ggj25.Constants;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
+import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
@@ -26,6 +26,9 @@ public class GameState implements Drawable {
     private final Pike pike = new Pike();
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
+    private final Camera camera;
+    private final float[] verts;
+    private final Polygon backgroundPolygon;
     boolean lost = false;
 
     private final int bonusPoints = 3;
@@ -39,29 +42,17 @@ public class GameState implements Drawable {
     private final List<Skill> projectileSkills = new ArrayList<>();
 
 
-    public GameState() {
+    public GameState(Camera camera) {
+        this.camera = camera;
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
+        verts = buildLillypadPolygon();
+        backgroundPolygon = new Polygon(verts);
     }
 
     public boolean frogInsideLeaf(float x, float y){
-        List<GridPoint2> outline = background.getEdgeOfLeaf();
-        List<Float> vertices = new ArrayList<Float>();
-
-        for (GridPoint2 p : outline){
-            //shapes.setColor(Color.WHITE);
-            //shapes.circle(p.x, p.y, 10); // Draw a pixel at (x, y)
-            vertices.add((float)p.x);
-            vertices.add((float)p.y);
-        }
-
-        float[] verts = new float[vertices.size()];
-        for (int i = 0 ; i < vertices.size(); i++){
-            verts[i] = vertices.get(i);
-        }
-        Polygon polygon = new Polygon(verts);
-        return polygon.contains(x, y);
+        return backgroundPolygon.contains(x, y);
     }
 
     @Override
@@ -132,6 +123,14 @@ public class GameState implements Drawable {
 
 
     public void renderShapes(ShapeRenderer shapes){
+        shapes.begin(ShapeRenderer.ShapeType.Line);
+        shapes.setColor(Color.RED);
+        shapes.polygon(verts); // Draw the polygon outline
+        shapes.end();
+
+    }
+
+    private float[] buildLillypadPolygon() {
         List<GridPoint2> outline = background.getEdgeOfLeaf();
         List<Float> vertices = new ArrayList<Float>();
 
@@ -146,15 +145,9 @@ public class GameState implements Drawable {
         }
         verts[vertices.size()] = vertices.get(0);
         verts[vertices.size() + 1] = vertices.get(1);
-
-
-        shapes.begin(ShapeRenderer.ShapeType.Line);
-        shapes.setColor(Color.RED);
-        shapes.polygon(verts); // Draw the polygon outline
-        shapes.end();
-
+        return verts;
     }
-    
+
     @Override
     public void draw(ShapeRenderer shapeRenderer) {
         background.draw(shapeRenderer);
@@ -199,5 +192,9 @@ public class GameState implements Drawable {
 
         // add skill to projectiles
         this.projectileSkills.add(skill);
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 }
