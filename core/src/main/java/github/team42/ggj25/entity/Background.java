@@ -13,6 +13,7 @@ import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -61,6 +62,35 @@ public class Background implements Drawable {
 
     }
 
+    public static List<GridPoint2> sortPointsByCentroid(List<GridPoint2> points) {
+        // Calculate the centroid
+        Vector2 centroid = calculateCentroid(points);
+
+        // Sort points based on the angle relative to the centroid
+        points.sort(new Comparator<GridPoint2>() {
+            @Override
+            public int compare(GridPoint2 p1, GridPoint2 p2) {
+                float angle1 = (float) Math.atan2(p1.y - centroid.y, p1.x - centroid.x);
+                float angle2 = (float) Math.atan2(p2.y - centroid.y, p2.x - centroid.x);
+                return Float.compare(angle1, angle2);
+            }
+        });
+
+        return points;
+    }
+
+    public static Vector2 calculateCentroid(List<GridPoint2> points) {
+        float centroidX = 0, centroidY = 0;
+        for (GridPoint2 point : points) {
+            centroidX += point.x;
+            centroidY += point.y;
+        }
+        centroidX /= points.size();
+        centroidY /= points.size();
+
+        return new Vector2(centroidX, centroidY);
+    }
+
     public List<GridPoint2> getEdgeOfLeaf(){
         int width = m_pixmap_leaf.getWidth();
         int height = m_pixmap_leaf.getHeight();
@@ -77,6 +107,8 @@ public class Background implements Drawable {
                 }
             }
         }
+
+        edge_points = sortPointsByCentroid(edge_points);
         return edge_points;
     };
 

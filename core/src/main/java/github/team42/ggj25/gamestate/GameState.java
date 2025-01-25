@@ -106,6 +106,8 @@ public class GameState implements Drawable {
     }
 
 
+
+
     public void renderShapes(ShapeRenderer shapes){
         List<GridPoint2> outline = background.getEdgeOfLeaf();
         List<Float> vertices = new ArrayList<Float>();
@@ -115,11 +117,13 @@ public class GameState implements Drawable {
             vertices.add((float)p.y);
         }
 
-        float[] verts = new float[vertices.size()];
+        float[] verts = new float[vertices.size() + 2];
         for (int i = 0 ; i < vertices.size(); i++){
             verts[i] = vertices.get(i);
         }
-        //Polygon polygon = new Polygon(verts);
+        verts[vertices.size()] = vertices.get(0);
+        verts[vertices.size() + 1] = vertices.get(1);
+               
 
         shapes.begin(ShapeRenderer.ShapeType.Line);
         shapes.setColor(Color.RED);
