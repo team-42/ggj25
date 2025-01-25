@@ -1,7 +1,6 @@
 package github.team42.ggj25.entity;
 
-import com.badlogic.gdx.math.Vector2;
-import github.team42.ggj25.FrogueUtil;
+import com.badlogic.gdx.graphics.Camera;
 import github.team42.ggj25.GameElement;
 import github.team42.ggj25.gamestate.GameState;
 import github.team42.ggj25.skills.Skill;
@@ -38,27 +37,12 @@ public abstract class Weapon implements GameElement {
         Skill skill = gameState.getSkillInLastTransition();
 
         // if the skill manipulates the weapon, add it to the list of applied skills
-        if(skill.manipulateWeapon(this)) {
+        if (skill.manipulateWeapon(this)) {
             this.appliedWeaponSkills.add(skill);
         }
     }
 
     protected abstract Projectile createProjectile(List<Skill> skills);
-
-    public static class BubbleGun extends Weapon {
-        public BubbleGun(GameState gameState, Frog frog) {
-            super(gameState, frog, 1f);
-        }
-
-        @Override
-        protected Projectile createProjectile(List<Skill> skills) {
-            return new Projectile(
-                "libgdx.png",
-                FrogueUtil.getBoundingBoxForCenter(frog.getX(), frog.getY(), getProjectileWidth(), getProjectileHeight()),
-                new Vector2(1, 0),
-                100, 100, 300, skills);
-        }
-    }
 
     public float getFireRate() {
         return fireRate;
@@ -82,5 +66,9 @@ public abstract class Weapon implements GameElement {
 
     public void setProjectileHeight(float projectileHeight) {
         this.projectileHeight = projectileHeight;
+    }
+
+    public Camera getCamera() {
+        return gameState.getCamera();
     }
 }
