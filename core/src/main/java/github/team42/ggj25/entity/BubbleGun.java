@@ -1,7 +1,7 @@
 package github.team42.ggj25.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import github.team42.ggj25.FrogueUtil;
@@ -12,11 +12,11 @@ import java.util.List;
 
 public class BubbleGun extends Weapon {
 
-    private final Texture projectileTexture;
+    private final TextureAtlas textureAtlas;
 
     public BubbleGun(GameState gameState, Frog frog) {
         super(gameState, frog, 1f, 85, 64);
-        projectileTexture = new Texture(Gdx.files.internal("bubble.png"));
+        textureAtlas = new TextureAtlas(Gdx.files.internal("bubble/bubble.txt"));
     }
 
     @Override
@@ -27,8 +27,8 @@ public class BubbleGun extends Weapon {
         fireVector.setLength(1);
 
         return new Projectile(
-                projectileTexture,
+                textureAtlas,
                 FrogueUtil.getBoundingBoxForCenter(frog.getX(), frog.getY(), getProjectileWidth(), getProjectileHeight()),
-                new Vector2(fireVector.x, fireVector.y), 200, 100, 500, skills);
+                new Vector2(fireVector.x, fireVector.y), 200, 100, 500, 100, skills);
     }
 }
