@@ -3,7 +3,6 @@ package github.team42.ggj25.gamestate;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.GridPoint2;
@@ -83,7 +82,7 @@ public class GameState implements Drawable {
     private float duration = 3; // Dauer der Animation (in Sekunden)
     private Vector2 startPoint; // Startpunkt der Bewegung
     private Vector2 endPoint = new Vector2(1920, 810); // Zielpunkt (rechter Rand)
-    private float controlPointOffset = 900; // Offset für die Kontrollpunkte der Kurve
+    private float controlPointOffset = (player.getBoundingBox().y + endPoint.y + player.getY()) / 2; // Offset für die Kontrollpunkte der Kurve
 
     private void updateToTransition(float deltaInSeconds) {
         elapsedTime += deltaInSeconds;
@@ -98,12 +97,11 @@ public class GameState implements Drawable {
                 new Vector2((startPoint.x + endPoint.x) / 2, startPoint.y + controlPointOffset), // Kontrollpunkt
                 endPoint);
 
-            // Aktualisiere die Sprite-Position
             player.setPosition(currentPosition.x - player.getBoundingBox().width / 2, currentPosition.y - player.getBoundingBox().height / 2);
-
-            // Aktualisiere die Sprite-Skalierung (z. B. von 1.0 bis 2.0 während der Bewegung)
-            float currentScale = 150f;
-            player.getBoundingBox().setSize(currentScale);
+            player.getBoundingBox().setSize(
+                (0.9f + progress) * player.getBoundingBox().width,
+                (0.9f + progress) * player.getBoundingBox().height);
+//                1, 1);
         }
         scoreBoard.update(deltaInSeconds);
         System.out.println("Player-Pos: " + progress);
@@ -114,7 +112,6 @@ public class GameState implements Drawable {
         float tt = t * t;
         float uu = u * u;
 
-        // Bezier-Gleichung: B(t) = (1-t)² * P0 + 2 * (1-t) * t * P1 + t² * P2
         Vector2 result = new Vector2();
         result.x = uu * p0.x + 2 * u * t * p1.x + tt * p2.x;
         result.y = uu * p0.y + 2 * u * t * p1.y + tt * p2.y;
@@ -206,8 +203,8 @@ public class GameState implements Drawable {
     }
 
     private void drawToTransition(SpriteBatch spriteBatch) {
-//        background.drawAmbient(spriteBatch);
-//        scoreBoard.draw(spriteBatch);
+        background.drawAmbient(spriteBatch);
+        scoreBoard.draw(spriteBatch);
         player.draw(spriteBatch);
     }
 
