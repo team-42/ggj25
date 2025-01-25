@@ -44,6 +44,7 @@ public class Projectile extends Entity {
         this.remainingRange = range;
 
         skills.forEach(skill -> skill.manipulateProjectile(this));
+
     }
 
     @Override

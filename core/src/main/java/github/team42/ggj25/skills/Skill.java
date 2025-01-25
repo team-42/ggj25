@@ -2,6 +2,7 @@ package github.team42.ggj25.skills;
 
 import github.team42.ggj25.entity.Frog;
 import github.team42.ggj25.entity.Projectile;
+import github.team42.ggj25.entity.Weapon;
 
 public abstract class Skill {
     public int cost;
@@ -18,11 +19,19 @@ public abstract class Skill {
         this.descriptionText = descriptionText;
     }
 
-    public void manipulateFrog(Frog frog) {
-
+    public boolean manipulateFrog(Frog frog) {
+        return false;
     }
 
     public void manipulateProjectile(Projectile projectile) {
 
+    }
+
+    /**
+     * @param weapon
+     * @return false if skill has no weapon manipulation, true otherwise
+     */
+    public boolean manipulateWeapon(Weapon weapon) {
+        return false;
     }
 }
