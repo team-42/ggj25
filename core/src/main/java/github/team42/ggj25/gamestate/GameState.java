@@ -157,10 +157,16 @@ public class GameState implements Drawable {
         }
 
         if (!frogInsideLeaf(player.getX(), player.getY())) {
+            try{this.webSocketServerBuzzer.stop();} catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             lost = true;
         }
 
         if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
+            try{this.webSocketServerBuzzer.stop();} catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             lost = true;
 
         }
