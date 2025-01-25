@@ -16,7 +16,11 @@ public class Entity implements Drawable, Disposable {
     private final Texture texture;
 
     Entity(final String textureFile, Rectangle boundingBox) {
-        this.texture = new Texture(Gdx.files.internal(textureFile));
+        this(new Texture(Gdx.files.internal(textureFile)), boundingBox);
+    }
+
+    Entity(final Texture texture, Rectangle boundingBox) {
+        this.texture = texture;
         this.boundingBox = boundingBox;
     }
 
