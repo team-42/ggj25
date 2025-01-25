@@ -17,7 +17,7 @@ import github.team42.ggj25.gamestate.GameState;
 
 public class GameScreen extends ScreenAdapter {
     private final SpriteBatch batch = new SpriteBatch();
-    private final ShapeRenderer shapes = new ShapeRenderer();
+    private final ShapeRenderer shapes = new ShapeRenderer(100_000);
     private final Texture image = new Texture("libgdx.png");
     private final GameState gameState = new GameState();
     private final Camera camera = new OrthographicCamera(Constants.WIDTH, Constants.HEIGHT);
