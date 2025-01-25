@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 
-public class KillScreen implements Drawable {
+public class KillScreen implements Drawable, Disposable {
 
     private final Texture killscreenTexture;
 
@@ -19,5 +20,10 @@ public class KillScreen implements Drawable {
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
         spriteBatch.draw(killscreenTexture, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+    }
+
+    @Override
+    public void dispose() {
+        killscreenTexture.dispose();
     }
 }

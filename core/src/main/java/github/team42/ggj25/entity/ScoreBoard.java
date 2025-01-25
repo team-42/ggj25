@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 
-public class ScoreBoard implements Drawable {
+public class ScoreBoard implements Drawable, Disposable {
     private long score = 0;
 
     private final Label scoreBoardLabel;
@@ -55,5 +56,9 @@ public class ScoreBoard implements Drawable {
 
     public long getScore() {
         return score;
+    }
+
+    @Override
+    public void dispose() {
     }
 }

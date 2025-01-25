@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.FrogueUtil;
@@ -21,7 +22,7 @@ import java.util.*;
 
 import static github.team42.ggj25.gamestate.GamePhase.PLAY;
 
-public class GameState implements Drawable {
+public class GameState implements Drawable, Disposable {
     private GamePhase currentPhase = PLAY;
 
     private static final Random R = new Random();
@@ -53,7 +54,7 @@ public class GameState implements Drawable {
 
     public GameState(Camera camera) {
         this.buzzerState = new BuzzerState();
-        this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337,this.buzzerState);
+        this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337, this.buzzerState);
         this.webSocketServerBuzzer.start();
         this.camera = camera;
         for (SkillTrees val : SkillTrees.values()) {
@@ -156,16 +157,10 @@ public class GameState implements Drawable {
         }
 
         if (!frogInsideLeaf(player.getX(), player.getY())) {
-            try{this.webSocketServerBuzzer.stop();} catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             lost = true;
         }
 
         if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
-            try{this.webSocketServerBuzzer.stop();} catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             lost = true;
 
         }
@@ -285,5 +280,21 @@ public class GameState implements Drawable {
 
     public Camera getCamera() {
         return camera;
+    }
+
+    @Override
+    public void dispose() {
+        player.dispose();
+        enemies.forEach(Enemy::dispose);
+        background.dispose();
+        leaf.dispose();
+        pike.dispose();
+        scoreBoard.dispose();
+        killScreen.dispose();
+        try {
+            this.webSocketServerBuzzer.stop();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

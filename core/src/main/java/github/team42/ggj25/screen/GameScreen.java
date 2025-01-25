@@ -58,6 +58,7 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        gameState.dispose();
         batch.dispose();
         image.dispose();
         shapeRenderer.dispose();
