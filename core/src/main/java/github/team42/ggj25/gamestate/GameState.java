@@ -175,7 +175,7 @@ public class GameState implements Drawable, Disposable {
         spawnVectorFromCenter.add(new Vector2(Constants.WIDTH / 2f, Constants.HEIGHT / 2f));
         initialDirection.rotateDeg(180);
         initialDirection.setLength(1);
-        this.enemies.add(new Enemy(spawnVectorFromCenter.x, spawnVectorFromCenter.y, initialDirection));
+        this.enemies.add(new Enemy(leaf, spawnVectorFromCenter.x, spawnVectorFromCenter.y, initialDirection));
         Gdx.app.log("Spawn Enemy", "direction: " + spawnDirection + "; initialDirection: " + initialDirection);
 
     }
@@ -203,11 +203,10 @@ public class GameState implements Drawable, Disposable {
 
     private void drawCurrentGameField(SpriteBatch spriteBatch) {
         background.drawSprites(spriteBatch);
-        for (final Enemy enemy : this.enemies) {
-            enemy.drawSprites(spriteBatch);
-        }
+        this.enemies.stream().filter(enemy -> !enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
         background.drawAmbient(spriteBatch);
         leaf.drawSprites(spriteBatch);
+        this.enemies.stream().filter(enemy -> enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
         pike.drawSprites(spriteBatch);
         player.drawSprites(spriteBatch);
         for (Projectile p : activeProjectiles) {
@@ -292,7 +291,6 @@ public class GameState implements Drawable, Disposable {
     @Override
     public void dispose() {
         player.dispose();
-        enemies.forEach(Enemy::dispose);
         background.dispose();
         leaf.dispose();
         pike.dispose();

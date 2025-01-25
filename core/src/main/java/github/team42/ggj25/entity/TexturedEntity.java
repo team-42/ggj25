@@ -75,10 +75,7 @@ public class TexturedEntity extends AbstractEntity implements Disposable {
     }
 
     public Polygon getAccurateHitbox() {
-        Polygon hitbox = this.hitbox;
-//        hitbox.setPosition(this.getX() - hitbox.getBoundingRectangle().width / 2,
-//            this.getY() - hitbox.getBoundingRectangle().height / 2);
-        return hitbox;
+        return this.hitbox;
     }
 
     @Override

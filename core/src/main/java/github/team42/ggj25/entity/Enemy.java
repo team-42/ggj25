@@ -1,6 +1,8 @@
 package github.team42.ggj25.entity;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,7 +15,9 @@ import java.util.Random;
 /**
  * An enemy.
  */
-public class Enemy extends TexturedEntity {
+public class Enemy extends AbstractEntity {
+    private final Leaf leaf;
+
     private enum Orientation {
         TurningClockwise(-1),
         TurningCounterClockwise(1),
@@ -21,10 +25,29 @@ public class Enemy extends TexturedEntity {
 
         final int turnRateFactor;
 
-        Orientation(int turnRateFactor){
+        Orientation(int turnRateFactor) {
             this.turnRateFactor = turnRateFactor;
         }
     }
+
+    public enum Mode {
+        Moving("tortoise_swimming.png", false),
+        Eating("tortoise_eating.png", true),
+        Floating("tortoise_floating.png", true);
+
+        final TextureRegion textureRegion;
+        final boolean isForeground;
+
+        Mode(String fileName, boolean isForeground) {
+            this.textureRegion = new TextureRegion(new Texture(Gdx.files.internal(fileName)));
+            this.isForeground = isForeground;
+        }
+
+        public boolean isForeground() {
+            return isForeground;
+        }
+    }
+
     private static final Random R = new Random();
     private static final int IMAGE_WIDTH = 1920;
     private static final int IMAGE_HEIGHT = 1080;
@@ -33,19 +56,19 @@ public class Enemy extends TexturedEntity {
     private static final float BASE_SPEED = 50;
     private static final float TURN_RATE_DEGREES_PER_SECOND = 20;
     private static final float ORIENTATION_CHANGE_COOLDOWN_SECONDS = 1f;
-    private final TextureRegion textureRegion;
     private float speed = BASE_SPEED;
     private final Vector2 direction;
     private Orientation orientation = Orientation.StraightAhead;
     private float timeSinceLastOrientationChangeSeconds = 0;
+    private Mode mode = Mode.Moving;
 
-    public Enemy(final float x, final float y, Vector2 initialDirection) {
-        super("tortoise_swimming.png", FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * IMAGE_SCALE, IMAGE_HEIGHT * IMAGE_SCALE));
+    public Enemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection) {
+        super(FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * IMAGE_SCALE, IMAGE_HEIGHT * IMAGE_SCALE));
+        this.leaf = toAttack;
         if (!initialDirection.isUnit(Constants.UNIT_VECTOR_MARGIN)) {
             throw new IllegalArgumentException("Initial direction must be a unit vector");
         }
         direction = initialDirection;
-        textureRegion = new TextureRegion(getTexture());
     }
 
     @Override
@@ -54,6 +77,33 @@ public class Enemy extends TexturedEntity {
         if (!direction.isUnit(Constants.UNIT_VECTOR_MARGIN)) {
             throw new IllegalStateException("Direction is not a unit vector");
         }
+        final Vector2 head = getHead();
+        switch (mode) {
+            case Floating -> {
+            }
+            case Eating -> {
+                if (!leaf.getAccurateHitbox().contains(head.x, head.y)) {
+                    mode = Mode.Moving;
+                } else {
+                    eat(deltaInSeconds);
+                }
+            }
+            case Moving -> {
+                if (leaf.getAccurateHitbox().contains(head.x, head.y)) {
+                    mode = Mode.Eating;
+                } else {
+                    move(deltaInSeconds);
+                }
+            }
+        }
+
+    }
+
+    private void eat(float deltaInSeconds) {
+
+    }
+
+    private void move(float deltaInSeconds) {
         this.setPosition(getX() + speed * deltaInSeconds * direction.x, getY() + speed * deltaInSeconds * direction.y);
         if (Constants.WORLD.contains(getBoundingBox())) {
             timeSinceLastOrientationChangeSeconds += deltaInSeconds;
@@ -74,7 +124,7 @@ public class Enemy extends TexturedEntity {
 
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
-        spriteBatch.draw(textureRegion,
+        spriteBatch.draw(mode.textureRegion,
             getBoundingBox().x, getBoundingBox().y, getBoundingBox().width / 2f, getBoundingBox().height / 2f, getBoundingBox().width, getBoundingBox().height,
             1, 1, direction.angleDeg(IMAGE_DIRECTION));
     }
@@ -88,6 +138,18 @@ public class Enemy extends TexturedEntity {
                 1, 1, direction.angleDeg(IMAGE_DIRECTION));
             shapeRenderer.line(getX(), getY(), getX() + direction.x * 100, getY() + direction.y * 100);
             shapeRenderer.end();
+            Vector2 head = getHead();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.circle(head.x, head.y, 6);
+            shapeRenderer.end();
         }
+    }
+
+    private Vector2 getHead() {
+        return new Vector2(getX() + direction.x * 30, getY() + direction.y * 30);
+    }
+
+    public Mode getMode() {
+        return mode;
     }
 }
