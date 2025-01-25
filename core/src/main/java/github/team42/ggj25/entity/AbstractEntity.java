@@ -23,7 +23,7 @@ abstract class AbstractEntity implements Drawable {
         this.boundingBox.setCenter(x, y);
     }
 
-    protected Rectangle getBoundingBox() {
+    public Rectangle getBoundingBox() {
         return this.boundingBox;
     }
 
