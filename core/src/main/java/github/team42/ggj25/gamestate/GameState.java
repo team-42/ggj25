@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
+import github.team42.ggj25.buzzer.BuzzerState;
+import github.team42.ggj25.buzzer.WebSocketServerBuzzer;
 import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
 import github.team42.ggj25.skills.SkillTrees;
@@ -36,6 +38,9 @@ public class GameState implements Drawable {
     private final Polygon backgroundPolygon;
     boolean lost = false;
 
+    private final BuzzerState buzzerState;
+    private final WebSocketServerBuzzer webSocketServerBuzzer;
+
     private final int bonusPoints = 3;
     private final float bonusPointsInterval = 1;
     private float bonusPointCooldown = 1;
@@ -48,6 +53,9 @@ public class GameState implements Drawable {
 
 
     public GameState(Camera camera) {
+        this.buzzerState = new BuzzerState();
+        this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337,this.buzzerState);
+        this.webSocketServerBuzzer.start();
         this.camera = camera;
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
@@ -118,7 +126,7 @@ public class GameState implements Drawable {
     }
 
     private void updatePlayPhase(float deltaInSeconds) {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || this.buzzerState.triggeredSinceLastCheck()) {
             currentPhase = GamePhase.CUTSCENE_TO_TRANSITION;
         }
         background.update(deltaInSeconds);

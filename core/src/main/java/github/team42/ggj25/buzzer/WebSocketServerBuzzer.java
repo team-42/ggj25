@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 public class WebSocketServerBuzzer extends WebSocketServer {
 
 private boolean webSocketStatus;
-private BuzzerState buzzerState;
+private final BuzzerState buzzerState;
         // Constructor to initialize server with a port
         public WebSocketServerBuzzer(int port, BuzzerState buzzerState) {
             super(new InetSocketAddress(port));
