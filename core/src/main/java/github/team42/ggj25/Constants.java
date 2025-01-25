@@ -8,5 +8,5 @@ public interface Constants {
     int HEIGHT = 1080;
     Rectangle WORLD = new Rectangle(0,0, WIDTH, HEIGHT);
 
-    float UNIT_VECTOR_MARGIN = 1e-5f;
+    float UNIT_VECTOR_MARGIN = 1e-4f;
 }

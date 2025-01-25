@@ -33,7 +33,7 @@ public class ScoreBoard implements Drawable {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch) {
+    public void drawSprites(SpriteBatch spriteBatch) {
         scoreBoardLabel.draw(spriteBatch, 0.5f);
     }
 

@@ -18,7 +18,7 @@ public class Enemy extends Entity {
     private static final float IMAGE_SCALE = 0.1f;
     private static final Vector2 IMAGE_DIRECTION = new Vector2(0, -1);
     private static final float BASE_SPEED = 50;
-    private static final float TURN_RATE_DEGREES_PER_SECOND = 45;
+    private static final float TURN_RATE_DEGREES_PER_SECOND = 20;
     private final TextureRegion textureRegion;
     private float speed = BASE_SPEED;
     private final Vector2 direction;
@@ -40,7 +40,7 @@ public class Enemy extends Entity {
         }
         this.setPosition(getX() + speed * deltaInSeconds * direction.x, getY() + speed * deltaInSeconds * direction.y);
         if (Constants.WORLD.contains(getBoundingBox())) {
-            if (R.nextFloat() < 0.03f) {
+            if (R.nextFloat() < 0.02f) {
                 rotateClockwise = !rotateClockwise;
             }
             this.direction.rotateDeg(TURN_RATE_DEGREES_PER_SECOND * deltaInSeconds * (rotateClockwise ? -1 : 1));
@@ -55,7 +55,7 @@ public class Enemy extends Entity {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch) {
+    public void drawSprites(SpriteBatch spriteBatch) {
         spriteBatch.draw(textureRegion,
             getBoundingBox().x, getBoundingBox().y, getBoundingBox().width / 2f, getBoundingBox().height / 2f, getBoundingBox().width, getBoundingBox().height,
             1, 1, direction.angleDeg(IMAGE_DIRECTION));

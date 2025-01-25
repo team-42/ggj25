@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  * Something that can be drawn onto the screen.
  */
 public interface Drawable extends GameElement {
-    void draw(SpriteBatch spriteBatch);
+    void drawSprites(SpriteBatch spriteBatch);
 
-    default void draw(ShapeRenderer shapeRenderer){}
+    default void drawShapes(ShapeRenderer shapeRenderer){}
 }
