@@ -27,6 +27,7 @@ public class Frog extends TexturedEntity {
 
     @Override
     public void update(float deltaInSeconds) {
+        super.update(deltaInSeconds);
         final EnumSet<Direction> directions = EnumSet.noneOf(Direction.class);
         for (final Direction d : Direction.values()) {
             if (Gdx.input.isKeyPressed(d.key) || Gdx.input.isKeyPressed(d.alternateKey)) {

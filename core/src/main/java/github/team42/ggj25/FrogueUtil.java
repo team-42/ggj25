@@ -51,7 +51,7 @@ public final class FrogueUtil {
         return new Vector2(centroidX, centroidY);
     }
 
-    static public List<GridPoint2> getEdgeOfPixmap(Pixmap pixmap){
+    static public List<GridPoint2> getEdgeOfPixmap(Pixmap pixmap) {
         int width = pixmap.getWidth();
         int height = pixmap.getHeight();
         List<GridPoint2> edge_points = new ArrayList<>();
@@ -63,14 +63,14 @@ public final class FrogueUtil {
                 // Check if the pixel is part of the outline
                 if (alpha > 0.1 && isEdge(grid_point, pixmap)) {
                     // Logic to detect edge pixels
-                    edge_points.add( new GridPoint2 ( x, height - y));
+                    edge_points.add(new GridPoint2(x, height - y));
                 }
             }
         }
 
         edge_points = sortPointsByCentroid(edge_points);
         return edge_points;
-    };
+    }
 
     static boolean isEdge(GridPoint2 xy, Pixmap pixmap) {
         int x = xy.x;
@@ -96,23 +96,17 @@ public final class FrogueUtil {
         return false;
     }
 
-    static public Polygon getEdgePolygon(Pixmap pixmap){
+    static public Polygon getEdgePolygon(Pixmap pixmap) {
         List<GridPoint2> outline = getEdgeOfPixmap(pixmap);
 
-        List<Float> vertices = new ArrayList<Float>();
-
-        for (GridPoint2 p : outline) {
-            vertices.add((float) p.x);
-            vertices.add((float) p.y);
+        float[] verts = new float[outline.size() * 2 + 2];
+        for (int i = 0; i < outline.size(); i++) {
+            verts[i * 2] = outline.get(i).x;
+            verts[i * 2 + 1] = outline.get(i).y;
         }
-
-    float[] verts = new float[vertices.size() + 2];
-        for (int i = 0; i < vertices.size(); i++) {
-        verts[i] = vertices.get(i);
+        // close the polygon by repeating the first point
+        verts[outline.size() * 2] = outline.get(0).x;
+        verts[outline.size() * 2 + 1] = outline.get(0).y;
+        return new Polygon(verts);
     }
-    verts[vertices.size()] = vertices.get(0);
-    verts[vertices.size() + 1] = vertices.get(1);
-    Polygon polygon = new Polygon(verts);
-    return polygon;
-
-}}
+}

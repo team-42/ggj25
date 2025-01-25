@@ -50,6 +50,7 @@ public class Enemy extends TexturedEntity {
 
     @Override
     public void update(float deltaInSeconds) {
+        super.update(deltaInSeconds);
         if (!direction.isUnit(Constants.UNIT_VECTOR_MARGIN)) {
             throw new IllegalStateException("Direction is not a unit vector");
         }
@@ -80,10 +81,11 @@ public class Enemy extends TexturedEntity {
 
     @Override
     public void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive) {
-        super.drawShapes(shapeRenderer, debugRenderingActive);
         if (debugRenderingActive) {
+            shapeRenderer.setColor(Color.GREEN);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.rect(getBoundingBox().x, getBoundingBox().y, getBoundingBox().width / 2f, getBoundingBox().height / 2f, getBoundingBox().width, getBoundingBox().height,
+                1, 1, direction.angleDeg(IMAGE_DIRECTION));
             shapeRenderer.line(getX(), getY(), getX() + direction.x * 100, getY() + direction.y * 100);
             shapeRenderer.end();
         }

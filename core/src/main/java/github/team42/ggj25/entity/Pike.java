@@ -38,6 +38,7 @@ public class Pike extends TexturedEntity {
 
     @Override
     public void update(float deltaInSeconds) {
+        super.update(deltaInSeconds);
         if (isPreparingToAttack) {
             cooldown += deltaInSeconds;
             if (cooldown >= attackCooldown) {
