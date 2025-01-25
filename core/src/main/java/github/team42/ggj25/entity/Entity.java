@@ -44,4 +44,8 @@ public class Entity implements Drawable, Disposable {
     public void setPosition(float x, float y) {
         this.boundingBox.setCenter(x, y);
     }
+
+    protected Rectangle getBoundingBox() {
+        return this.boundingBox;
+    }
 }

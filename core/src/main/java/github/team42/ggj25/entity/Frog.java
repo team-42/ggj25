@@ -1,7 +1,6 @@
 package github.team42.ggj25.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Direction;
@@ -53,6 +52,10 @@ public class Frog extends Entity {
         for (final Weapon w : this.weapons) {
             w.update(delta);
         }
+    }
+
+    public boolean overlapsWith(Entity entity) {
+        return this.getBoundingBox().overlaps(entity.getBoundingBox());
     }
 
     public float getSpeed() {
