@@ -20,6 +20,8 @@ public class TexturedEntity extends AbstractEntity implements Disposable {
 
     TexturedEntity(final String textureFile, Rectangle boundingBox) {
         this(new Texture(Gdx.files.internal(textureFile)), new Pixmap(Gdx.files.internal(textureFile)), boundingBox);
+        this.hitbox.setScale(this.getBoundingBox().getWidth() / this.m_pixmap.getWidth() ,
+            this.getBoundingBox().getHeight()/this.m_pixmap.getHeight() );
     }
 
     TexturedEntity(final Texture texture, Pixmap pixmap, Rectangle boundingBox) {
@@ -27,6 +29,8 @@ public class TexturedEntity extends AbstractEntity implements Disposable {
         this.texture = texture;
         this.m_pixmap = pixmap;
         this.hitbox = FrogueUtil.getEdgePolygon(this.m_pixmap);
+        this.hitbox.setScale(this.getBoundingBox().getWidth() / this.m_pixmap.getWidth() ,
+            this.getBoundingBox().getHeight()/this.m_pixmap.getHeight() );
     }
 
     TexturedEntity() {
@@ -40,6 +44,8 @@ public class TexturedEntity extends AbstractEntity implements Disposable {
     @Override
     public void dispose() {
         texture.dispose();
+        m_pixmap.dispose();
+
     }
 
     protected Texture getTexture() {
@@ -47,7 +53,10 @@ public class TexturedEntity extends AbstractEntity implements Disposable {
     }
 
     public Polygon getAccurateHitbox(){
-        return this.hitbox;
+        Polygon hitbox = this.hitbox;
+        hitbox.setPosition(this.getX() - hitbox.getBoundingRectangle().width / 2,
+            this.getY() - hitbox.getBoundingRectangle().height /2);
+        return hitbox;
     }
 
 

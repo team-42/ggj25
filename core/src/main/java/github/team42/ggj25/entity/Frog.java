@@ -1,6 +1,8 @@
 package github.team42.ggj25.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Direction;
@@ -55,7 +57,14 @@ public class Frog extends TexturedEntity {
     }
 
     public boolean overlapsWith(TexturedEntity entity) {
-        return this.getBoundingBox().overlaps(entity.getBoundingBox());
+        Polygon polygon_frog = this.getAccurateHitbox();
+        Polygon polygon_other = entity.getAccurateHitbox();
+        if (polygon_frog.getBoundingRectangle().overlaps(polygon_other.getBoundingRectangle())){
+            return true;
+                //Intersector.overlapConvexPolygons(polygon_frog, polygon_other);
+        }
+        return false;
+        //return this.getBoundingBox().overlaps(entity.getBoundingBox());
     }
 
     public float getSpeed() {

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
@@ -231,7 +232,13 @@ public class GameState implements Drawable {
         if (debugRenderingActive) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.RED);
-            shapeRenderer.polygon(backgroundPolygon.getVertices()); // Draw the polygon outline
+            //shapeRenderer.polygon(backgroundPolygon.getVertices()); // Draw the polygon outline
+            Rectangle box = player.getAccurateHitbox().getBoundingRectangle();
+            shapeRenderer.rect(box.x, box.y, box.width, box.height);
+            //shapeRenderer.polygon(player.getAccurateHitbox().getVertices());
+            Rectangle box2 = pike.getAccurateHitbox().getBoundingRectangle();
+            //shapeRenderer.polygon(pike.getAccurateHitbox().getVertices());
+            shapeRenderer.rect(box2.x, box2.y, box2.width, box2.height);
             shapeRenderer.end();
         }
         scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
