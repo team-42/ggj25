@@ -54,6 +54,10 @@ public class Frog extends Entity {
         }
     }
 
+    public boolean overlapsWith(Entity entity) {
+        return this.getBoundingBox().overlaps(entity.getBoundingBox());
+    }
+
     public float getSpeed() {
         return speed;
     }

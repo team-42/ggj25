@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.GameElement;
 import github.team42.ggj25.gamestate.GameState;
+import github.team42.ggj25.skills.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,11 @@ public abstract class Weapon implements GameElement {
         coolDown += delta;
         if (coolDown > fireRate) {
             coolDown = 0;
-            this.gameState.addProjectile(createProjectile());
+            this.gameState.addProjectile(createProjectile(gameState.getProjectileSkills()));
         }
     }
 
-    protected abstract Projectile createProjectile();
+    protected abstract Projectile createProjectile(List<Skill> skills);
 
     public static class BubbleGun extends Weapon {
         public BubbleGun(GameState gameState, Frog frog) {
@@ -38,12 +39,12 @@ public abstract class Weapon implements GameElement {
         }
 
         @Override
-        protected Projectile createProjectile() {
+        protected Projectile createProjectile(List<Skill> skills) {
             Gdx.app.log("foo", "bar");
             return new Projectile(
                 "libgdx.png",
                 new Rectangle(frog.getX(), frog.getY(), 5, 5), new Vector2(1, 0),
-                100, 100, 300);
+                100, 100, 300, skills);
         }
     }
 }
