@@ -2,7 +2,6 @@ package github.team42.ggj25.gamestate;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -63,15 +62,14 @@ public class GameState implements Drawable {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (!frogInsideLeaf(player.getX(), player.getY())) {
-            lost = true;
-        }
+
         if (!lost) {
             switch (currentPhase) {
                 case PLAY:
                     updatePlayPhase(deltaInSeconds);
                     break;
                 case CUTSCENE_TO_TRANSITION:
+                    updateToTransition(deltaInSeconds);
                     break;
                 case TRANSITION:
                     break;
@@ -79,6 +77,48 @@ public class GameState implements Drawable {
                     break;
             }
         }
+    }
+
+    private float elapsedTime = 0; // Zeit, die seit dem Start vergangen ist
+    private float duration = 3; // Dauer der Animation (in Sekunden)
+    private Vector2 startPoint; // Startpunkt der Bewegung
+    private Vector2 endPoint = new Vector2(1920, 810); // Zielpunkt (rechter Rand)
+    private float controlPointOffset = 900; // Offset für die Kontrollpunkte der Kurve
+
+    private void updateToTransition(float deltaInSeconds) {
+        elapsedTime += deltaInSeconds;
+        float progress = elapsedTime / duration;
+        if (progress > 1f) progress = 1f;
+
+        Vector2 currentPosition;
+        if (startPoint == null) {
+            startPoint = new Vector2(player.getX(), player.getY());
+        } else {
+            currentPosition = calculateBezier(progress, startPoint,
+                new Vector2((startPoint.x + endPoint.x) / 2, startPoint.y + controlPointOffset), // Kontrollpunkt
+                endPoint);
+
+            // Aktualisiere die Sprite-Position
+            player.setPosition(currentPosition.x - player.getBoundingBox().width / 2, currentPosition.y - player.getBoundingBox().height / 2);
+
+            // Aktualisiere die Sprite-Skalierung (z. B. von 1.0 bis 2.0 während der Bewegung)
+            float currentScale = 150f;
+            player.getBoundingBox().setSize(currentScale);
+        }
+        scoreBoard.update(deltaInSeconds);
+        System.out.println("Player-Pos: " + progress);
+    }
+
+    private Vector2 calculateBezier(float t, Vector2 p0, Vector2 p1, Vector2 p2) {
+        float u = 1 - t;
+        float tt = t * t;
+        float uu = u * u;
+
+        // Bezier-Gleichung: B(t) = (1-t)² * P0 + 2 * (1-t) * t * P1 + t² * P2
+        Vector2 result = new Vector2();
+        result.x = uu * p0.x + 2 * u * t * p1.x + tt * p2.x;
+        result.y = uu * p0.y + 2 * u * t * p1.y + tt * p2.y;
+        return result;
     }
 
     private void updatePlayPhase(float deltaInSeconds) {
@@ -103,6 +143,10 @@ public class GameState implements Drawable {
             scoreBoard.addPointsToScore(bonusPoints);
         }
         scoreBoard.update(deltaInSeconds);
+
+        if (!frogInsideLeaf(player.getX(), player.getY())) {
+            lost = true;
+        }
 
         if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
             lost = true;
@@ -136,6 +180,7 @@ public class GameState implements Drawable {
                     drawCurrentGameField(spriteBatch);
                     break;
                 case CUTSCENE_TO_TRANSITION:
+                    drawToTransition(spriteBatch);
                     break;
                 case TRANSITION:
                     break;
@@ -153,11 +198,16 @@ public class GameState implements Drawable {
         }
         background.drawAmbient(spriteBatch);
         pike.draw(spriteBatch);
-        player.draw(spriteBatch);
         for (Projectile p : activeProjectiles) {
             p.draw(spriteBatch);
         }
         scoreBoard.draw(spriteBatch);
+        player.draw(spriteBatch);
+    }
+
+    private void drawToTransition(SpriteBatch spriteBatch) {
+//        background.drawAmbient(spriteBatch);
+//        scoreBoard.draw(spriteBatch);
         player.draw(spriteBatch);
     }
 
