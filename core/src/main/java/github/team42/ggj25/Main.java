@@ -9,6 +9,7 @@ import github.team42.ggj25.screen.GameScreen;
 public class Main extends Game {
 
     private final boolean debug;
+    private GameScreen gameScreen;
 
     public Main(boolean debug) {
         this.debug = debug;
@@ -16,6 +17,13 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        setScreen(new GameScreen(debug));
+        gameScreen = new GameScreen(debug);
+        setScreen(gameScreen);
+    }
+
+    @Override
+    public void dispose() {
+        gameScreen.dispose();
+        super.dispose();
     }
 }

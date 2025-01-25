@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.FrogueUtil;
@@ -23,7 +23,7 @@ import java.util.*;
 
 import static github.team42.ggj25.gamestate.GamePhase.PLAY;
 
-public class GameState implements Drawable {
+public class GameState implements Drawable, Disposable {
     private GamePhase currentPhase = PLAY;
 
     private static final Random R = new Random();
@@ -43,8 +43,7 @@ public class GameState implements Drawable {
     private final BuzzerState buzzerState;
     private final WebSocketServerBuzzer webSocketServerBuzzer;
 
-    private final int bonusPoints = 3;
-    private final float bonusPointsInterval = 1;
+    private float bonusPointsInterval = 1f;
     private float bonusPointCooldown = 1;
     private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
 
@@ -56,7 +55,7 @@ public class GameState implements Drawable {
 
     public GameState(Camera camera) {
         this.buzzerState = new BuzzerState();
-        this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337,this.buzzerState);
+        this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337, this.buzzerState);
         this.webSocketServerBuzzer.start();
         this.camera = camera;
         for (SkillTrees val : SkillTrees.values()) {
@@ -144,10 +143,11 @@ public class GameState implements Drawable {
         }
         activeProjectiles.removeIf(p -> !p.isActive());
 
-        bonusPointCooldown -= deltaInSeconds;
-        if (bonusPointCooldown <= 0) {
-            bonusPointCooldown = bonusPointsInterval;
-            scoreBoard.addPointsToScore(bonusPoints);
+        bonusPointCooldown += deltaInSeconds;
+        if (bonusPointCooldown >= bonusPointsInterval) {
+            scoreBoard.addPointsToScore((int) (bonusPointCooldown / bonusPointsInterval));
+            bonusPointCooldown = 0;
+            bonusPointsInterval *= 0.99f;
         }
         scoreBoard.update(deltaInSeconds);
 
@@ -287,5 +287,21 @@ public class GameState implements Drawable {
 
     public Camera getCamera() {
         return camera;
+    }
+
+    @Override
+    public void dispose() {
+        player.dispose();
+        enemies.forEach(Enemy::dispose);
+        background.dispose();
+        leaf.dispose();
+        pike.dispose();
+        scoreBoard.dispose();
+        killScreen.dispose();
+        try {
+            this.webSocketServerBuzzer.stop();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

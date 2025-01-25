@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * The game background, i.e. water and the pike.
  */
-public class Background implements Drawable {
+public class Background implements Drawable, Disposable {
 
     private final Texture m_blue_background;
     private final Texture m_water;
@@ -72,7 +73,14 @@ public class Background implements Drawable {
     }
 
 
-
-
-
+    @Override
+    public void dispose() {
+        m_blue_background.dispose();
+        m_pixmap_leaf.dispose();
+        m_water.dispose();
+        m_water_dark.dispose();
+        m_white_puddle.dispose();
+        m_water_lily.dispose();
+        m_water_lily_ambient.dispose();
+    }
 }
