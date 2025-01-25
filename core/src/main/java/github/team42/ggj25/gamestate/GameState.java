@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
+import github.team42.ggj25.FrogueUtil;
 import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
 import github.team42.ggj25.skills.SkillTrees;
@@ -32,7 +33,6 @@ public class GameState implements Drawable {
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
     private final Camera camera;
-    private final float[] verts;
     private final Polygon backgroundPolygon;
     boolean lost = false;
 
@@ -52,8 +52,7 @@ public class GameState implements Drawable {
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
-        verts = buildLillypadPolygon();
-        backgroundPolygon = new Polygon(verts);
+        backgroundPolygon = buildLillypadPolygon();
     }
 
     public boolean frogInsideLeaf(float x, float y) {
@@ -218,7 +217,7 @@ public class GameState implements Drawable {
         if (debugRenderingActive) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.RED);
-            shapeRenderer.polygon(verts); // Draw the polygon outline
+            shapeRenderer.polygon(backgroundPolygon.getVertices()); // Draw the polygon outline
             shapeRenderer.end();
         }
         scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
@@ -230,22 +229,9 @@ public class GameState implements Drawable {
         player.drawSprites(spriteBatch);
     }
 
-    private float[] buildLillypadPolygon() {
-        List<GridPoint2> outline = background.getEdgeOfLeaf();
-        List<Float> vertices = new ArrayList<Float>();
-
-        for (GridPoint2 p : outline) {
-            vertices.add((float) p.x);
-            vertices.add((float) p.y);
-        }
-
-        float[] verts = new float[vertices.size() + 2];
-        for (int i = 0; i < vertices.size(); i++) {
-            verts[i] = vertices.get(i);
-        }
-        verts[vertices.size()] = vertices.get(0);
-        verts[vertices.size() + 1] = vertices.get(1);
-        return verts;
+    private Polygon buildLillypadPolygon() {
+        Polygon polygon = FrogueUtil.getEdgePolygon(background.getPixmap());
+        return polygon;
     }
 
     public void addProjectile(Projectile toAdd) {
