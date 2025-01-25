@@ -1,18 +1,20 @@
 package github.team42.ggj25.gamestate;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
 import github.team42.ggj25.skills.SkillTrees;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GameState implements Drawable {
+    private static final Random R = new Random();
+    private static final float ENEMY_SPAWN_RATE_SECONDS = 3;
     private final Frog player = new Frog(this);
     private final List<Enemy> enemies = new ArrayList<>();
     private final Background background = new Background();
@@ -25,6 +27,7 @@ public class GameState implements Drawable {
     private final int bonusPoints = 3;
     private final float bonusPointsInterval = 1;
     private float bonusPointCooldown = 1;
+    private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
 
     private final Map<SkillTrees, Integer> levelPerSkilltree = new EnumMap<>(SkillTrees.class);
     private final List<Skill> frogSkills = new ArrayList<>();
@@ -34,7 +37,6 @@ public class GameState implements Drawable {
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
-        this.enemies.add(new Enemy(1600, 800));
     }
 
     @Override
@@ -62,7 +64,26 @@ public class GameState implements Drawable {
             if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
                 lost = true;
             }
+
+            timeSinceLastEnemySpawnSeconds += deltaInSeconds;
+            if (timeSinceLastEnemySpawnSeconds > ENEMY_SPAWN_RATE_SECONDS) {
+                timeSinceLastEnemySpawnSeconds = 0;
+                spawnEnemy();
+            }
         }
+    }
+
+    private void spawnEnemy() {
+        final int spawnDirection = R.nextInt(360);
+        final Vector2 spawnVectorFromCenter = new Vector2(1100, 0);
+        spawnVectorFromCenter.rotateDeg(spawnDirection);
+        final Vector2 initialDirection = new Vector2(spawnVectorFromCenter);
+        spawnVectorFromCenter.add(new Vector2(Constants.WIDTH / 2f, Constants.HEIGHT / 2f));
+        initialDirection.rotateDeg(180);
+        initialDirection.setLength(1);
+        this.enemies.add(new Enemy(spawnVectorFromCenter.x, spawnVectorFromCenter.y, initialDirection));
+        Gdx.app.log("Spawn Enemy", "direction: " + spawnDirection + "; initialDirection: " + initialDirection);
+
     }
 
     @Override

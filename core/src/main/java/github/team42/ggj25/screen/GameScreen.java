@@ -19,6 +19,10 @@ public class GameScreen extends ScreenAdapter {
     private final Camera camera = new PerspectiveCamera();
     private final FitViewport viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, camera);
 
+    public GameScreen() {
+        batch.enableBlending();
+    }
+
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
