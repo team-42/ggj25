@@ -134,7 +134,7 @@ public class GameState implements Drawable, Disposable {
             p.drawShapes(shapeRenderer, debugRenderingActive);
         }
         scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
-//        if (debugRenderingActive) {
+        //if (debugRenderingActive) {
 //            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 //            shapeRenderer.setColor(Color.RED);
 //            Rectangle box = player.getAccurateHitbox().getBoundingRectangle();
@@ -144,7 +144,7 @@ public class GameState implements Drawable, Disposable {
             //shapeRenderer.polygon(pike.getAccurateHitbox().getVertices());
 //            shapeRenderer.rect(box2.x, box2.y, box2.width, box2.height);
 //            shapeRenderer.end();
-//        }
+        //}
     }
 
     public void addProjectile(Projectile toAdd) {

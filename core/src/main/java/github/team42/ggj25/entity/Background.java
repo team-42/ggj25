@@ -18,6 +18,7 @@ public class Background implements Drawable, Disposable {
     private final Texture m_water_dark;
     private final Texture m_white_puddle;
     private final Texture m_water_lily_ambient;
+    private final Texture m_water_lily_show;
 
 
     public Background() {
@@ -26,12 +27,14 @@ public class Background implements Drawable, Disposable {
         FileHandle water_dark = Gdx.files.internal("water_dark.png");
         FileHandle water_white_puddle = Gdx.files.internal("white_puddle.png");
         FileHandle water_lily_ambient = Gdx.files.internal("water_lily_ambient.png");
+        FileHandle water_lily_shadow = Gdx.files.internal("water_lily_shadow_only.png");
 
         m_blue_background = new Texture(blue_background);
         m_water = new Texture(water);
         m_water_dark = new Texture(water_dark);
         m_white_puddle = new Texture(water_white_puddle);
         m_water_lily_ambient = new Texture(water_lily_ambient);
+        m_water_lily_show = new Texture(water_lily_shadow);
     }
 
     @Override
@@ -49,6 +52,7 @@ public class Background implements Drawable, Disposable {
     public void drawAmbient(SpriteBatch spriteBatch) {
 //        spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_lily_ambient, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+        spriteBatch.draw(m_water_lily_show, 0, 0, Constants.WIDTH, Constants.HEIGHT);
 
     }
 
