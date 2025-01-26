@@ -30,7 +30,8 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(boolean debugRenderingActive) {
         this.sounds = new SoundManager();
         this.debugRenderingActive = debugRenderingActive;
-        this.sounds.background_sound.play(0.6f);
+        long id = this.sounds.background_sound.play(0.6f);
+        this.sounds.background_sound.setLooping(id,true);
         batch.enableBlending();
         gameState = new GameState(viewport, this.sounds);
         Gdx.input.setInputProcessor(new InputAdapter() {

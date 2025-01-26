@@ -75,6 +75,10 @@ public class GameState implements Drawable, Disposable {
 
     }
 
+    public SoundManager getSounds() {
+        return sounds;
+    }
+
     private GameLevel getRandomLevel() {
         int randomLevel = new Random().nextInt(2);
         return switch (randomLevel) {
