@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.FrogueUtil;
+import github.team42.ggj25.gamestate.GameLevel;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -33,9 +34,20 @@ public class Leaf extends AbstractEntity implements Disposable {
     private final ShapeRenderer fboShapeRenderer = new ShapeRenderer();
     private final SpriteBatch fboSpriteBatch = new SpriteBatch();
 
-    public Leaf() {
+    public Leaf(GameLevel level) {
         super(new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT));
-        pixmap = new Pixmap(Gdx.files.internal("water_lily_no_shadow.png"));
+        Pixmap pixmap1;
+        pixmap1 = null;
+        if (level == GameLevel.LEVEL_ONE) {
+            pixmap1 = new Pixmap(Gdx.files.internal("water_lily_no_shadow.png"));
+        }
+        else if (level == GameLevel.LEVEL_TWO) {
+            pixmap1 = new Pixmap(Gdx.files.internal("radioactive_leaf_no_shadow.png"));
+        }
+        else {
+            pixmap1 = new Pixmap(Gdx.files.internal("radioactive_leaf_no_shadow.png"));
+        }
+        pixmap = pixmap1;
         texture = new Texture(pixmap);
 //        texture = new Texture(Gdx.files.internal("water_lily.png"));
         outline = buildLillypadPolygon();

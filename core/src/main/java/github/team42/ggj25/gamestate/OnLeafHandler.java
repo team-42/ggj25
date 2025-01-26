@@ -23,10 +23,14 @@ public class OnLeafHandler {
     private float bonusPointCooldown = 1;
     private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
 
-    public void init() {
+    // level handling
+    private GameLevel currentLevel;
+
+    public void init(GameLevel level) {
         bonusPointCooldown = 1;
         timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
         elapsedTime = 0;
+        currentLevel = level;
     }
 
     public boolean updatePlayPhase(float deltaInSeconds, GameState gs) {
