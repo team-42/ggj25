@@ -17,6 +17,6 @@ public class LongShot extends Skill {
 
     @Override
     public void manipulateProjectile(Projectile projectile) {
-        projectile.setRemainingRange(projectile.getRemainingRange() * 1.25f);
+        projectile.setRemainingRange(projectile.getRemainingRange() * 1.5f);
     }
 }
