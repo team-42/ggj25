@@ -10,12 +10,13 @@ import github.team42.ggj25.skills.SkillTrees;
 import java.util.*;
 
 public class SkillScreenHandler {
+    public static final int DURATION = 2;
     private float elapsedTime; // Zeit, die seit dem Start vergangen ist
     private float duration; // Dauer der Animation (in Sekunden)
 
     private final SkillScreen skillScreen;
     private List<SkillTrees> skillTreesToLevelUp;
-    private final int numberOfSkillChoices = 2;
+    private final int numberOfSkillChoices = DURATION;
     private final EnumSet<SkillTrees> possibleSkillTreesToLevelUp;
 
     public SkillScreenHandler(GameState gs) {
@@ -25,15 +26,15 @@ public class SkillScreenHandler {
         skillTreesToLevelUp = new ArrayList<>();
         randomizeChoosableSkills(gs.getLevelPerSkilltree());
 
-        skillScreen.init(gs.getLevelPerSkilltree().keySet().toArray(new SkillTrees[0]));
+        skillScreen.init();
 
         elapsedTime = 0;
-        duration = 2;
+        duration = DURATION;
     }
 
     public void init(Map<SkillTrees, Integer> levelPerSkilltree) {
         elapsedTime = 0;
-        duration = 2;
+        duration = DURATION;
         skillTreesToLevelUp = new ArrayList<>();
         initNextLevelUp(levelPerSkilltree);
     }
@@ -41,7 +42,7 @@ public class SkillScreenHandler {
     private void initNextLevelUp(Map<SkillTrees, Integer> levelPerSkilltree) {
         skillTreesToLevelUp.clear();
         randomizeChoosableSkills(levelPerSkilltree);
-        skillScreen.init(skillTreesToLevelUp.toArray(new SkillTrees[0]));
+        skillScreen.init();
     }
 
     private void randomizeChoosableSkills(Map<SkillTrees, Integer> levelPerSkilltree) {
@@ -62,12 +63,12 @@ public class SkillScreenHandler {
             gs.addLevelToSkilltree(skillTreesToLevelUp.get(0));
             buttonpressed = true;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S) && skillTreesToLevelUp.size() >= 2) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S) && skillTreesToLevelUp.size() >= DURATION) {
             gs.addLevelToSkilltree(skillTreesToLevelUp.get(1));
             buttonpressed = true;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.D) && skillTreesToLevelUp.size() >= 3) {
-            gs.addLevelToSkilltree(skillTreesToLevelUp.get(2));
+            gs.addLevelToSkilltree(skillTreesToLevelUp.get(DURATION));
             buttonpressed = true;
         }
 
@@ -80,7 +81,7 @@ public class SkillScreenHandler {
         float progress = elapsedTime / duration;
         if (progress > 1f) {
             gs.setCurrentPhase(GamePhase.SKILLSCREEN_TO_LEAF);
-            gs.setLeaf(new Leaf(gs.getCurrentLevel()));
+            gs.setLeaf(new Leaf(gs.getViewport(), gs.getCurrentLevel()));
         }
         return progress > 1f;
     }
