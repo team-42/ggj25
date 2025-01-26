@@ -98,7 +98,7 @@ public class OnLeafHandler {
     public void drawCurrentGameField(SpriteBatch spriteBatch, GameState gs) {
         gs.getBackground().drawSprites(spriteBatch);
         gs.getEnemies().stream().filter(enemy -> !enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
-//        gs.getBackground().drawAmbient(spriteBatch);
+        gs.getBackground().drawAmbient(spriteBatch);
         gs.getLeaf().drawSprites(spriteBatch);
         gs.getEnemies().stream().filter(enemy -> enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
         gs.getPike().drawSprites(spriteBatch);

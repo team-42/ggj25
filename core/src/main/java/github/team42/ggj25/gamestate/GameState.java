@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
-import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.buzzer.BuzzerState;
 import github.team42.ggj25.buzzer.WebSocketServerBuzzer;
@@ -13,20 +12,13 @@ import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
 import github.team42.ggj25.skills.SkillTrees;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
-import static github.team42.ggj25.gamestate.GamePhase.ON_LEAF;
-import static github.team42.ggj25.gamestate.GamePhase.SKILLSCREEN_TO_LEAF;
-import static github.team42.ggj25.gamestate.GameLevel.*;
+import java.util.*;
 
 public class GameState implements Drawable, Disposable {
     private final Frog player = new Frog(this);
     private final List<Enemy> enemies = new ArrayList<>();
 
-    private GameLevel currentLevel = LEVEL_TWO;
+    private GameLevel currentLevel = GameLevel.LEVEL_ONE;
     private final Background background = new Background(currentLevel);
     private Leaf leaf = new Leaf(currentLevel);
 
@@ -47,8 +39,7 @@ public class GameState implements Drawable, Disposable {
     private final List<Skill> projectileSkills = new ArrayList<>();
 
     // Transition Handling
-    private GamePhase currentPhase = ON_LEAF;
-
+    private GamePhase currentPhase = GamePhase.ON_LEAF;
     private final OnLeafHandler onLeafHandler = new OnLeafHandler();
     private final LeafToSkillScreenHandler leafToSkillHandler = new LeafToSkillScreenHandler();
     private final SkillScreenHandler skillScreenHandler;
@@ -66,6 +57,14 @@ public class GameState implements Drawable, Disposable {
         this.scoreBoard = new ScoreBoard(new ArrayList<>());
     }
 
+    private GameLevel getRandomLevel() {
+        int randomLevel = new Random().nextInt(2);
+        return switch (randomLevel) {
+            case 0 -> GameLevel.LEVEL_ONE;
+            case 1 -> GameLevel.LEVEL_TWO;
+            default -> GameLevel.LEVEL_ONE;
+        };
+    }
 
     public void prepareGameStateForOnLeaf() {
         Gdx.app.log("Prepare", "Prepare for new On Leaf Phase.");
@@ -81,12 +80,11 @@ public class GameState implements Drawable, Disposable {
         skillScreenHandler.init(levelPerSkilltree);
         skillScreenToLeafHandler.init();
 
-        pike.setPosition((float) Math.random() * Constants.WIDTH, (float) Math.random() * Constants.HEIGHT);
+        pike = new Pike(this);
     }
 
     @Override
     public void update(float deltaInSeconds) {
-        System.out.println("skillmap: " + levelPerSkilltree);
         if (!lost) {
             switch (currentPhase) {
                 case ON_LEAF:
@@ -97,13 +95,14 @@ public class GameState implements Drawable, Disposable {
                     break;
                 case SKILLSCREEN:
                     if (skillScreenHandler.updateSkillScreen(deltaInSeconds, this)) {
-                        currentPhase = SKILLSCREEN_TO_LEAF;
+                        setLeaf(new Leaf(getRandomLevel()));
+                        currentPhase = GamePhase.SKILLSCREEN_TO_LEAF;
                     }
                     break;
                 case SKILLSCREEN_TO_LEAF:
                     skillScreenToLeafHandler.updateSkillToLeaf(deltaInSeconds, this);
 
-                    if (currentPhase.equals(ON_LEAF)) prepareGameStateForOnLeaf();
+                    if (currentPhase.equals(GamePhase.ON_LEAF)) prepareGameStateForOnLeaf();
                     break;
             }
         }

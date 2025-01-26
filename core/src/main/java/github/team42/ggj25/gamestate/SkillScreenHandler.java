@@ -58,31 +58,31 @@ public class SkillScreenHandler {
 
     public boolean updateSkillScreen(float deltaInSeconds, GameState gs) {
         boolean buttonpressed = false;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A) && skillTreesToLevelUp.size() >= 1) {
             gs.addLevelToSkilltree(skillTreesToLevelUp.get(0));
             buttonpressed = true;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S) && skillTreesToLevelUp.size() >= 2) {
             gs.addLevelToSkilltree(skillTreesToLevelUp.get(1));
             buttonpressed = true;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D) && skillTreesToLevelUp.size() >= 3) {
             gs.addLevelToSkilltree(skillTreesToLevelUp.get(2));
             buttonpressed = true;
         }
 
         skillScreen.update(deltaInSeconds);
-        updatePhaseTransition(deltaInSeconds, gs);
-        return buttonpressed;
+        return updatePhaseTransition(deltaInSeconds, gs) || buttonpressed;
     }
 
-    private void updatePhaseTransition(float deltaInSeconds, GameState gs) {
+    private boolean updatePhaseTransition(float deltaInSeconds, GameState gs) {
         elapsedTime += deltaInSeconds;
         float progress = elapsedTime / duration;
         if (progress > 1f) {
             gs.setCurrentPhase(GamePhase.SKILLSCREEN_TO_LEAF);
             gs.setLeaf(new Leaf(gs.getCurrentLevel()));
         }
+        return progress > 1f;
     }
 
     public void drawSkillScreen(SpriteBatch spriteBatch, GameState gs) {
