@@ -23,10 +23,14 @@ public class OnLeafHandler {
     private float bonusPointCooldown = 1;
     private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
 
-    public void init() {
+    // level handling
+    private GameLevel currentLevel;
+
+    public void init(GameLevel level) {
         bonusPointCooldown = 1;
         timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
         elapsedTime = 0;
+        currentLevel = level;
     }
 
     public boolean updateOnLeafPhase(float deltaInSeconds, GameState gs) {
@@ -69,7 +73,7 @@ public class OnLeafHandler {
                 Gdx.app.log("Leaf", "Player X: " + gs.getPlayer().getX() + " Y: " + gs.getPlayer().getY());
                 return true;
             }
-            if (gs.getPlayer().overlapsWith(gs.getPike()) && !gs.getPike().getIsPreparingToAttack()) {
+            if (!gs.getPike().getIsPreparingToAttack() && gs.getPlayer().overlapsWith(gs.getPike())) {
                 Gdx.app.log("Pike", "You got Piked, you are Dead!");
                 return true;
             }

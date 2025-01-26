@@ -20,12 +20,16 @@ import java.util.Map;
 
 import static github.team42.ggj25.gamestate.GamePhase.ON_LEAF;
 import static github.team42.ggj25.gamestate.GamePhase.SKILLSCREEN_TO_LEAF;
+import static github.team42.ggj25.gamestate.GameLevel.*;
 
 public class GameState implements Drawable, Disposable {
     private final Frog player = new Frog(this);
     private final List<Enemy> enemies = new ArrayList<>();
-    private final Background background = new Background();
-    private Leaf leaf = new Leaf();
+
+    private GameLevel currentLevel = LEVEL_TWO;
+    private final Background background = new Background(currentLevel);
+    private Leaf leaf = new Leaf(currentLevel);
+
     private Pike pike = new Pike(this);
     private final ScoreBoard scoreBoard;
     private final DeathScreen deathScreen = new DeathScreen();
@@ -44,6 +48,7 @@ public class GameState implements Drawable, Disposable {
 
     // Transition Handling
     private GamePhase currentPhase = ON_LEAF;
+
     private final OnLeafHandler onLeafHandler = new OnLeafHandler();
     private final LeafToSkillScreenHandler leafToSkillHandler = new LeafToSkillScreenHandler();
     private final SkillScreenHandler skillScreenHandler;
@@ -61,6 +66,7 @@ public class GameState implements Drawable, Disposable {
         this.scoreBoard = new ScoreBoard(new ArrayList<>());
     }
 
+
     public void prepareGameStateForOnLeaf() {
         Gdx.app.log("Prepare", "Prepare for new On Leaf Phase.");
         enemies.clear();
@@ -70,7 +76,7 @@ public class GameState implements Drawable, Disposable {
         applySkill(skillInLastTransition);
         skillInLastTransition = null;
 
-        onLeafHandler.init();
+        onLeafHandler.init(currentLevel);
         leafToSkillHandler.init();
         skillScreenHandler.init(levelPerSkilltree);
         skillScreenToLeafHandler.init();
@@ -189,6 +195,14 @@ public class GameState implements Drawable, Disposable {
 
     public Frog getPlayer() {
         return player;
+    }
+
+    public GameLevel getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public void setCurrentLevel(GameLevel currentLevel) {
+        this.currentLevel = currentLevel;
     }
 
     public ScoreBoard getScoreBoard() {

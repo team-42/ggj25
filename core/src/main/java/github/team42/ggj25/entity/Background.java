@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
+import github.team42.ggj25.gamestate.GameLevel;
 
 /**
  * The game background, i.e. water and the pike.
@@ -18,36 +19,46 @@ public class Background implements Drawable, Disposable {
     private final Texture m_water_dark;
     private final Texture m_white_puddle;
     private final Texture m_water_lily_ambient;
-    private final Texture m_water_lily_show;
+    private final Texture m_water_lily_shadow;
 
 
-    public Background() {
+    public Background(GameLevel currentLevel) {
         FileHandle blue_background = Gdx.files.internal("blue_background.png");
         FileHandle water = Gdx.files.internal("water.png");
-        FileHandle water_dark = Gdx.files.internal("water_dark.png");
         FileHandle water_white_puddle = Gdx.files.internal("white_puddle.png");
         FileHandle water_lily_ambient = Gdx.files.internal("water_lily_ambient.png");
         FileHandle water_lily_shadow = Gdx.files.internal("water_lily_shadow_only.png");
+        if (currentLevel == GameLevel.LEVEL_ONE) {
+            FileHandle water_dark = Gdx.files.internal("water_dark.png");
+            m_water_dark = new Texture(water_dark);
+        }
+        else if (currentLevel == GameLevel.LEVEL_TWO) {
+            FileHandle water_dark = Gdx.files.internal("oil_traces_transparent.png");
+            m_water_dark = new Texture(water_dark);
+        }
+        else {
+            m_water_dark = null;
+        }
 
         m_blue_background = new Texture(blue_background);
         m_water = new Texture(water);
-        m_water_dark = new Texture(water_dark);
         m_white_puddle = new Texture(water_white_puddle);
         m_water_lily_ambient = new Texture(water_lily_ambient);
-        m_water_lily_show = new Texture(water_lily_shadow);
+        m_water_lily_shadow = new Texture(water_lily_shadow);
     }
 
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
         // store the worldWidth and worldHeight as local variables for brevity
         spriteBatch.draw(m_blue_background, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-
-        spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-        spriteBatch.draw(m_white_puddle, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+        spriteBatch.draw(m_white_puddle, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+        spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+
+    }
 
         spriteBatch.draw(m_water_lily_ambient, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-        spriteBatch.draw(m_water_lily_show, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+        spriteBatch.draw(m_water_lily_shadow, 0, 0, Constants.WIDTH, Constants.HEIGHT);
 
     }
 
