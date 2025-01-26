@@ -3,7 +3,9 @@ package github.team42.ggj25.gamestate;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.buzzer.BuzzerState;
@@ -23,6 +25,8 @@ public class GameState implements Drawable, Disposable {
     private Leaf leaf = new Leaf(currentLevel);
 
     private Pike pike = new Pike(this);
+    private TextureAtlas pikeBiteAtlas = new TextureAtlas(Gdx.files.internal("pike/animation_pikebite.txt"));
+    private AnimatedPike animatedPike = new AnimatedPike(pikeBiteAtlas, pike.getBoundingBox());
     private final ScoreBoard scoreBoard;
     private final DeathScreen deathScreen = new DeathScreen();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
@@ -48,6 +52,9 @@ public class GameState implements Drawable, Disposable {
     private final SkillScreenHandler skillScreenHandler;
     private final SkillScreenToLeafHandler skillScreenToLeafHandler = new SkillScreenToLeafHandler();
 
+
+
+
     public GameState(Camera camera) {
         this.buzzerState = new BuzzerState();
         this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337, this.buzzerState);
@@ -58,6 +65,7 @@ public class GameState implements Drawable, Disposable {
         }
         skillScreenHandler = new SkillScreenHandler(this);
         this.scoreBoard = new ScoreBoard(new ArrayList<>());
+
     }
 
     private GameLevel getRandomLevel() {
@@ -84,12 +92,19 @@ public class GameState implements Drawable, Disposable {
         skillScreenToLeafHandler.init();
 
         pike = new Pike(this);
+        animatedPike = new AnimatedPike(pikeBiteAtlas, pike.getBoundingBox());
     }
 
     @Override
     public void update(float deltaInSeconds) {
         if (lost){
             pauseTime += deltaInSeconds;
+            //Rectangle bbox = pike.getBoundingBox();
+            //bbox.setHeight(1000);
+            //bbox.setWidth(1000);
+            //animatedPike.setBoundingBox(bbox);
+            animatedPike.update(deltaInSeconds);
+
             if (pauseTime >= maxPauseTime) { // Check if 2 seconds have passed
                 this.is_paused = false;
                 pauseTime = 0; // Reset the timer
@@ -282,6 +297,14 @@ public class GameState implements Drawable, Disposable {
     public void addLevelToSkilltree(SkillTrees skilltrees) {
         skillInLastTransition = skilltrees.getSkillByLevel(levelPerSkilltree.get(skilltrees));
         levelPerSkilltree.put(skilltrees, levelPerSkilltree.get(skilltrees) + 1);
+    }
+
+    public AnimatedPike getAnimatedPike() {
+        return animatedPike;
+    }
+
+    public void setAnimatedPike(AnimatedPike animatedPike) {
+        this.animatedPike = animatedPike;
     }
 
     @Override
