@@ -9,6 +9,8 @@ import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.skills.SkillTrees;
 
+import java.util.List;
+
 public class SkillScreen implements Drawable, Disposable {
 
     private final Texture skillScreenTexture;
@@ -29,13 +31,12 @@ public class SkillScreen implements Drawable, Disposable {
     public void update(float deltaInSeconds) {
     }
 
-    @Override
-    public void drawSprites(SpriteBatch spriteBatch) {
+    public void drawSprites(SpriteBatch spriteBatch, List<SkillTrees> skillTrees) {
         spriteBatch.draw(skillScreenTexture, 0, 0, Constants.WIDTH, Constants.HEIGHT);
 
-        for (int i = 0; i < skillTrees.length; i++) {
+        for (int i = 0; i < skillTrees.size(); i++) {
             spriteBatch.draw(
-                skillTrees[i].getIconTexture(),
+                skillTrees.get(i).getIconTexture(),
                 sideOffset + i * 420,
                 (float) (Constants.HEIGHT) / 2 - 200,
                 420,
@@ -46,5 +47,10 @@ public class SkillScreen implements Drawable, Disposable {
     @Override
     public void dispose() {
         skillScreenTexture.dispose();
+    }
+
+    @Override
+    public void drawSprites(SpriteBatch spriteBatch) {
+
     }
 }

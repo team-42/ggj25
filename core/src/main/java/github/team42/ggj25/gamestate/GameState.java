@@ -46,7 +46,7 @@ public class GameState implements Drawable, Disposable {
     private GamePhase currentPhase = ON_LEAF;
     private final OnLeafHandler onLeafHandler = new OnLeafHandler();
     private final LeafToSkillScreenHandler leafToSkillHandler = new LeafToSkillScreenHandler();
-    private final SkillScreenHandler skillScreenHandler = new SkillScreenHandler();
+    private final SkillScreenHandler skillScreenHandler;
     private final SkillScreenToLeafHandler skillScreenToLeafHandler = new SkillScreenToLeafHandler();
 
     public GameState(Camera camera) {
@@ -57,6 +57,7 @@ public class GameState implements Drawable, Disposable {
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
+        skillScreenHandler = new SkillScreenHandler(this);
         this.scoreBoard = new ScoreBoard(new ArrayList<>());
     }
 

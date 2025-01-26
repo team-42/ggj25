@@ -15,15 +15,17 @@ public class SkillScreenHandler {
 
     private final SkillScreen skillScreen;
     private final List<SkillTrees> skillTreesToLevelUp;
-    private final int numberOfSkillChoices = 3;
-    private final EnumSet<SkillTrees> possibleSkillTreesToLevelUp = EnumSet.allOf(SkillTrees.class);
+    private final int numberOfSkillChoices = 2;
+    private final EnumSet<SkillTrees> possibleSkillTreesToLevelUp;
 
-    public SkillScreenHandler() {
+    public SkillScreenHandler(GameState gs) {
         skillScreen = new SkillScreen();
 
+        possibleSkillTreesToLevelUp = EnumSet.allOf(SkillTrees.class);
         skillTreesToLevelUp = new ArrayList<>();
-        skillTreesToLevelUp.add(SkillTrees.values()[new Random().nextInt(possibleSkillTreesToLevelUp.size())]);
-        skillTreesToLevelUp.add(SkillTrees.values()[new Random().nextInt(possibleSkillTreesToLevelUp.size())]);
+        randomizeChoosableSkills(gs.getLevelPerSkilltree());
+
+        skillScreen.init(gs.getLevelPerSkilltree().keySet().toArray(new SkillTrees[0]));
 
         elapsedTime = 0;
         duration = 2;
@@ -36,15 +38,21 @@ public class SkillScreenHandler {
     }
 
     private void initNextLevelUp(Map<SkillTrees, Integer> levelPerSkilltree) {
+        skillTreesToLevelUp.clear();
+        randomizeChoosableSkills(levelPerSkilltree);
+        skillScreen.init(skillTreesToLevelUp.toArray(new SkillTrees[0]));
+    }
+
+    private void randomizeChoosableSkills(Map<SkillTrees, Integer> levelPerSkilltree) {
         for (int i = 1; i <= numberOfSkillChoices; i++) {
             SkillTrees randomSkillTrees = SkillTrees.values()[new Random().nextInt(possibleSkillTreesToLevelUp.size())];
             if (levelPerSkilltree.get(randomSkillTrees) >= randomSkillTrees.getMaxSkillLevel()) {
                 possibleSkillTreesToLevelUp.remove(randomSkillTrees);
             } else {
+                Gdx.app.log("SkillAdd", "Added Skill: " + randomSkillTrees.name());
                 skillTreesToLevelUp.add(randomSkillTrees);
             }
         }
-        skillScreen.init(skillTreesToLevelUp.toArray(new SkillTrees[0]));
     }
 
     public void updateSkillScreen(float deltaInSeconds, GameState gs) {
@@ -74,6 +82,6 @@ public class SkillScreenHandler {
     public void drawSkillScreen(SpriteBatch spriteBatch, GameState gs) {
         gs.getBackground().drawSprites(spriteBatch);
         gs.getScoreBoard().drawSprites(spriteBatch);
-        skillScreen.drawSprites(spriteBatch);
+        skillScreen.drawSprites(spriteBatch, skillTreesToLevelUp);
     }
 }
