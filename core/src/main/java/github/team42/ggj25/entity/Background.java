@@ -31,12 +31,10 @@ public class Background implements Drawable, Disposable {
         if (currentLevel == GameLevel.LEVEL_ONE) {
             FileHandle water_dark = Gdx.files.internal("water_dark.png");
             m_water_dark = new Texture(water_dark);
-        }
-        else if (currentLevel == GameLevel.LEVEL_TWO) {
+        } else if (currentLevel == GameLevel.LEVEL_TWO) {
             FileHandle water_dark = Gdx.files.internal("oil_traces_transparent.png");
             m_water_dark = new Texture(water_dark);
-        }
-        else {
+        } else {
             m_water_dark = null;
         }
 
@@ -58,12 +56,10 @@ public class Background implements Drawable, Disposable {
     }
 
     public void drawAmbient(SpriteBatch spriteBatch) {
-//        spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_lily_ambient, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_lily_shadow, 0, 0, Constants.WIDTH, Constants.HEIGHT);
 
     }
-
 
     @Override
     public void dispose() {

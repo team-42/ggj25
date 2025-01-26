@@ -33,7 +33,7 @@ public class OnLeafHandler {
         currentLevel = level;
     }
 
-    public boolean updatePlayPhase(float deltaInSeconds, GameState gs) {
+    public boolean updateOnLeafPhase(float deltaInSeconds, GameState gs) {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || gs.getBuzzerState().triggeredSinceLastCheck()) {
             gs.setCurrentPhase(GamePhase.LEAF_TO_SKILLSCREEN);
             return false;
