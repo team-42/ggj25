@@ -3,16 +3,12 @@ package github.team42.ggj25.gamestate;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
-import github.team42.ggj25.FrogueUtil;
 import github.team42.ggj25.buzzer.BuzzerState;
 import github.team42.ggj25.buzzer.WebSocketServerBuzzer;
 import github.team42.ggj25.entity.*;
@@ -37,7 +33,6 @@ public class GameState implements Drawable, Disposable {
     private final KillScreen killScreen = new KillScreen();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
     private final Camera camera;
-    private final Polygon backgroundPolygon;
     boolean lost = false;
 
     private final BuzzerState buzzerState;
@@ -61,11 +56,6 @@ public class GameState implements Drawable, Disposable {
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
-        backgroundPolygon = buildLillypadPolygon();
-    }
-
-    public boolean frogInsideLeaf(float x, float y) {
-        return backgroundPolygon.contains(x, y);
     }
 
     @Override
@@ -157,7 +147,7 @@ public class GameState implements Drawable, Disposable {
             spawnEnemy();
         }
 
-        if (!frogInsideLeaf(player.getX(), player.getY())) {
+        if (!leaf.contains(player.getX(), player.getY())) {
             lost = true;
         }
 
@@ -228,30 +218,23 @@ public class GameState implements Drawable, Disposable {
             p.drawShapes(shapeRenderer, debugRenderingActive);
         }
         scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
-        if (debugRenderingActive) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.polygon(backgroundPolygon.getVertices()); // Draw the polygon outline
+//        if (debugRenderingActive) {
+//            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//            shapeRenderer.setColor(Color.RED);
 //            Rectangle box = player.getAccurateHitbox().getBoundingRectangle();
 //            shapeRenderer.rect(box.x, box.y, box.width, box.height);
             //shapeRenderer.polygon(player.getAccurateHitbox().getVertices());
 //            Rectangle box2 = pike.getAccurateHitbox().getBoundingRectangle();
             //shapeRenderer.polygon(pike.getAccurateHitbox().getVertices());
 //            shapeRenderer.rect(box2.x, box2.y, box2.width, box2.height);
-            shapeRenderer.end();
-        }
-        scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
+//            shapeRenderer.end();
+//        }
     }
 
     private void drawToTransition(SpriteBatch spriteBatch) {
         background.drawAmbient(spriteBatch);
         scoreBoard.drawSprites(spriteBatch);
         player.drawSprites(spriteBatch);
-    }
-
-    private Polygon buildLillypadPolygon() {
-        Polygon polygon = FrogueUtil.getEdgePolygon(leaf.getPixmap());
-        return polygon;
     }
 
     public void addProjectile(Projectile toAdd) {

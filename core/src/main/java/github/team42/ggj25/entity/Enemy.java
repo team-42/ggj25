@@ -56,10 +56,12 @@ public class Enemy extends AbstractEntity {
     private static final float BASE_SPEED = 50;
     private static final float TURN_RATE_DEGREES_PER_SECOND = 20;
     private static final float ORIENTATION_CHANGE_COOLDOWN_SECONDS = 1f;
+    private static final float BITE_DURATION_SECONDS = 3f;
     private float speed = BASE_SPEED;
     private final Vector2 direction;
     private Orientation orientation = Orientation.StraightAhead;
     private float timeSinceLastOrientationChangeSeconds = 0;
+    private float chewTime = 0;
     private Mode mode = Mode.Moving;
 
     public Enemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection) {
@@ -82,15 +84,16 @@ public class Enemy extends AbstractEntity {
             case Floating -> {
             }
             case Eating -> {
-                if (!leaf.getAccurateHitbox().contains(head.x, head.y)) {
+                if (!leaf.contains(head.x, head.y)) {
                     mode = Mode.Moving;
                 } else {
                     eat(deltaInSeconds);
                 }
             }
             case Moving -> {
-                if (leaf.getAccurateHitbox().contains(head.x, head.y)) {
+                if (leaf.contains(head.x, head.y)) {
                     mode = Mode.Eating;
+                    chewTime = 0;
                 } else {
                     move(deltaInSeconds);
                 }
@@ -100,7 +103,11 @@ public class Enemy extends AbstractEntity {
     }
 
     private void eat(float deltaInSeconds) {
-
+        chewTime += deltaInSeconds;
+        if(chewTime > BITE_DURATION_SECONDS){
+            leaf.bite(getHead());
+            chewTime = 0;
+        }
     }
 
     private void move(float deltaInSeconds) {
