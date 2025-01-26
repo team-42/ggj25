@@ -77,6 +77,7 @@ public class OnLeafHandler {
             if (!gs.getPike().getIsPreparingToAttack() && gs.getPlayer().overlapsWith(gs.getPike())) {
                 Gdx.app.log("Pike", "You got Piked, you are Dead!");
                 gs.is_paused = true;
+                // gs.getPike(). change to animated
                 return true;
             }
         }
@@ -103,7 +104,13 @@ public class OnLeafHandler {
         gs.getBackground().drawAmbient(spriteBatch);
         gs.getLeaf().drawSprites(spriteBatch);
         gs.getEnemies().stream().filter(enemy -> enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
-        gs.getPike().drawSprites(spriteBatch);
+        if (!gs.is_paused) {
+            gs.getPike().drawSprites(spriteBatch);
+        }
+        else {
+            // draw animation pike
+            gs.getPike().drawSprites(spriteBatch);
+            }
         gs.getPlayer().drawSprites(spriteBatch);
         for (Projectile p : gs.getActiveProjectiles()) {
             p.drawSprites(spriteBatch);
