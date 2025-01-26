@@ -76,6 +76,8 @@ public class SkillScreenToLeafHandler {
     }
 
     public void drawSkillToLeaf(SpriteBatch spriteBatch, GameState gs) {
+        gs.getBackground().drawSprites(spriteBatch);
+        gs.getLeaf().drawSprites(spriteBatch);
         gs.getBackground().drawAmbient(spriteBatch);
         gs.getScoreBoard().drawSprites(spriteBatch);
         gs.getPlayer().drawSprites(spriteBatch);

@@ -118,6 +118,7 @@ public class GameState implements Drawable, Disposable {
                     leafToSkillHandler.drawLeafToSkill(spriteBatch, this);
                     break;
                 case SKILLSCREEN:
+                    skillScreenHandler.drawSkillScreen(spriteBatch, this);
                     break;
                 case SKILLSCREEN_TO_LEAF:
                     skillScreenToLeafHandler.drawSkillToLeaf(spriteBatch, this);
