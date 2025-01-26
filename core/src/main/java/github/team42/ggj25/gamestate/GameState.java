@@ -12,7 +12,6 @@ import github.team42.ggj25.buzzer.WebSocketServerBuzzer;
 import github.team42.ggj25.entity.*;
 import github.team42.ggj25.skills.Skill;
 import github.team42.ggj25.skills.SkillTrees;
-import github.team42.ggj25.skills.Skilltree;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static github.team42.ggj25.gamestate.GamePhase.ON_LEAF;
+import static github.team42.ggj25.gamestate.GamePhase.SKILLSCREEN_TO_LEAF;
 
 public class GameState implements Drawable, Disposable {
     private final Frog player = new Frog(this);
@@ -80,6 +80,7 @@ public class GameState implements Drawable, Disposable {
 
     @Override
     public void update(float deltaInSeconds) {
+        System.out.println("skillmap: " + levelPerSkilltree);
         if (!lost) {
             switch (currentPhase) {
                 case ON_LEAF:
@@ -89,7 +90,9 @@ public class GameState implements Drawable, Disposable {
                     leafToSkillHandler.updateLeafToSkillScreen(deltaInSeconds, this);
                     break;
                 case SKILLSCREEN:
-                    skillScreenHandler.updateSkillScreen(deltaInSeconds, this);
+                    if (skillScreenHandler.updateSkillScreen(deltaInSeconds, this)) {
+                        currentPhase = SKILLSCREEN_TO_LEAF;
+                    }
                     break;
                 case SKILLSCREEN_TO_LEAF:
                     skillScreenToLeafHandler.updateSkillToLeaf(deltaInSeconds, this);
@@ -236,9 +239,9 @@ public class GameState implements Drawable, Disposable {
         return levelPerSkilltree;
     }
 
-    public void addLevelToSkilltree(Skilltree skilltree) {
-        skillInLastTransition = skilltree.getSkill();
-//        levelPerSkilltree.put(SkillTrees.BUBBLE_CONTROL, levelPerSkilltree.get());
+    public void addLevelToSkilltree(SkillTrees skilltrees) {
+        skillInLastTransition = skilltrees.getSkillByLevel(levelPerSkilltree.get(skilltrees));
+        levelPerSkilltree.put(skilltrees, levelPerSkilltree.get(skilltrees) + 1);
     }
 
     @Override

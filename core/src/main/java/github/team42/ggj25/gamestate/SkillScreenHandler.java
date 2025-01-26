@@ -14,7 +14,7 @@ public class SkillScreenHandler {
     private float duration; // Dauer der Animation (in Sekunden)
 
     private final SkillScreen skillScreen;
-    private final List<SkillTrees> skillTreesToLevelUp;
+    private List<SkillTrees> skillTreesToLevelUp;
     private final int numberOfSkillChoices = 2;
     private final EnumSet<SkillTrees> possibleSkillTreesToLevelUp;
 
@@ -34,6 +34,7 @@ public class SkillScreenHandler {
     public void init(Map<SkillTrees, Integer> levelPerSkilltree) {
         elapsedTime = 0;
         duration = 2;
+        skillTreesToLevelUp = new ArrayList<>();
         initNextLevelUp(levelPerSkilltree);
     }
 
@@ -55,19 +56,24 @@ public class SkillScreenHandler {
         }
     }
 
-    public void updateSkillScreen(float deltaInSeconds, GameState gs) {
+    public boolean updateSkillScreen(float deltaInSeconds, GameState gs) {
+        boolean buttonpressed = false;
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-//            gs.setSkillInLastTransition() = skillTreesToLevelUp.get(0);
+            gs.addLevelToSkilltree(skillTreesToLevelUp.get(0));
+            buttonpressed = true;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            skillTreesToLevelUp.get(1);
+            gs.addLevelToSkilltree(skillTreesToLevelUp.get(1));
+            buttonpressed = true;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            skillTreesToLevelUp.get(2);
+            gs.addLevelToSkilltree(skillTreesToLevelUp.get(2));
+            buttonpressed = true;
         }
 
         skillScreen.update(deltaInSeconds);
         updatePhaseTransition(deltaInSeconds, gs);
+        return buttonpressed;
     }
 
     private void updatePhaseTransition(float deltaInSeconds, GameState gs) {
