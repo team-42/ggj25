@@ -47,6 +47,7 @@ public class OnLeafHandler {
         gs.getPlayer().update(deltaInSeconds);
         for (Projectile p : gs.getActiveProjectiles()) {
             p.update(deltaInSeconds);
+            p.checkCollisionWithEnemy(gs.getEnemies());
         }
         gs.getActiveProjectiles().removeIf(p -> !p.isActive());
 

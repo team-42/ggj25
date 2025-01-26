@@ -12,8 +12,8 @@ public class PrecisionBurst extends Skill {
 
     @Override
     public void manipulateProjectile(Projectile projectile) {
-        projectile.setSpeed(projectile.getSpeed() * 1.1f);
-        projectile.setRemainingRange(projectile.getRemainingRange() * 1.1f);
-        projectile.setDamage(projectile.getDamage() * 1.1f);
+        projectile.setSpeed(projectile.getSpeed() * 1.2f);
+        projectile.setRemainingRange(projectile.getRemainingRange() * 1.2f);
+        projectile.setDamage(projectile.getDamage() * 1.2f);
     }
 }

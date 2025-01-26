@@ -17,6 +17,6 @@ public class SwiftProjectile extends Skill {
 
     @Override
     public void manipulateProjectile(Projectile projectile) {
-        projectile.setSpeed(projectile.getSpeed() * 1.2f);
+        projectile.setSpeed(projectile.getSpeed() * 1.4f);
     }
 }
