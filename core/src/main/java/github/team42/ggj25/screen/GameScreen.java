@@ -50,12 +50,12 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
         batch.draw(image, 140, 210);
         batch.end();
-        gameState.update(delta);
         batch.begin();
         gameState.drawSprites(batch);
         batch.end();
         shapeRenderer.setProjectionMatrix(camera.combined);
         gameState.drawShapes(shapeRenderer, debugRenderingActive);
+        gameState.update(delta);
     }
 
     @Override

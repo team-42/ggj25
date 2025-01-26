@@ -73,7 +73,7 @@ public class OnLeafHandler {
                 Gdx.app.log("Leaf", "Player X: " + gs.getPlayer().getX() + " Y: " + gs.getPlayer().getY());
                 return true;
             }
-            if (gs.getPlayer().overlapsWith(gs.getPike()) && !gs.getPike().getIsPreparingToAttack()) {
+            if (!gs.getPike().getIsPreparingToAttack() && gs.getPlayer().overlapsWith(gs.getPike())) {
                 Gdx.app.log("Pike", "You got Piked, you are Dead!");
                 return true;
             }
