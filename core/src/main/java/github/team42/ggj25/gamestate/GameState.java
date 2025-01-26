@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import github.team42.ggj25.Drawable;
+import github.team42.ggj25.FrogueUtil;
 import github.team42.ggj25.buzzer.BuzzerState;
 import github.team42.ggj25.buzzer.WebSocketServerBuzzer;
 import github.team42.ggj25.entity.*;
@@ -103,10 +104,9 @@ public class GameState implements Drawable, Disposable {
     public void update(float deltaInSeconds) {
         if (lost) {
             pauseTime += deltaInSeconds;
-            //Rectangle bbox = pike.getBoundingBox();
-            //bbox.setHeight(1000);
-            //bbox.setWidth(1000);
-            //animatedPike.setBoundingBox(bbox);
+
+            Rectangle bbox = FrogueUtil.getBoundingBoxForCenter(pike.getX(), pike.getY(), 600, 600);
+            animatedPike.setBoundingBox(bbox);
             animatedPike.update(deltaInSeconds);
 
             if (pauseTime >= maxPauseTime) { // Check if 2 seconds have passed
