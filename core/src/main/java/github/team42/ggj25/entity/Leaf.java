@@ -1,19 +1,14 @@
 package github.team42.ggj25.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.ScreenUtils;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.FrogueUtil;
 
@@ -30,6 +25,8 @@ public class Leaf extends AbstractEntity implements Disposable {
     private final Pixmap pixmap;
     private final Collection<Circle> bites = new ConcurrentLinkedDeque<>();
     private final FrameBuffer maskBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Constants.WIDTH, Constants.HEIGHT, true);
+    private final ShapeRenderer fboShapeRenderer = new ShapeRenderer();
+    private final SpriteBatch fboSpriteBatch = new SpriteBatch();
 
     public Leaf() {
         super(new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT));
@@ -47,31 +44,31 @@ public class Leaf extends AbstractEntity implements Disposable {
     public void drawSprites(SpriteBatch spriteBatch) {
         spriteBatch.end();
         maskBuffer.begin();
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
         /* Disable RGB color writing, enable alpha writing to the frame buffer. */
         Gdx.gl.glColorMask(false, false, false, true);
         /* Change the blending function for our alpha map. */
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(0,0, Constants.WIDTH, Constants.HEIGHT);
-        shapeRenderer.end();
+        fboShapeRenderer.setColor(Color.WHITE);
+        fboShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        fboShapeRenderer.rect(0,0, Constants.WIDTH, Constants.HEIGHT);
+        fboShapeRenderer.end();
 
         /* This blending function makes it so we subtract instead of adding to the alpha map. */
-        shapeRenderer.setColor(Color.CLEAR);
+        fboShapeRenderer.setColor(Color.CLEAR);
         for (Circle c : bites) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.circle(c.x, c.y, c.radius);
-            shapeRenderer.end();
+            fboShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            fboShapeRenderer.circle(c.x, c.y, c.radius);
+            fboShapeRenderer.end();
         }
         /* Now that the buffer has our alpha, we simply draw the sprite with the mask applied. */
         Gdx.gl.glColorMask(true, true, true, true);
         /* Change the blending function so the rendered pixels alpha blend with our alpha map. */
-        spriteBatch.setBlendFunction(GL20.GL_DST_ALPHA, GL20.GL_ONE_MINUS_DST_ALPHA);
+        fboSpriteBatch.setBlendFunction(GL20.GL_DST_ALPHA, GL20.GL_ONE_MINUS_DST_ALPHA);
 
-        spriteBatch.begin();
-        spriteBatch.draw(texture, getBoundingBox().x, getBoundingBox().y, getBoundingBox().width, getBoundingBox().height);
-        spriteBatch.end();
+        fboSpriteBatch.begin();
+        fboSpriteBatch.draw(texture, getBoundingBox().x, getBoundingBox().y, getBoundingBox().width, getBoundingBox().height);
+        fboSpriteBatch.end();
         /* Switch to the default blend function */
-        spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        fboSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         maskBuffer.end();
         spriteBatch.begin();
@@ -125,6 +122,7 @@ public class Leaf extends AbstractEntity implements Disposable {
 
     @Override
     public void dispose() {
+        fboShapeRenderer.dispose();
         maskBuffer.dispose();
     }
 }
