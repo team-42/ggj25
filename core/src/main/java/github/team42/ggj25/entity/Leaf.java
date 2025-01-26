@@ -25,37 +25,22 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class Leaf extends AbstractEntity implements Disposable {
 
-    public static final int BITE_RADIUS = 50;
     private final Polygon outline;
-    private final Pixmap biteMap;
-    private Texture texture;
-    private Pixmap pixmap;
+    private final Texture texture;
+    private final Pixmap pixmap;
     private final Collection<Circle> bites = new ConcurrentLinkedDeque<>();
     private final FrameBuffer maskBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Constants.WIDTH, Constants.HEIGHT, true);
 
     public Leaf() {
         super(new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT));
         pixmap = new Pixmap(Gdx.files.internal("water_lily_no_shadow.png"));
-//        texture = new Texture(Gdx.files.internal("water_lily.png"));
         texture = new Texture(pixmap);
+//        texture = new Texture(Gdx.files.internal("water_lily.png"));
         outline = buildLillypadPolygon();
-        biteMap = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
-        biteMap.setBlending(Pixmap.Blending.None);
-        biteMap.setColor(new Color(1f, 1f, 1f, 1f));
-        biteMap.fill();
-        biteMap.setColor(new Color(0f, 0f, 0f, 0f));
     }
 
-    public void bite(Vector2 head) {
-        biteMap.fillCircle((int) head.x, Constants.HEIGHT - (int) head.y, BITE_RADIUS);
-        bites.add(new Circle(head.x, head.y, BITE_RADIUS));
-//        for (int x = 0; x < biteMap.getWidth(); x++) {
-//            for (int y = 0; y < biteMap.getHeight(); y++) {
-//                biteMap.drawPixel(x, y, pixmap.getPixel(x, y) & biteMap.getPixel(x, y));
-//            }
-//        }
-//        pixmap = biteMap;
-//        texture = new Texture(pixmap);
+    public void bite(Vector2 head, float biteRadius) {
+        bites.add(new Circle(head.x, head.y, biteRadius));
     }
 
     @Override

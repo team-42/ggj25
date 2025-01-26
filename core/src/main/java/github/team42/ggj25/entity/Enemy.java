@@ -57,6 +57,7 @@ public class Enemy extends AbstractEntity {
     private static final float TURN_RATE_DEGREES_PER_SECOND = 20;
     private static final float ORIENTATION_CHANGE_COOLDOWN_SECONDS = 1f;
     private static final float BITE_DURATION_SECONDS = 3f;
+    private static final int BITE_RADIUS = 50;
     private float speed = BASE_SPEED;
     private final Vector2 direction;
     private Orientation orientation = Orientation.StraightAhead;
@@ -104,8 +105,8 @@ public class Enemy extends AbstractEntity {
 
     private void eat(float deltaInSeconds) {
         chewTime += deltaInSeconds;
-        if(chewTime > BITE_DURATION_SECONDS){
-            leaf.bite(getHead());
+        if (chewTime > BITE_DURATION_SECONDS) {
+            leaf.bite(getHead(), BITE_RADIUS);
             chewTime = 0;
         }
     }
