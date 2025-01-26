@@ -87,6 +87,8 @@ public class SkillScreenHandler {
 
     public void drawSkillScreen(SpriteBatch spriteBatch, GameState gs) {
         gs.getBackground().drawSprites(spriteBatch);
+        gs.getLeaf().drawSprites(spriteBatch);
+        gs.getBackground().drawAmbient(spriteBatch);
         gs.getScoreBoard().drawSprites(spriteBatch);
         skillScreen.drawSprites(spriteBatch, skillTreesToLevelUp);
     }
