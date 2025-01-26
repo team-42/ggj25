@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.buzzer.BuzzerState;
 import github.team42.ggj25.buzzer.WebSocketServerBuzzer;
@@ -20,13 +21,12 @@ public class GameState implements Drawable, Disposable {
 
     private GameLevel currentLevel = GameLevel.LEVEL_ONE;
     private final Background background = new Background(currentLevel);
-    private Leaf leaf = new Leaf(currentLevel);
-
-    private Pike pike = new Pike(this);
+    private Leaf leaf;
+    private Pike pike;
     private final ScoreBoard scoreBoard;
     private final DeathScreen deathScreen = new DeathScreen();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
-    private final Camera camera;
+    private final Viewport viewport;
     boolean lost = false;
     boolean is_paused = false;
     private float pauseTime = 0;
@@ -48,11 +48,13 @@ public class GameState implements Drawable, Disposable {
     private final SkillScreenHandler skillScreenHandler;
     private final SkillScreenToLeafHandler skillScreenToLeafHandler = new SkillScreenToLeafHandler();
 
-    public GameState(Camera camera) {
+    public GameState(Viewport viewport) {
+        this.leaf = new Leaf(viewport, currentLevel);
+        this.pike = new Pike(this);
         this.buzzerState = new BuzzerState();
         this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337, this.buzzerState);
         this.webSocketServerBuzzer.start();
-        this.camera = camera;
+        this.viewport = viewport;
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
@@ -88,7 +90,7 @@ public class GameState implements Drawable, Disposable {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (lost){
+        if (lost) {
             pauseTime += deltaInSeconds;
             if (pauseTime >= maxPauseTime) { // Check if 2 seconds have passed
                 this.is_paused = false;
@@ -107,7 +109,7 @@ public class GameState implements Drawable, Disposable {
                     break;
                 case SKILLSCREEN:
                     if (skillScreenHandler.updateSkillScreen(deltaInSeconds, this)) {
-                        setLeaf(new Leaf(getRandomLevel()));
+                        setLeaf(new Leaf(viewport, getRandomLevel()));
                         currentPhase = GamePhase.SKILLSCREEN_TO_LEAF;
                     }
                     break;
@@ -136,9 +138,9 @@ public class GameState implements Drawable, Disposable {
                 case SKILLSCREEN_TO_LEAF:
                     skillScreenToLeafHandler.drawSkillToLeaf(spriteBatch, this);
                     break;
-            }}
-            else if(lost && is_paused){
-                switch (currentPhase) {
+            }
+        } else if (lost && is_paused) {
+            switch (currentPhase) {
                 case ON_LEAF:
                     onLeafHandler.drawCurrentGameField(spriteBatch, this);
                     break;
@@ -216,7 +218,11 @@ public class GameState implements Drawable, Disposable {
     }
 
     public Camera getCamera() {
-        return camera;
+        return viewport.getCamera();
+    }
+
+    public Viewport getViewport() {
+        return viewport;
     }
 
     public Frog getPlayer() {

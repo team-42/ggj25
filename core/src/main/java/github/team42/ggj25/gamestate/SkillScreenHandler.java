@@ -81,7 +81,7 @@ public class SkillScreenHandler {
         float progress = elapsedTime / duration;
         if (progress > 1f) {
             gs.setCurrentPhase(GamePhase.SKILLSCREEN_TO_LEAF);
-            gs.setLeaf(new Leaf(gs.getCurrentLevel()));
+            gs.setLeaf(new Leaf(gs.getViewport(), gs.getCurrentLevel()));
         }
         return progress > 1f;
     }
