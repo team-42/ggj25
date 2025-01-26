@@ -13,7 +13,7 @@ public class LeafToSkillScreenHandler {
     private Vector2 endPoint; // Zielpunkt (rechter Rand)
     private float controlPointOffset; // Offset für die Kontrollpunkte der Kurve
 
-    public LeafToSkillScreenHandler () {
+    public LeafToSkillScreenHandler() {
         init();
     }
 
@@ -26,13 +26,14 @@ public class LeafToSkillScreenHandler {
     }
 
     public void updateLeafToSkillScreen(float deltaInSeconds, GameState gs) {
-        if(Float.isNaN(controlPointOffset)) {
-            controlPointOffset = 550.0f; // (gs.getPlayer().getBoundingBox().y + endPoint.y + gs.getPlayer().getY()) / 2;
+        if (Float.isNaN(controlPointOffset)) {
+            controlPointOffset = 550.0f;
         }
 
         Vector2 originalSize = new Vector2(gs.getPlayer().getOriginalSize().width, gs.getPlayer().getOriginalSize().height);
         elapsedTime += deltaInSeconds;
-        float progress = Math.min(elapsedTime / duration, 1f);;
+        float progress = Math.min(elapsedTime / duration, 1f);
+        ;
         if (progress >= 1f) {
             // Animation abgeschlossen
             gs.setCurrentPhase(GamePhase.SKILLSCREEN);
@@ -40,10 +41,11 @@ public class LeafToSkillScreenHandler {
 
             // Größe zurücksetzen
             gs.getPlayer().getBoundingBox().setSize(originalSize.x, originalSize.y);
+            startPoint = null;
             return;
         }
 
-       Vector2 currentPosition;
+        Vector2 currentPosition;
         if (startPoint == null) {
             startPoint = new Vector2(gs.getPlayer().getX(), gs.getPlayer().getY());
         } else {
@@ -64,7 +66,7 @@ public class LeafToSkillScreenHandler {
         }
         gs.getScoreBoard().update(deltaInSeconds);
 
-        if(gs.getCurrentPhase().equals(GamePhase.SKILLSCREEN)) {
+        if (gs.getCurrentPhase().equals(GamePhase.SKILLSCREEN)) {
             gs.getPlayer().setPosition(endPoint.x, endPoint.y);
 
             Rectangle rectangle = gs.getPlayer().getOriginalSize();
@@ -75,7 +77,7 @@ public class LeafToSkillScreenHandler {
     public void drawLeafToSkill(SpriteBatch spriteBatch, GameState gs) {
         gs.getBackground().drawSprites(spriteBatch);
         gs.getLeaf().drawSprites(spriteBatch);
-        gs.getBackground().drawAmbient(spriteBatch);
+//        gs.getBackground().drawAmbient(spriteBatch);
         gs.getScoreBoard().drawSprites(spriteBatch);
         gs.getPlayer().drawSprites(spriteBatch);
     }

@@ -8,8 +8,7 @@ public enum BubbleControl implements Skilltree {
     LONG_SHOT(new LongShot()),
     PRECISION_BURST(new PrecisionBurst()),
     SONIC_BUBBLE(new SonicBubble()),
-    INFINITE_HORIZON(null),
-    ;
+    INFINITE_HORIZON(null);
 
 
     private final Skill skill;

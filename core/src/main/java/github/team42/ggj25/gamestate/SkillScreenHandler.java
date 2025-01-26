@@ -2,21 +2,53 @@ package github.team42.ggj25.gamestate;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import github.team42.ggj25.entity.Leaf;
+import github.team42.ggj25.entity.SkillScreen;
+import github.team42.ggj25.skills.SkillTrees;
+
+import java.util.*;
 
 public class SkillScreenHandler {
     private float elapsedTime; // Zeit, die seit dem Start vergangen ist
     private float duration; // Dauer der Animation (in Sekunden)
 
-    public SkillScreenHandler() {
-        init();
-    }
+    private final SkillScreen skillScreen;
+    private final List<SkillTrees> skillTreesToLevelUp;
+    private final int numberOfSkillChoices = 3;
+    private final EnumSet<SkillTrees> possibleSkillTreesToLevelUp = EnumSet.allOf(SkillTrees.class);
 
-    public void init() {
+    public SkillScreenHandler() {
+        skillScreen = new SkillScreen();
+        skillTreesToLevelUp = new ArrayList<>();
         elapsedTime = 0;
         duration = 2;
     }
 
+    public void init(Map<SkillTrees, Integer> levelPerSkilltree) {
+        elapsedTime = 0;
+        duration = 2;
+        initNextLevelUp(levelPerSkilltree);
+    }
+
+    private void initNextLevelUp(Map<SkillTrees, Integer> levelPerSkilltree) {
+        for (int i = 1; i <= numberOfSkillChoices; i++) {
+            SkillTrees randomSkillTrees = SkillTrees.values()[new Random().nextInt(possibleSkillTreesToLevelUp.size())];
+            if (levelPerSkilltree.get(randomSkillTrees) >= randomSkillTrees.getMaxSkillLevel()) {
+                possibleSkillTreesToLevelUp.remove(randomSkillTrees);
+            } else {
+                skillTreesToLevelUp.add(randomSkillTrees);
+            }
+        }
+        skillScreen.init(skillTreesToLevelUp.toArray(new SkillTrees[0]));
+    }
+
     public void updateSkillScreen(float deltaInSeconds, GameState gs) {
+        // onClick: skillInLastTransition setzen
+
+        skillScreen.update(deltaInSeconds);
+        updatePhaseTransition(deltaInSeconds, gs);
+    }
+
+    private void updatePhaseTransition(float deltaInSeconds, GameState gs) {
         elapsedTime += deltaInSeconds;
         float progress = elapsedTime / duration;
         if (progress > 1f) {
@@ -26,6 +58,8 @@ public class SkillScreenHandler {
     }
 
     public void drawSkillScreen(SpriteBatch spriteBatch, GameState gs) {
-        // TODO: add skillscreen
+        gs.getBackground().drawSprites(spriteBatch);
+        gs.getScoreBoard().drawSprites(spriteBatch);
+        skillScreen.drawSprites(spriteBatch);
     }
 }

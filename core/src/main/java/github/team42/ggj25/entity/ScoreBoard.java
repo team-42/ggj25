@@ -9,6 +9,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
+import github.team42.ggj25.skills.Skill;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScoreBoard implements Drawable, Disposable {
     private long score = 0;
@@ -18,10 +22,11 @@ public class ScoreBoard implements Drawable, Disposable {
 
     private final int row_height = Constants.HEIGHT / 16;
     private final int textPadding = row_height / 2;
-//    int col_width = Gdx.graphics.getWidth() / 24;
 
-    public ScoreBoard() {
-        super();
+    private List<Skill> skillsToApply = new ArrayList<>();
+
+    public ScoreBoard(List<Skill> skills) {
+        skillsToApply = skills;
 
         scoreBoardStyle.font = new BitmapFont(Gdx.files.internal("font.fnt"));
         scoreBoardStyle.fontColor = Color.RED;

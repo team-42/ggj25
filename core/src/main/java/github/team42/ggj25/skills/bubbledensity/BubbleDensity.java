@@ -8,8 +8,7 @@ public enum BubbleDensity implements Skilltree {
     ENLARGED_BUBBLE(new EnlargedBubble()),
     DOUBLE_VOLLEY(new DoubleVolley()),
     BUBBLE_STREAM(new BubbleStream()),
-    BUBBLE_BARRAGE(null),
-    ;
+    BUBBLE_BARRAGE(null);
 
     private final Skill skill;
 

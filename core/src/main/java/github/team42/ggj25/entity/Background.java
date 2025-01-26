@@ -37,21 +37,14 @@ public class Background implements Drawable, Disposable {
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
         // store the worldWidth and worldHeight as local variables for brevity
-
         spriteBatch.draw(m_blue_background, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-        //spriteBatch.draw(m_water, 0, 0, Constants.WIDTH, Constants.HEIGHT);
 
         spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_white_puddle, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-    }
 
-    public void drawAmbient(SpriteBatch spriteBatch) {
-//        spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_lily_ambient, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-
     }
-
 
     @Override
     public void dispose() {

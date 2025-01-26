@@ -12,19 +12,19 @@ public class SkillScreenToLeafHandler {
     private Vector2 endPoint; // Zielpunkt (rechter Rand)
     private float controlPointOffset; // Offset für die Kontrollpunkte der Kurve
 
-    public SkillScreenToLeafHandler () {
+    public SkillScreenToLeafHandler() {
         init();
     }
 
     public void init() {
         elapsedTime = 0;
         duration = 3;
-        endPoint = new Vector2((float)Constants.WIDTH / 2.0f, (float)Constants.HEIGHT / 2.0f); // middle of the map
+        endPoint = new Vector2((float) Constants.WIDTH / 2.0f, (float) Constants.HEIGHT / 2.0f); // middle of the map
         controlPointOffset = Float.NaN;
     }
 
     public void updateSkillToLeaf(float deltaInSeconds, GameState gs) {
-        if(Float.isNaN(controlPointOffset)) {
+        if (Float.isNaN(controlPointOffset)) {
             controlPointOffset = 550.0f; // (gs.getPlayer().getBoundingBox().y + endPoint.y + gs.getPlayer().getY()) / 2;
         }
 
@@ -78,7 +78,7 @@ public class SkillScreenToLeafHandler {
     public void drawSkillToLeaf(SpriteBatch spriteBatch, GameState gs) {
         gs.getBackground().drawSprites(spriteBatch);
         gs.getLeaf().drawSprites(spriteBatch);
-        gs.getBackground().drawAmbient(spriteBatch);
+//        gs.getBackground().drawAmbient(spriteBatch);
         gs.getScoreBoard().drawSprites(spriteBatch);
         gs.getPlayer().drawSprites(spriteBatch);
     }
