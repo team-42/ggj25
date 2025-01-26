@@ -1,15 +1,11 @@
 package github.team42.ggj25.gamestate;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
-import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.FrogueUtil;
 import github.team42.ggj25.buzzer.BuzzerState;
@@ -20,38 +16,37 @@ import github.team42.ggj25.skills.SkillTrees;
 
 import java.util.*;
 
-import static github.team42.ggj25.gamestate.GamePhase.PLAY;
+import static github.team42.ggj25.gamestate.GamePhase.ON_LEAF;
 
 public class GameState implements Drawable {
-    private GamePhase currentPhase = PLAY;
-
-    private static final Random R = new Random();
-    private static final float ENEMY_SPAWN_RATE_SECONDS = 3;
     private final Frog player = new Frog(this);
     private final List<Enemy> enemies = new ArrayList<>();
     private final Background background = new Background();
     private final Leaf leaf = new Leaf();
-    private final Pike pike = new Pike(this);
+    private Pike pike = new Pike(this);
     private final ScoreBoard scoreBoard = new ScoreBoard();
-    private final KillScreen killScreen = new KillScreen();
+    private final DeathScreen deathScreen = new DeathScreen();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
     private final Camera camera;
-    private final Polygon backgroundPolygon;
+    private Polygon backgroundPolygon;
     boolean lost = false;
 
+    // Buzzer Handling
     private final BuzzerState buzzerState;
     private final WebSocketServerBuzzer webSocketServerBuzzer;
 
-    private final int bonusPoints = 3;
-    private final float bonusPointsInterval = 1;
-    private float bonusPointCooldown = 1;
-    private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
-
+    // Skill Handling
     private final Map<SkillTrees, Integer> levelPerSkilltree = new EnumMap<>(SkillTrees.class);
     private Skill skillInLastTransition = null;
     private final List<Skill> frogSkills = new ArrayList<>();
     private final List<Skill> projectileSkills = new ArrayList<>();
 
+    // Transition Handling
+    private GamePhase currentPhase = ON_LEAF;
+    private final OnLeafHandler onLeafHandler = new OnLeafHandler();
+    private final LeafToSkillScreenHandler leafToSkillHandler = new LeafToSkillScreenHandler();
+    private final SkillScreenHandler skillScreenHandler = new SkillScreenHandler();
+    private final SkillScreenToLeafHandler skillScreenToLeafHandler = new SkillScreenToLeafHandler();
 
     public GameState(Camera camera) {
         this.buzzerState = new BuzzerState();
@@ -64,6 +59,25 @@ public class GameState implements Drawable {
         backgroundPolygon = buildLillypadPolygon();
     }
 
+    public void prepareGameStateForOnLeaf() {
+        Gdx.app.log("Prepare", "Prepare for new On Leaf Phase.");
+        enemies.clear();
+        activeProjectiles.clear();
+
+        // apply chosen skill
+        applySkill(skillInLastTransition);
+        skillInLastTransition = null;
+
+        onLeafHandler.init();
+        leafToSkillHandler.init();
+        skillScreenHandler.init();
+        skillScreenToLeafHandler.init();
+
+        //backgroundPolygon = buildLillypadPolygon();
+        pike.setPosition(0.0f, 0.0f);
+        //player.setPosition((float)Constants.WIDTH / 2.0f, (float)Constants.HEIGHT / 2.0f);
+    }
+
     public boolean frogInsideLeaf(float x, float y) {
         return backgroundPolygon.contains(x, y);
     }
@@ -72,147 +86,44 @@ public class GameState implements Drawable {
     public void update(float deltaInSeconds) {
         if (!lost) {
             switch (currentPhase) {
-                case PLAY:
-                    updatePlayPhase(deltaInSeconds);
+                case ON_LEAF:
+                    lost = onLeafHandler.updatePlayPhase(deltaInSeconds, this);
                     break;
-                case CUTSCENE_TO_TRANSITION:
-                    updateToTransition(deltaInSeconds);
+                case LEAF_TO_SKILLSCREEN:
+                    leafToSkillHandler.updateLeafToSkillScreen(deltaInSeconds, this);
                     break;
-                case TRANSITION:
+                case SKILLSCREEN:
+                    skillScreenHandler.updateSkillScreen(deltaInSeconds, this);
                     break;
-                case CUTSCENE_FROM_TRANSITION:
+                case SKILLSCREEN_TO_LEAF:
+                    skillScreenToLeafHandler.updateSkillToLeaf(deltaInSeconds, this);
+
+                    if(currentPhase.equals(ON_LEAF)) prepareGameStateForOnLeaf();
                     break;
             }
-        } else {
-
         }
-    }
-
-    private float elapsedTime = 0; // Zeit, die seit dem Start vergangen ist
-    private float duration = 3; // Dauer der Animation (in Sekunden)
-    private Vector2 startPoint; // Startpunkt der Bewegung
-    private Vector2 endPoint = new Vector2(1920, 810); // Zielpunkt (rechter Rand)
-    private float controlPointOffset = (player.getBoundingBox().y + endPoint.y + player.getY()) / 2; // Offset für die Kontrollpunkte der Kurve
-
-    private void updateToTransition(float deltaInSeconds) {
-        elapsedTime += deltaInSeconds;
-        float progress = elapsedTime / duration;
-        if (progress > 1f) progress = 1f;
-
-        Vector2 currentPosition;
-        if (startPoint == null) {
-            startPoint = new Vector2(player.getX(), player.getY());
-        } else {
-            currentPosition = calculateBezier(progress, startPoint,
-                new Vector2((startPoint.x + endPoint.x) / 2, startPoint.y + controlPointOffset), // Kontrollpunkt
-                endPoint);
-
-            player.setPosition(currentPosition.x - player.getBoundingBox().width / 2, currentPosition.y - player.getBoundingBox().height / 2);
-            player.getBoundingBox().setSize(
-                (0.9f + progress) * player.getBoundingBox().width,
-                (0.9f + progress) * player.getBoundingBox().height);
-//                1, 1);
-        }
-        scoreBoard.update(deltaInSeconds);
-    }
-
-    private Vector2 calculateBezier(float t, Vector2 p0, Vector2 p1, Vector2 p2) {
-        float u = 1 - t;
-        float tt = t * t;
-        float uu = u * u;
-
-        Vector2 result = new Vector2();
-        result.x = uu * p0.x + 2 * u * t * p1.x + tt * p2.x;
-        result.y = uu * p0.y + 2 * u * t * p1.y + tt * p2.y;
-        return result;
-    }
-
-    private void updatePlayPhase(float deltaInSeconds) {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || this.buzzerState.triggeredSinceLastCheck()) {
-            currentPhase = GamePhase.CUTSCENE_TO_TRANSITION;
-        }
-        background.update(deltaInSeconds);
-        pike.update(deltaInSeconds);
-        leaf.update(deltaInSeconds);
-        for (final Enemy enemy : this.enemies) {
-            enemy.update(deltaInSeconds);
-        }
-        player.update(deltaInSeconds);
-        for (Projectile p : activeProjectiles) {
-            p.update(deltaInSeconds);
-        }
-        activeProjectiles.removeIf(p -> !p.isActive());
-
-        bonusPointCooldown -= deltaInSeconds;
-        if (bonusPointCooldown <= 0) {
-            bonusPointCooldown = bonusPointsInterval;
-            scoreBoard.addPointsToScore(bonusPoints);
-        }
-        scoreBoard.update(deltaInSeconds);
-
-        timeSinceLastEnemySpawnSeconds += deltaInSeconds;
-        if (timeSinceLastEnemySpawnSeconds > ENEMY_SPAWN_RATE_SECONDS) {
-            timeSinceLastEnemySpawnSeconds = 0;
-            spawnEnemy();
-        }
-
-        if (!frogInsideLeaf(player.getX(), player.getY())) {
-            lost = true;
-        }
-
-        if (player.overlapsWith(pike) && !pike.getIsPreparingToAttack()) {
-            lost = true;
-
-        }
-    }
-
-    private void spawnEnemy() {
-        final int spawnDirection = R.nextInt(360);
-        final Vector2 spawnVectorFromCenter = new Vector2(1100, 0);
-        spawnVectorFromCenter.rotateDeg(spawnDirection);
-        final Vector2 initialDirection = new Vector2(spawnVectorFromCenter);
-        spawnVectorFromCenter.add(new Vector2(Constants.WIDTH / 2f, Constants.HEIGHT / 2f));
-        initialDirection.rotateDeg(180);
-        initialDirection.setLength(1);
-        this.enemies.add(new Enemy(spawnVectorFromCenter.x, spawnVectorFromCenter.y, initialDirection));
-        Gdx.app.log("Spawn Enemy", "direction: " + spawnDirection + "; initialDirection: " + initialDirection);
-
     }
 
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
         if (!lost) {
             switch (currentPhase) {
-                case PLAY:
-                    drawCurrentGameField(spriteBatch);
+                case ON_LEAF:
+                    onLeafHandler.drawCurrentGameField(spriteBatch, this);
                     break;
-                case CUTSCENE_TO_TRANSITION:
-                    drawToTransition(spriteBatch);
+                case LEAF_TO_SKILLSCREEN:
+                    leafToSkillHandler.drawLeafToSkill(spriteBatch, this);
                     break;
-                case TRANSITION:
+                case SKILLSCREEN:
                     break;
-                case CUTSCENE_FROM_TRANSITION:
+                case SKILLSCREEN_TO_LEAF:
+                    skillScreenToLeafHandler.drawSkillToLeaf(spriteBatch, this);
                     break;
             }
         } else {
-            killScreen.drawSprites(spriteBatch);
+            deathScreen.drawSprites(spriteBatch);
             scoreBoard.drawSprites(spriteBatch);
         }
-    }
-
-    private void drawCurrentGameField(SpriteBatch spriteBatch) {
-        background.drawSprites(spriteBatch);
-        leaf.drawSprites(spriteBatch);
-        for (final Enemy enemy : this.enemies) {
-            enemy.drawSprites(spriteBatch);
-        }
-        background.drawAmbient(spriteBatch);
-        pike.drawSprites(spriteBatch);
-        player.drawSprites(spriteBatch);
-        for (Projectile p : activeProjectiles) {
-            p.drawSprites(spriteBatch);
-        }
-        scoreBoard.drawSprites(spriteBatch);
     }
 
     @Override
@@ -237,15 +148,8 @@ public class GameState implements Drawable {
         scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
     }
 
-    private void drawToTransition(SpriteBatch spriteBatch) {
-        background.drawAmbient(spriteBatch);
-        scoreBoard.drawSprites(spriteBatch);
-        player.drawSprites(spriteBatch);
-    }
-
     private Polygon buildLillypadPolygon() {
-        Polygon polygon = FrogueUtil.getEdgePolygon(background.getPixmap());
-        return polygon;
+        return FrogueUtil.getEdgePolygon(background.getPixmap());
     }
 
     public void addProjectile(Projectile toAdd) {
@@ -269,7 +173,7 @@ public class GameState implements Drawable {
     }
 
     private void applySkill(Skill skill) {
-        this.skillInLastTransition = skill;
+        if(skill == null) return;
 
         // add skill to all weapons if necessary
         this.player.addSkillToWeapons();
@@ -280,5 +184,49 @@ public class GameState implements Drawable {
 
     public Camera getCamera() {
         return camera;
+    }
+
+    public Frog getPlayer() {
+        return player;
+    }
+
+    public ScoreBoard getScoreBoard() {
+        return scoreBoard;
+    }
+
+    public GamePhase getCurrentPhase() {
+        return currentPhase;
+    }
+
+    public void setCurrentPhase(GamePhase currentPhase) {
+        this.currentPhase = currentPhase;
+    }
+
+    public Background getBackground() {
+        return background;
+    }
+
+    public BuzzerState getBuzzerState() {
+        return buzzerState;
+    }
+
+    public Pike getPike() {
+        return pike;
+    }
+
+    public void setPike(Pike pike) {
+        this.pike = pike;
+    }
+
+    public Leaf getLeaf() {
+        return leaf;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public List<Projectile> getActiveProjectiles() {
+        return activeProjectiles;
     }
 }

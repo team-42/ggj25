@@ -106,13 +106,24 @@ public final class FrogueUtil {
             vertices.add((float) p.y);
         }
 
-    float[] verts = new float[vertices.size() + 2];
-        for (int i = 0; i < vertices.size(); i++) {
-        verts[i] = vertices.get(i);
+        float[] verts = new float[vertices.size() + 2];
+            for (int i = 0; i < vertices.size(); i++) {
+            verts[i] = vertices.get(i);
+        }
+        verts[vertices.size()] = vertices.get(0);
+        verts[vertices.size() + 1] = vertices.get(1);
+        Polygon polygon = new Polygon(verts);
+        return polygon;
     }
-    verts[vertices.size()] = vertices.get(0);
-    verts[vertices.size() + 1] = vertices.get(1);
-    Polygon polygon = new Polygon(verts);
-    return polygon;
 
-}}
+    static public Vector2 calculateBezier(float t, Vector2 p0, Vector2 p1, Vector2 p2) {
+        float u = 1 - t;
+        float tt = t * t;
+        float uu = u * u;
+
+        Vector2 result = new Vector2();
+        result.x = uu * p0.x + 2 * u * t * p1.x + tt * p2.x;
+        result.y = uu * p0.y + 2 * u * t * p1.y + tt * p2.y;
+        return result;
+    }
+}

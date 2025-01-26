@@ -2,6 +2,7 @@ package github.team42.ggj25.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Direction;
 import github.team42.ggj25.gamestate.GameState;
@@ -68,5 +69,9 @@ public class Frog extends TexturedEntity {
 
     public void addSkillToWeapons() {
         weapons.forEach(weapon -> weapon.handleLeafTransition());
+    }
+
+    public Rectangle getOriginalSize() {
+        return new Rectangle(Constants.WIDTH / 2f, Constants.HEIGHT / 2f, 96, 54);
     }
 }

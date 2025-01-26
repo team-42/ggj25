@@ -7,17 +7,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 
-public class KillScreen implements Drawable {
+public class DeathScreen implements Drawable {
 
-    private final Texture killscreenTexture;
+    private final Texture deathScreenTexture;
 
-    public KillScreen() {
-        FileHandle killScreenFile = Gdx.files.internal("screne_lose.png");
-        killscreenTexture = new Texture(killScreenFile);
+    public DeathScreen() {
+        FileHandle deathScreenFile = Gdx.files.internal("screne_lose.png");
+        deathScreenTexture = new Texture(deathScreenFile);
     }
 
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
-        spriteBatch.draw(killscreenTexture, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+        spriteBatch.draw(deathScreenTexture, 0, 0, Constants.WIDTH, Constants.HEIGHT);
     }
 }

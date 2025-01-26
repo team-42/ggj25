@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Drawable;
 
 abstract class AbstractEntity implements Drawable {
-    private final Rectangle boundingBox;
+    private Rectangle boundingBox;
 
     AbstractEntity(Rectangle boundingBox) {
         this.boundingBox = boundingBox;
@@ -26,5 +26,7 @@ abstract class AbstractEntity implements Drawable {
     public Rectangle getBoundingBox() {
         return this.boundingBox;
     }
+
+    public void setBoundingBox(Rectangle boundingBox) {this.boundingBox = boundingBox;}
 
 }
