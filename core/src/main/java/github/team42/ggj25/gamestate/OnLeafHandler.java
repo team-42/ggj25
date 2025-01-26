@@ -45,6 +45,9 @@ public class OnLeafHandler {
         gs.getLeaf().update(deltaInSeconds);
         for (final Enemy enemy : gs.getEnemies()) {
             enemy.update(deltaInSeconds);
+            if(enemy.checkScored()){
+                gs.getScoreBoard().addPointsToScore((long) (10 / bonusPointsInterval));
+            }
         }
         gs.getPlayer().update(deltaInSeconds);
         for (Projectile p : gs.getActiveProjectiles()) {
