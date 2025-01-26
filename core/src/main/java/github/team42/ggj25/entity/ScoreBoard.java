@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 
-public class ScoreBoard implements Drawable {
-    private int score = 0;
+public class ScoreBoard implements Drawable, Disposable {
+    private long score = 0;
 
     private final Label scoreBoardLabel;
     private final Label.LabelStyle scoreBoardStyle = new Label.LabelStyle();
@@ -43,17 +44,21 @@ public class ScoreBoard implements Drawable {
         scoreBoardLabel.setText(score + " QUAKS");
     }
 
-    public int addPointsToScore(int points) {
+    public long addPointsToScore(long points) {
         score += points;
         return score;
     }
 
-    public int subtractPointsFromScore(int points) {
+    public long subtractPointsFromScore(long points) {
         score -= points;
         return score;
     }
 
-    public int getScore() {
+    public long getScore() {
         return score;
+    }
+
+    @Override
+    public void dispose() {
     }
 }

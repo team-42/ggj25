@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
+import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.FrogueUtil;
 import github.team42.ggj25.buzzer.BuzzerState;
@@ -18,7 +22,7 @@ import java.util.*;
 
 import static github.team42.ggj25.gamestate.GamePhase.ON_LEAF;
 
-public class GameState implements Drawable {
+public class GameState implements Drawable, Disposable {
     private final Frog player = new Frog(this);
     private final List<Enemy> enemies = new ArrayList<>();
     private final Background background = new Background();
@@ -35,7 +39,10 @@ public class GameState implements Drawable {
     private final BuzzerState buzzerState;
     private final WebSocketServerBuzzer webSocketServerBuzzer;
 
-    // Skill Handling
+    private float bonusPointsInterval = 1f;
+    private float bonusPointCooldown = 1;
+    private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
+
     private final Map<SkillTrees, Integer> levelPerSkilltree = new EnumMap<>(SkillTrees.class);
     private Skill skillInLastTransition = null;
     private final List<Skill> frogSkills = new ArrayList<>();
@@ -50,7 +57,7 @@ public class GameState implements Drawable {
 
     public GameState(Camera camera) {
         this.buzzerState = new BuzzerState();
-        this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337,this.buzzerState);
+        this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337, this.buzzerState);
         this.webSocketServerBuzzer.start();
         this.camera = camera;
         for (SkillTrees val : SkillTrees.values()) {
@@ -142,7 +149,13 @@ public class GameState implements Drawable {
         if (debugRenderingActive) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.RED);
-            shapeRenderer.polygon(backgroundPolygon.getVertices()); // Draw the polygon outline
+            //shapeRenderer.polygon(backgroundPolygon.getVertices()); // Draw the polygon outline
+            Rectangle box = player.getAccurateHitbox().getBoundingRectangle();
+            shapeRenderer.rect(box.x, box.y, box.width, box.height);
+            //shapeRenderer.polygon(player.getAccurateHitbox().getVertices());
+            Rectangle box2 = pike.getAccurateHitbox().getBoundingRectangle();
+            //shapeRenderer.polygon(pike.getAccurateHitbox().getVertices());
+            shapeRenderer.rect(box2.x, box2.y, box2.width, box2.height);
             shapeRenderer.end();
         }
         scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
@@ -228,5 +241,21 @@ public class GameState implements Drawable {
 
     public List<Projectile> getActiveProjectiles() {
         return activeProjectiles;
+    }
+
+    @Override
+    public void dispose() {
+        player.dispose();
+        enemies.forEach(Enemy::dispose);
+        background.dispose();
+        leaf.dispose();
+        pike.dispose();
+        scoreBoard.dispose();
+        killScreen.dispose();
+        try {
+            this.webSocketServerBuzzer.stop();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
