@@ -41,16 +41,13 @@ public class Leaf extends AbstractEntity implements Disposable {
         pixmap1 = null;
         if (level == GameLevel.LEVEL_ONE) {
             pixmap1 = new Pixmap(Gdx.files.internal("water_lily_no_shadow.png"));
-        }
-        else if (level == GameLevel.LEVEL_TWO) {
+        } else if (level == GameLevel.LEVEL_TWO) {
             pixmap1 = new Pixmap(Gdx.files.internal("radioactive_leaf_no_shadow.png"));
-        }
-        else {
+        } else {
             pixmap1 = new Pixmap(Gdx.files.internal("radioactive_leaf_no_shadow.png"));
         }
         pixmap = pixmap1;
         texture = new Texture(pixmap);
-//        texture = new Texture(Gdx.files.internal("water_lily.png"));
         outline = buildLillypadPolygon();
     }
 
@@ -67,7 +64,7 @@ public class Leaf extends AbstractEntity implements Disposable {
         /* Change the blending function for our alpha map. */
         fboShapeRenderer.setColor(Color.WHITE);
         fboShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        fboShapeRenderer.rect(0,0, Constants.WIDTH, Constants.HEIGHT);
+        fboShapeRenderer.rect(0, 0, Constants.WIDTH, Constants.HEIGHT);
         fboShapeRenderer.end();
 
         /* This blending function makes it so we subtract instead of adding to the alpha map. */
