@@ -17,6 +17,7 @@ public enum SkillTrees {
     SkillTrees(Skilltree[] skilltreeLevels, String pathToIcon, String pathToUltiIcon) {
         this.skilltreeLevels = skilltreeLevels;
         this.pathToIcon = pathToIcon;
+
         this.pathToUltiIcon = pathToUltiIcon;
     }
 

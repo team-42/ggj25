@@ -23,7 +23,7 @@ public class GameState implements Drawable, Disposable {
     private final Frog player = new Frog(this);
     private final List<Enemy> enemies = new ArrayList<>();
     private final Background background = new Background();
-    private final Leaf leaf = new Leaf();
+    private Leaf leaf = new Leaf();
     private Pike pike = new Pike(this);
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final DeathScreen deathScreen = new DeathScreen();
@@ -229,6 +229,10 @@ public class GameState implements Drawable, Disposable {
 
     public Leaf getLeaf() {
         return leaf;
+    }
+
+    public void setLeaf(Leaf leaf) {
+        this.leaf = leaf;
     }
 
     public List<Enemy> getEnemies() {
