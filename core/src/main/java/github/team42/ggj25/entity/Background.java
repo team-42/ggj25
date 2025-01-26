@@ -19,7 +19,7 @@ public class Background implements Drawable, Disposable {
     private final Texture m_water_dark;
     private final Texture m_white_puddle;
     private final Texture m_water_lily_ambient;
-    private final Texture m_water_lily_show;
+    private final Texture m_water_lily_shadow;
 
 
     public Background(GameLevel currentLevel) {
@@ -27,6 +27,7 @@ public class Background implements Drawable, Disposable {
         FileHandle water = Gdx.files.internal("water.png");
         FileHandle water_white_puddle = Gdx.files.internal("white_puddle.png");
         FileHandle water_lily_ambient = Gdx.files.internal("water_lily_ambient.png");
+        FileHandle water_lily_shadow = Gdx.files.internal("water_lily_shadow_only.png");
         if (currentLevel == GameLevel.LEVEL_ONE) {
             FileHandle water_dark = Gdx.files.internal("water_dark.png");
             m_water_dark = new Texture(water_dark);
@@ -34,17 +35,16 @@ public class Background implements Drawable, Disposable {
         else if (currentLevel == GameLevel.LEVEL_TWO) {
             FileHandle water_dark = Gdx.files.internal("oil_traces_transparent.png");
             m_water_dark = new Texture(water_dark);
-        FileHandle water_lily_shadow = Gdx.files.internal("water_lily_shadow_only.png");
-
         }
         else {
             m_water_dark = null;
         }
+
         m_blue_background = new Texture(blue_background);
         m_water = new Texture(water);
         m_white_puddle = new Texture(water_white_puddle);
         m_water_lily_ambient = new Texture(water_lily_ambient);
-        m_water_lily_show = new Texture(water_lily_shadow);
+        m_water_lily_shadow = new Texture(water_lily_shadow);
     }
 
     @Override
@@ -54,12 +54,13 @@ public class Background implements Drawable, Disposable {
         spriteBatch.draw(m_water, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_white_puddle, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+
     }
 
     public void drawAmbient(SpriteBatch spriteBatch) {
 //        spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_lily_ambient, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-        spriteBatch.draw(m_water_lily_show, 0, 0, Constants.WIDTH, Constants.HEIGHT);
+        spriteBatch.draw(m_water_lily_shadow, 0, 0, Constants.WIDTH, Constants.HEIGHT);
 
     }
 
