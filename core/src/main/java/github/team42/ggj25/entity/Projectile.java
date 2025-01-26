@@ -60,8 +60,21 @@ public class Projectile extends AnimatedEntity {
         return remainingRange > -afterEffectRange;
     }
 
-    public boolean isHarmful() {
+    private boolean isHarmful() {
         return remainingRange > 0;
     }
 
+    public boolean checkCollisionWithEnemy(List<Enemy> enemies) {
+        if(!isActive() || !isHarmful()){
+            return false;
+        }
+        for(final Enemy enemy : enemies){
+            if(enemy.contains(this)){
+                enemy.hit(this.damage);
+                this.remainingRange = 0;
+                return true;
+            }
+        }
+        return false;
+    }
 }

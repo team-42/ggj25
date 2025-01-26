@@ -58,12 +58,14 @@ public class Enemy extends AbstractEntity {
     private static final float ORIENTATION_CHANGE_COOLDOWN_SECONDS = 1f;
     private static final float BITE_DURATION_SECONDS = 3f;
     private static final int BITE_RADIUS = 50;
+    private static final int START_HP = 100;
     private float speed = BASE_SPEED;
     private final Vector2 direction;
     private Orientation orientation = Orientation.StraightAhead;
     private float timeSinceLastOrientationChangeSeconds = 0;
     private float chewTime = 0;
     private Mode mode = Mode.Moving;
+    private int hp = START_HP;
 
     public Enemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection) {
         super(FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * IMAGE_SCALE, IMAGE_HEIGHT * IMAGE_SCALE));
@@ -83,16 +85,21 @@ public class Enemy extends AbstractEntity {
         final Vector2 head = getHead();
         switch (mode) {
             case Floating -> {
+                floatUp(deltaInSeconds);
             }
             case Eating -> {
-                if (!leaf.contains(head.x, head.y)) {
+                if (this.isDead()) {
+                    mode = Mode.Floating;
+                } else if (!leaf.contains(head.x, head.y)) {
                     mode = Mode.Moving;
                 } else {
                     eat(deltaInSeconds);
                 }
             }
             case Moving -> {
-                if (leaf.contains(head.x, head.y)) {
+                if (this.isDead()) {
+                    mode = Mode.Floating;
+                } else if (leaf.contains(head.x, head.y)) {
                     mode = Mode.Eating;
                     chewTime = 0;
                 } else {
@@ -100,7 +107,18 @@ public class Enemy extends AbstractEntity {
                 }
             }
         }
+    }
 
+    public void hit(float damage) {
+        this.hp -= damage;
+    }
+
+    public boolean isDead() {
+        return this.hp <= 0;
+    }
+
+    private void floatUp(float deltaInSeconds) {
+        this.setPosition(getX(), getY() + speed * deltaInSeconds);
     }
 
     private void eat(float deltaInSeconds) {
