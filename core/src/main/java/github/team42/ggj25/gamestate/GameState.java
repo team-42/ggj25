@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
+import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
 import github.team42.ggj25.buzzer.BuzzerState;
 import github.team42.ggj25.buzzer.WebSocketServerBuzzer;
@@ -71,9 +72,7 @@ public class GameState implements Drawable, Disposable {
         skillScreenHandler.init();
         skillScreenToLeafHandler.init();
 
-        //backgroundPolygon = buildLillypadPolygon();
-        pike.setPosition(0.0f, 0.0f);
-        //player.setPosition((float)Constants.WIDTH / 2.0f, (float)Constants.HEIGHT / 2.0f);
+        pike.setPosition((float) Math.random() * Constants.WIDTH, (float) Math.random() * Constants.HEIGHT);
     }
 
     @Override
@@ -121,19 +120,6 @@ public class GameState implements Drawable, Disposable {
         }
     }
 
-    private void drawCurrentGameField(SpriteBatch spriteBatch) {
-        background.drawSprites(spriteBatch);
-        this.enemies.stream().filter(enemy -> !enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
-        background.drawAmbient(spriteBatch);
-        leaf.drawSprites(spriteBatch);
-        this.enemies.stream().filter(enemy -> enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
-        pike.drawSprites(spriteBatch);
-        player.drawSprites(spriteBatch);
-        for (Projectile p : activeProjectiles) {
-            p.drawSprites(spriteBatch);
-        }
-        scoreBoard.drawSprites(spriteBatch);
-    }
 
     @Override
     public void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive) {
@@ -148,7 +134,7 @@ public class GameState implements Drawable, Disposable {
             p.drawShapes(shapeRenderer, debugRenderingActive);
         }
         scoreBoard.drawShapes(shapeRenderer, debugRenderingActive);
-//        if (debugRenderingActive) {
+        //if (debugRenderingActive) {
 //            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 //            shapeRenderer.setColor(Color.RED);
 //            Rectangle box = player.getAccurateHitbox().getBoundingRectangle();
@@ -158,7 +144,7 @@ public class GameState implements Drawable, Disposable {
             //shapeRenderer.polygon(pike.getAccurateHitbox().getVertices());
 //            shapeRenderer.rect(box2.x, box2.y, box2.width, box2.height);
 //            shapeRenderer.end();
-//        }
+        //}
     }
 
     public void addProjectile(Projectile toAdd) {

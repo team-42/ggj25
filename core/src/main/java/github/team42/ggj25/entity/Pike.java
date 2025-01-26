@@ -3,8 +3,12 @@ package github.team42.ggj25.entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
+import github.team42.ggj25.FrogueUtil;
 import github.team42.ggj25.gamestate.GameState;
 
 import java.util.ArrayList;
@@ -84,6 +88,18 @@ public class Pike extends TexturedEntity {
             spriteBatch.setColor(Color.WHITE);
         } else {
             super.drawSprites(spriteBatch);
+        }
+    }
+
+    @Override
+    public void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive) {
+        super.drawShapes(shapeRenderer, debugRenderingActive);
+        if (debugRenderingActive) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.RED);
+            float[] vertices = this.getAccurateHitbox().getTransformedVertices();
+            shapeRenderer.polygon(vertices);
+            shapeRenderer.end();
         }
     }
 
