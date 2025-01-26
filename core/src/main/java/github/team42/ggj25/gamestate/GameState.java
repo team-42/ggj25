@@ -80,6 +80,8 @@ public class GameState implements Drawable, Disposable {
         skillScreenHandler.init(levelPerSkilltree);
         skillScreenToLeafHandler.init();
 
+        scoreBoard.prepareForNextOnLeaf();
+
         pike = new Pike(this);
     }
 

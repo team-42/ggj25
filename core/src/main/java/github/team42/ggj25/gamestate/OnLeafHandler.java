@@ -34,7 +34,7 @@ public class OnLeafHandler {
     }
 
     public boolean updateOnLeafPhase(float deltaInSeconds, GameState gs) {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || gs.getBuzzerState().triggeredSinceLastCheck()) {
+        if (gs.getScoreBoard().isJumpedAllowed() && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || gs.getBuzzerState().triggeredSinceLastCheck())) {
             gs.setCurrentPhase(GamePhase.LEAF_TO_SKILLSCREEN);
             return false;
         }
