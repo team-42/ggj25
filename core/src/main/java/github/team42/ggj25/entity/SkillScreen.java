@@ -15,7 +15,6 @@ public class SkillScreen implements Drawable, Disposable {
     private SkillTrees[] skillTrees = new SkillTrees[0];
 
     private final int sideOffset = 300;
-    private final int skillOffset = 30;
 
     public SkillScreen() {
         FileHandle skillScreenFile = Gdx.files.internal("menu_background.png");
@@ -37,8 +36,8 @@ public class SkillScreen implements Drawable, Disposable {
         for (int i = 0; i < skillTrees.length; i++) {
             spriteBatch.draw(
                 skillTrees[i].getIconTexture(),
-                sideOffset + i * (skillOffset + 420),
-                (float) (Constants.HEIGHT - skillTrees[i].getIconTexture().getHeight()) / 2,
+                sideOffset + i * 420,
+                (float) (Constants.HEIGHT) / 2 - 200,
                 420,
                 420);
         }

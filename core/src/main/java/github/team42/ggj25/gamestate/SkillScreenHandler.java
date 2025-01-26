@@ -1,5 +1,7 @@
 package github.team42.ggj25.gamestate;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import github.team42.ggj25.entity.Leaf;
 import github.team42.ggj25.entity.SkillScreen;
@@ -46,7 +48,15 @@ public class SkillScreenHandler {
     }
 
     public void updateSkillScreen(float deltaInSeconds, GameState gs) {
-        // onClick: skillInLastTransition setzen
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+//            gs.setSkillInLastTransition() = skillTreesToLevelUp.get(0);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            skillTreesToLevelUp.get(1);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            skillTreesToLevelUp.get(2);
+        }
 
         skillScreen.update(deltaInSeconds);
         updatePhaseTransition(deltaInSeconds, gs);

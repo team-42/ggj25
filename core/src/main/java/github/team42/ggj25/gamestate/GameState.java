@@ -14,7 +14,10 @@ import github.team42.ggj25.skills.Skill;
 import github.team42.ggj25.skills.SkillTrees;
 import github.team42.ggj25.skills.Skilltree;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 import static github.team42.ggj25.gamestate.GamePhase.ON_LEAF;
 
@@ -233,8 +236,8 @@ public class GameState implements Drawable, Disposable {
     }
 
     public void addLevelToSkilltree(Skilltree skilltree) {
-        SkillTrees randomSkillTree = SkillTrees.values()[new Random().nextInt(SkillTrees.values().length)];
-        levelPerSkilltree.put(SkillTrees.BUBBLE_CONTROL, 1);
+        skillInLastTransition = skilltree.getSkill();
+//        levelPerSkilltree.put(SkillTrees.BUBBLE_CONTROL, levelPerSkilltree.get());
     }
 
     @Override
