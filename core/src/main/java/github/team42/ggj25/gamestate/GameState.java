@@ -28,6 +28,9 @@ public class GameState implements Drawable, Disposable {
     private final List<Projectile> activeProjectiles = new ArrayList<>();
     private final Camera camera;
     boolean lost = false;
+    boolean is_paused = false;
+    private float pauseTime = 0;
+    private float maxPauseTime = 1;
 
     // Buzzer Handling
     private final BuzzerState buzzerState;
@@ -85,6 +88,15 @@ public class GameState implements Drawable, Disposable {
 
     @Override
     public void update(float deltaInSeconds) {
+        if (lost){
+            pauseTime += deltaInSeconds;
+            if (pauseTime >= maxPauseTime) { // Check if 2 seconds have passed
+                this.is_paused = false;
+                pauseTime = 0; // Reset the timer
+            }
+            return; // Skip updates while paused
+        }
+
         if (!lost) {
             switch (currentPhase) {
                 case ON_LEAF:
@@ -110,8 +122,23 @@ public class GameState implements Drawable, Disposable {
 
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
-        if (!lost) {
+        if (!lost && !is_paused) {
             switch (currentPhase) {
+                case ON_LEAF:
+                    onLeafHandler.drawCurrentGameField(spriteBatch, this);
+                    break;
+                case LEAF_TO_SKILLSCREEN:
+                    leafToSkillHandler.drawLeafToSkill(spriteBatch, this);
+                    break;
+                case SKILLSCREEN:
+                    skillScreenHandler.drawSkillScreen(spriteBatch, this);
+                    break;
+                case SKILLSCREEN_TO_LEAF:
+                    skillScreenToLeafHandler.drawSkillToLeaf(spriteBatch, this);
+                    break;
+            }}
+            else if(lost && is_paused){
+                switch (currentPhase) {
                 case ON_LEAF:
                     onLeafHandler.drawCurrentGameField(spriteBatch, this);
                     break;
