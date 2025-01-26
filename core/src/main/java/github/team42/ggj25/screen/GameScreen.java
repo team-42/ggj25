@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import github.team42.ggj25.Constants;
+import github.team42.ggj25.SoundManager;
 import github.team42.ggj25.gamestate.GameState;
 
 public class GameScreen extends ScreenAdapter {
@@ -21,11 +23,14 @@ public class GameScreen extends ScreenAdapter {
     private final GameState gameState;
     private final Camera camera = new OrthographicCamera(Constants.WIDTH, Constants.HEIGHT);
     private boolean debugRenderingActive;
+    private final SoundManager sounds;
 
     public GameScreen(boolean debugRenderingActive) {
+        this.sounds = new SoundManager();
         this.debugRenderingActive = debugRenderingActive;
+        this.sounds.background_sound.play(0.6f);
         batch.enableBlending();
-        gameState = new GameState(camera);
+        gameState = new GameState(camera, this.sounds);
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -64,6 +69,7 @@ public class GameScreen extends ScreenAdapter {
         batch.dispose();
         image.dispose();
         shapeRenderer.dispose();
+        sounds.dispose();
     }
 
     @Override

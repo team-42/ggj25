@@ -3,6 +3,7 @@ package github.team42.ggj25.entity;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import github.team42.ggj25.SoundManager;
 import github.team42.ggj25.skills.Skill;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class Projectile extends AnimatedEntity {
     private float damage;
     private float remainingRange;
     private final float afterEffectRange;
+    private final SoundManager sounds;
 
     public float getSpeed() {
         return speed;
@@ -38,15 +40,15 @@ public class Projectile extends AnimatedEntity {
         this.damage = damage;
     }
 
-    public Projectile(TextureAtlas atlas, Rectangle boundingBox, Vector2 direction, float speed, float damage, float range, float afterEffectRange, List<Skill> skills) {
+    public Projectile(TextureAtlas atlas, Rectangle boundingBox, Vector2 direction, float speed, float damage, float range, float afterEffectRange, List<Skill> skills, SoundManager sounds)  {
         super(atlas, (range + afterEffectRange) / (speed * atlas.getRegions().size), boundingBox);
         this.direction = direction;
         this.speed = speed;
         this.damage = damage;
         this.remainingRange = range;
         this.afterEffectRange = afterEffectRange;
+        this.sounds = sounds;
         skills.forEach(skill -> skill.manipulateProjectile(this));
-
     }
 
     @Override
@@ -72,6 +74,7 @@ public class Projectile extends AnimatedEntity {
             if (!enemy.isDead() && enemy.contains(this)) {
                 enemy.hit(this.damage);
                 this.remainingRange = 0;
+                this.sounds.bubble_pop.play(2.0f);
                 this.skipToFrame(20);
                 return true;
             }
