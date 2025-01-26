@@ -1,6 +1,5 @@
 package github.team42.ggj25.skills.bubbledensity;
 
-import github.team42.ggj25.entity.Projectile;
 import github.team42.ggj25.entity.Weapon;
 import github.team42.ggj25.skills.Skill;
 

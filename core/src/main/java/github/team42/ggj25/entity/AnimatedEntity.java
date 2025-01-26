@@ -13,7 +13,7 @@ public class AnimatedEntity extends AbstractEntity {
 
     public AnimatedEntity(TextureAtlas atlas, float frameDuration, Rectangle boundingBox) {
         super(boundingBox);
-        animation = new Animation<>(frameDuration, atlas.getRegions(), Animation.PlayMode.LOOP);
+        animation = new Animation<>(frameDuration, atlas.getRegions(), Animation.PlayMode.NORMAL);
     }
 
     @Override

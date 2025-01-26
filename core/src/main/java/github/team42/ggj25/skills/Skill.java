@@ -9,11 +9,11 @@ public abstract class Skill {
     public String skillName;
     public String descriptionText;
 
-    public Skill () {
+    public Skill() {
 
     }
 
-    public Skill (int cost, String skillName, String descriptionText) {
+    public Skill(int cost, String skillName, String descriptionText) {
         this.cost = cost;
         this.skillName = skillName;
         this.descriptionText = descriptionText;
@@ -24,6 +24,10 @@ public abstract class Skill {
     }
 
     public void manipulateProjectile(Projectile projectile) {
+
+    }
+
+    public void manipulatesScore() {
 
     }
 

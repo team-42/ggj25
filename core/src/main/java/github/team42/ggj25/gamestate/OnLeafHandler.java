@@ -23,14 +23,18 @@ public class OnLeafHandler {
     private float bonusPointCooldown = 1;
     private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
 
-    public void init() {
+    // level handling
+    private GameLevel currentLevel;
+
+    public void init(GameLevel level) {
         bonusPointCooldown = 1;
         timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
         elapsedTime = 0;
+        currentLevel = level;
     }
 
-    public boolean updatePlayPhase(float deltaInSeconds, GameState gs) {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || gs.getBuzzerState().triggeredSinceLastCheck()) {
+    public boolean updateOnLeafPhase(float deltaInSeconds, GameState gs) {
+        if (gs.getScoreBoard().isJumpedAllowed() && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || gs.getBuzzerState().triggeredSinceLastCheck())) {
             gs.setCurrentPhase(GamePhase.LEAF_TO_SKILLSCREEN);
             return false;
         }
@@ -67,10 +71,13 @@ public class OnLeafHandler {
             if (!gs.getLeaf().contains(gs.getPlayer().getX(), gs.getPlayer().getY())) {
                 Gdx.app.log("Leaf", "Not on Leaf, you are Dead!");
                 Gdx.app.log("Leaf", "Player X: " + gs.getPlayer().getX() + " Y: " + gs.getPlayer().getY());
+                gs.is_paused = true;
                 return true;
             }
-            if (gs.getPlayer().overlapsWith(gs.getPike()) && !gs.getPike().getIsPreparingToAttack()) {
+            if (!gs.getPike().getIsPreparingToAttack() && gs.getPlayer().overlapsWith(gs.getPike())) {
                 Gdx.app.log("Pike", "You got Piked, you are Dead!");
+                gs.is_paused = true;
+                // gs.getPike(). change to animated
                 return true;
             }
         }
@@ -97,7 +104,13 @@ public class OnLeafHandler {
         gs.getBackground().drawAmbient(spriteBatch);
         gs.getLeaf().drawSprites(spriteBatch);
         gs.getEnemies().stream().filter(enemy -> enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
-        gs.getPike().drawSprites(spriteBatch);
+        if (!gs.is_paused) {
+            gs.getPike().drawSprites(spriteBatch);
+        }
+        else {
+            // draw animation pike
+            gs.getPike().drawSprites(spriteBatch);
+            }
         gs.getPlayer().drawSprites(spriteBatch);
         for (Projectile p : gs.getActiveProjectiles()) {
             p.drawSprites(spriteBatch);

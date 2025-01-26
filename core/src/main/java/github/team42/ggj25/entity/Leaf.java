@@ -1,21 +1,17 @@
 package github.team42.ggj25.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.FrogueUtil;
+import github.team42.ggj25.gamestate.GameLevel;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -32,10 +28,27 @@ public class Leaf extends AbstractEntity implements Disposable {
     private final FrameBuffer maskBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Constants.WIDTH, Constants.HEIGHT, true);
     private final ShapeRenderer fboShapeRenderer = new ShapeRenderer();
     private final SpriteBatch fboSpriteBatch = new SpriteBatch();
+    private final Viewport viewport;
 
-    public Leaf() {
+    public Leaf(Viewport viewport, GameLevel level) {
         super(new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT));
-        pixmap = new Pixmap(Gdx.files.internal("water_lily_no_shadow.png"));
+        this.viewport = viewport;
+        Matrix4 matrix = new Matrix4();
+        matrix.setToOrtho2D(0,0, Constants.WIDTH, Constants.HEIGHT);
+        fboSpriteBatch.setProjectionMatrix(matrix);
+        fboShapeRenderer.setProjectionMatrix(matrix);
+        Pixmap pixmap1;
+        pixmap1 = null;
+        if (level == GameLevel.LEVEL_ONE) {
+            pixmap1 = new Pixmap(Gdx.files.internal("water_lily_no_shadow.png"));
+        }
+        else if (level == GameLevel.LEVEL_TWO) {
+            pixmap1 = new Pixmap(Gdx.files.internal("radioactive_leaf_no_shadow.png"));
+        }
+        else {
+            pixmap1 = new Pixmap(Gdx.files.internal("radioactive_leaf_no_shadow.png"));
+        }
+        pixmap = pixmap1;
         texture = new Texture(pixmap);
 //        texture = new Texture(Gdx.files.internal("water_lily.png"));
         outline = buildLillypadPolygon();
@@ -76,6 +89,7 @@ public class Leaf extends AbstractEntity implements Disposable {
         fboSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         maskBuffer.end();
+        viewport.apply(true);
         spriteBatch.begin();
         Texture bufferTexture = maskBuffer.getColorBufferTexture();
         TextureRegion textureRegion = new TextureRegion(bufferTexture);
