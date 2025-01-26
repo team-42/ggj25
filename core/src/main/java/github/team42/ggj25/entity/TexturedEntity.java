@@ -17,7 +17,8 @@ import github.team42.ggj25.FrogueUtil;
 public class TexturedEntity extends AbstractEntity implements Disposable {
     private final Texture texture;
     private final Pixmap pixmap;
-    private final Polygon hitbox;
+    private final Polygon hitboxAccurate;
+    private final Rectangle hitboxBoundingBox;
 
     TexturedEntity(final String textureFile, Rectangle boundingBox) {
         this(new Texture(Gdx.files.internal(textureFile)), new Pixmap(Gdx.files.internal(textureFile)), boundingBox);
@@ -27,9 +28,10 @@ public class TexturedEntity extends AbstractEntity implements Disposable {
         super(boundingBox);
         this.texture = texture;
         this.pixmap = pixmap;
-        this.hitbox = FrogueUtil.getEdgePolygon(this.pixmap);
-        this.hitbox.setScale(this.getBoundingBox().getWidth() / this.pixmap.getWidth(),
+        this.hitboxAccurate = FrogueUtil.getEdgePolygon(this.pixmap);
+        this.hitboxAccurate.setScale(this.getBoundingBox().getWidth() / this.pixmap.getWidth(),
             this.getBoundingBox().getHeight() / this.pixmap.getHeight());
+        hitboxBoundingBox = this.hitboxAccurate.getBoundingRectangle();
     }
 
     TexturedEntity() {
@@ -52,7 +54,7 @@ public class TexturedEntity extends AbstractEntity implements Disposable {
             shapeRenderer.end();
             shapeRenderer.setColor(Color.DARK_GRAY);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            Rectangle boundingRectangle = getAccurateHitbox().getBoundingRectangle();
+            Rectangle boundingRectangle = hitboxBoundingBox;
             shapeRenderer.rect(boundingRectangle.x, boundingRectangle.y, boundingRectangle.width, boundingRectangle.height);
             shapeRenderer.end();
         }
@@ -65,22 +67,18 @@ public class TexturedEntity extends AbstractEntity implements Disposable {
 
     }
 
-    protected Texture getTexture() {
-        return texture;
-    }
-
-
-    public Pixmap getPixmap() {
-        return pixmap;
-    }
-
     public Polygon getAccurateHitbox() {
-        return this.hitbox;
+        return this.hitboxAccurate;
     }
 
     @Override
     public void update(float deltaInSeconds) {
         super.update(deltaInSeconds);
-        hitbox.setPosition(getBoundingBox().x, getBoundingBox().y);
+        hitboxAccurate.setPosition(getBoundingBox().x, getBoundingBox().y);
+    }
+
+    @Override
+    public boolean contains(float x, float y) {
+        return hitboxBoundingBox.contains(x, y);
     }
 }
