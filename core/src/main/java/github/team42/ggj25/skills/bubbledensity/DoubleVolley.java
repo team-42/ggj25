@@ -13,7 +13,7 @@ public class DoubleVolley extends Skill {
 
     @Override
     public boolean manipulateWeapon(Weapon weapon) {
-        weapon.setFireRate(weapon.getFireRate() * 1.5f);
+        weapon.setFireRate(weapon.getFireRate() * 0.5f);
 
         return true;
     }

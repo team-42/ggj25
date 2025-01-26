@@ -8,12 +8,12 @@ public class RapidFire extends Skill {
     public RapidFire() {
         super(0,
             "Rapid Fire",
-            "This skill increases the weapons fire rate by 15%!");
+            "This skill increases the weapons fire rate by 30%!");
     }
 
     @Override
     public boolean manipulateWeapon(Weapon weapon) {
-        weapon.setFireRate(weapon.getFireRate() * 1.15f);
+        weapon.setFireRate(weapon.getFireRate() * 0.7f);
         return true;
     }
 }
