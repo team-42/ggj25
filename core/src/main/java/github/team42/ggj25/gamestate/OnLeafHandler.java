@@ -19,7 +19,6 @@ public class OnLeafHandler {
     private float elapsedTime = 0;
 
     // Score Handling
-    private final int bonusPoints = 3;
     private float bonusPointsInterval = 1f;
     private float bonusPointCooldown = 1;
     private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
@@ -47,10 +46,11 @@ public class OnLeafHandler {
         }
         gs.getActiveProjectiles().removeIf(p -> !p.isActive());
 
-        bonusPointCooldown -= deltaInSeconds;
-        if (bonusPointCooldown <= 0) {
-            bonusPointCooldown = bonusPointsInterval;
-            gs.getScoreBoard().addPointsToScore(bonusPoints);
+        bonusPointCooldown += deltaInSeconds;
+        if (bonusPointCooldown >= bonusPointsInterval) {
+            gs.getScoreBoard().addPointsToScore((int) (bonusPointCooldown / bonusPointsInterval));
+            bonusPointCooldown = 0;
+            bonusPointsInterval *= 0.99f;
         }
         gs.getScoreBoard().update(deltaInSeconds);
 
@@ -63,7 +63,7 @@ public class OnLeafHandler {
         elapsedTime += deltaInSeconds;
         float progress = elapsedTime / invulnerabilityDuration;
         if (progress > 1f) {
-            if (!gs.frogInsideLeaf(gs.getPlayer().getX(), gs.getPlayer().getY())) {
+            if (!gs.getLeaf().contains(gs.getPlayer().getX(), gs.getPlayer().getY())) {
                 Gdx.app.log("Leaf", "Not on Leaf, you are Dead!");
                 Gdx.app.log("Leaf", "Player X: " + gs.getPlayer().getX() + " Y: " + gs.getPlayer().getY());
                 return true;
@@ -85,18 +85,17 @@ public class OnLeafHandler {
         spawnVectorFromCenter.add(new Vector2(Constants.WIDTH / 2f, Constants.HEIGHT / 2f));
         initialDirection.rotateDeg(180);
         initialDirection.setLength(1);
-        gs.getEnemies().add(new Enemy(spawnVectorFromCenter.x, spawnVectorFromCenter.y, initialDirection));
+        gs.getEnemies().add(new Enemy(gs.getLeaf(), spawnVectorFromCenter.x, spawnVectorFromCenter.y, initialDirection));
         Gdx.app.log("Spawn Enemy", "direction: " + spawnDirection + "; initialDirection: " + initialDirection);
 
     }
 
     public void drawCurrentGameField(SpriteBatch spriteBatch, GameState gs) {
         gs.getBackground().drawSprites(spriteBatch);
-        gs.getLeaf().drawSprites(spriteBatch);
-        for (final Enemy enemy : gs.getEnemies()) {
-            enemy.drawSprites(spriteBatch);
-        }
+        gs.getEnemies().stream().filter(enemy -> !enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
         gs.getBackground().drawAmbient(spriteBatch);
+        gs.getLeaf().drawSprites(spriteBatch);
+        gs.getEnemies().stream().filter(enemy -> enemy.getMode().isForeground()).forEach(enemy -> enemy.drawSprites(spriteBatch));
         gs.getPike().drawSprites(spriteBatch);
         gs.getPlayer().drawSprites(spriteBatch);
         for (Projectile p : gs.getActiveProjectiles()) {
