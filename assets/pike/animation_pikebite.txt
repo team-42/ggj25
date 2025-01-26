@@ -1,341 +1,341 @@
 animation_pikebite.png
-size: 3840, 1080
+size: 1728, 1296
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 frame_01 (Benutzerdefiniert)
   rotate: false
   xy: 0, 0
-  size: 384, 216
-  orig: 384, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_02 (Benutzerdefiniert)
   rotate: false
-  xy: 384, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 216, 0
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_03 (Benutzerdefiniert)
   rotate: false
-  xy: 768, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 432, 0
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_04 (Benutzerdefiniert)
   rotate: false
-  xy: 1152, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 648, 0
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_05 (Benutzerdefiniert)
   rotate: false
-  xy: 1536, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 864, 0
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_06 (Benutzerdefiniert)
   rotate: false
-  xy: 1920, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 1080, 0
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_07 (Benutzerdefiniert)
   rotate: false
-  xy: 2304, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 1296, 0
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_08 (Benutzerdefiniert)
   rotate: false
-  xy: 2688, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 1512, 0
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_09 (Benutzerdefiniert)
   rotate: false
-  xy: 3072, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 0, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_10 (Benutzerdefiniert)
   rotate: false
-  xy: 3456, 0
-  size: 384, 216
-  orig: 384, 216
+  xy: 216, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_11 (Benutzerdefiniert)
   rotate: false
-  xy: 0, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 432, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_12 (Benutzerdefiniert)
   rotate: false
-  xy: 384, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 648, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_13 (Benutzerdefiniert)
   rotate: false
-  xy: 768, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 864, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_14 (Benutzerdefiniert)
   rotate: false
-  xy: 1152, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 1080, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_15 (Benutzerdefiniert)
   rotate: false
-  xy: 1536, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 1296, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_16 (Benutzerdefiniert)
   rotate: false
-  xy: 1920, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 1512, 216
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_17 (Benutzerdefiniert)
   rotate: false
-  xy: 2304, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 0, 432
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_18 (Benutzerdefiniert)
   rotate: false
-  xy: 2688, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 216, 432
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_19 (Benutzerdefiniert)
   rotate: false
-  xy: 3072, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 432, 432
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_20 (Benutzerdefiniert)
   rotate: false
-  xy: 3456, 216
-  size: 384, 216
-  orig: 384, 216
+  xy: 648, 432
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_21 (Benutzerdefiniert)
   rotate: false
-  xy: 0, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 864, 432
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_22 (Benutzerdefiniert)
   rotate: false
-  xy: 384, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 1080, 432
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_23 (Benutzerdefiniert)
   rotate: false
-  xy: 768, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 1296, 432
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_24 (Benutzerdefiniert)
   rotate: false
-  xy: 1152, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 1512, 432
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_25 (Benutzerdefiniert)
   rotate: false
-  xy: 1536, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 0, 648
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_26 (Benutzerdefiniert)
   rotate: false
-  xy: 1920, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 216, 648
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_27 (Benutzerdefiniert)
   rotate: false
-  xy: 2304, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 432, 648
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_28 (Benutzerdefiniert)
   rotate: false
-  xy: 2688, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 648, 648
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_29 (Benutzerdefiniert)
   rotate: false
-  xy: 3072, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 864, 648
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_30 (Benutzerdefiniert)
   rotate: false
-  xy: 3456, 432
-  size: 384, 216
-  orig: 384, 216
+  xy: 1080, 648
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_31 (Benutzerdefiniert)
   rotate: false
-  xy: 0, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 1296, 648
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_32 (Benutzerdefiniert)
   rotate: false
-  xy: 384, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 1512, 648
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_33 (Benutzerdefiniert)
   rotate: false
-  xy: 768, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 0, 864
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_34 (Benutzerdefiniert)
   rotate: false
-  xy: 1152, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 216, 864
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_35 (Benutzerdefiniert)
   rotate: false
-  xy: 1536, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 432, 864
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_36 (Benutzerdefiniert)
   rotate: false
-  xy: 1920, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 648, 864
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_37 (Benutzerdefiniert)
   rotate: false
-  xy: 2304, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 864, 864
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_38 (Benutzerdefiniert)
   rotate: false
-  xy: 2688, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 1080, 864
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_39 (Benutzerdefiniert)
   rotate: false
-  xy: 3072, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 1296, 864
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_40 (Benutzerdefiniert)
   rotate: false
-  xy: 3456, 648
-  size: 384, 216
-  orig: 384, 216
+  xy: 1512, 864
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_41 (Benutzerdefiniert)
   rotate: false
-  xy: 0, 864
-  size: 384, 216
-  orig: 384, 216
+  xy: 0, 1080
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_42 (Benutzerdefiniert)
   rotate: false
-  xy: 384, 864
-  size: 384, 216
-  orig: 384, 216
+  xy: 216, 1080
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_43 (Benutzerdefiniert)
   rotate: false
-  xy: 768, 864
-  size: 384, 216
-  orig: 384, 216
+  xy: 432, 1080
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_44 (Benutzerdefiniert)
   rotate: false
-  xy: 1152, 864
-  size: 384, 216
-  orig: 384, 216
+  xy: 648, 1080
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_45 (Benutzerdefiniert)
   rotate: false
-  xy: 1536, 864
-  size: 384, 216
-  orig: 384, 216
+  xy: 864, 1080
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_46 (Benutzerdefiniert)
   rotate: false
-  xy: 1920, 864
-  size: 384, 216
-  orig: 384, 216
+  xy: 1080, 1080
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_47 (Benutzerdefiniert)
   rotate: false
-  xy: 2304, 864
-  size: 384, 216
-  orig: 384, 216
+  xy: 1296, 1080
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
 frame_48 (Benutzerdefiniert)
   rotate: false
-  xy: 2688, 864
-  size: 384, 216
-  orig: 384, 216
+  xy: 1512, 1080
+  size: 216, 216
+  orig: 216, 216
   offset: 0, 0
   index: -1
