@@ -25,8 +25,8 @@ public class GameState implements Drawable, Disposable {
     private final Background background = new Background(currentLevel);
     private Leaf leaf;
     private Pike pike;
-    private TextureAtlas pikeBiteAtlas = new TextureAtlas(Gdx.files.internal("pike/animation_pikebite.txt"));
-    private AnimatedPike animatedPike = new AnimatedPike(pikeBiteAtlas, pike.getBoundingBox());
+    private TextureAtlas pikeBiteAtlas;
+    private AnimatedPike animatedPike;
     private final ScoreBoard scoreBoard;
     private final DeathScreen deathScreen = new DeathScreen();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
@@ -53,11 +53,11 @@ public class GameState implements Drawable, Disposable {
     private final SkillScreenToLeafHandler skillScreenToLeafHandler = new SkillScreenToLeafHandler();
 
 
-
-
     public GameState(Viewport viewport) {
         this.leaf = new Leaf(viewport, currentLevel);
         this.pike = new Pike(this);
+        this.pikeBiteAtlas = new TextureAtlas(Gdx.files.internal("pike/animation_pikebite.txt"));
+        this.animatedPike = new AnimatedPike(pikeBiteAtlas, pike.getBoundingBox());
         this.buzzerState = new BuzzerState();
         this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337, this.buzzerState);
         this.webSocketServerBuzzer.start();
