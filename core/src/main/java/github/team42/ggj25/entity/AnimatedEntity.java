@@ -28,6 +28,6 @@ public class AnimatedEntity extends AbstractEntity {
     }
 
     protected void skipToFrame(int frameNumber) {
-        this.stateTime = frameNumber * animation.getAnimationDuration() / animation.getFrameDuration();
+        this.stateTime = frameNumber * animation.getFrameDuration();
     }
 }
