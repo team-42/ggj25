@@ -24,7 +24,7 @@ public class GameState implements Drawable, Disposable {
     private final List<Enemy> enemies = new ArrayList<>();
 
     private GameLevel currentLevel = GameLevel.LEVEL_ONE;
-    private final Background background = new Background(currentLevel);
+    private Background background = new Background(currentLevel);
     private Leaf leaf;
     private Pike pike;
     private TextureAtlas pikeBiteAtlas;
@@ -98,6 +98,8 @@ public class GameState implements Drawable, Disposable {
         skillInLastTransition = null;
 
         onLeafHandler.init(currentLevel);
+        background.dispose();
+        background = new Background(currentLevel);
         leafToSkillHandler.init();
         skillScreenHandler.init(levelPerSkilltree);
         skillScreenToLeafHandler.init();
@@ -134,7 +136,8 @@ public class GameState implements Drawable, Disposable {
                     break;
                 case SKILLSCREEN:
                     if (skillScreenHandler.updateSkillScreen(deltaInSeconds, this)) {
-                        setLeaf(new Leaf(viewport, getRandomLevel()));
+                        currentLevel = getRandomLevel();
+                        setLeaf(new Leaf(viewport, currentLevel));
                         currentPhase = GamePhase.SKILLSCREEN_TO_LEAF;
                     }
                     break;
