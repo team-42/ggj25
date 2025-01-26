@@ -1,6 +1,8 @@
 package github.team42.ggj25.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -66,6 +68,18 @@ public class Frog extends TexturedEntity {
         }
         return false;
         //return this.getBoundingBox().overlaps(entity.getBoundingBox());
+    }
+
+    @Override
+    public void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive) {
+        super.drawShapes(shapeRenderer, debugRenderingActive);
+        if (debugRenderingActive) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.RED);
+            float[] vertices = this.getAccurateHitbox().getTransformedVertices();
+            shapeRenderer.polygon(vertices);
+            shapeRenderer.end();
+        }
     }
 
     public float getSpeed() {

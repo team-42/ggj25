@@ -243,9 +243,6 @@ public final class FrogueUtil {
         }
 
 
-
-
-
     static public Vector2 calculateBezier(float t, Vector2 p0, Vector2 p1, Vector2 p2) {
         float u = 1 - t;
         float tt = t * t;
