@@ -18,7 +18,11 @@ public class SkillScreenHandler {
 
     public SkillScreenHandler() {
         skillScreen = new SkillScreen();
+
         skillTreesToLevelUp = new ArrayList<>();
+        skillTreesToLevelUp.add(SkillTrees.values()[new Random().nextInt(possibleSkillTreesToLevelUp.size())]);
+        skillTreesToLevelUp.add(SkillTrees.values()[new Random().nextInt(possibleSkillTreesToLevelUp.size())]);
+
         elapsedTime = 0;
         duration = 2;
     }

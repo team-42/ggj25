@@ -38,7 +38,7 @@ public class SkillScreen implements Drawable, Disposable {
             spriteBatch.draw(
                 skillTrees[i].getIconTexture(),
                 sideOffset + i * (skillOffset + 420),
-                (float) (Constants.HEIGHT + skillTrees[i].getIconTexture().getHeight()) / 2,
+                (float) (Constants.HEIGHT - skillTrees[i].getIconTexture().getHeight()) / 2,
                 420,
                 420);
         }
