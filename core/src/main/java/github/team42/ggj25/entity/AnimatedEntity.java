@@ -26,4 +26,8 @@ public class AnimatedEntity extends AbstractEntity {
     public void drawSprites(SpriteBatch spriteBatch) {
         spriteBatch.draw(this.animation.getKeyFrame(stateTime), getBoundingBox().x, getBoundingBox().y, getBoundingBox().width, getBoundingBox().height);
     }
+
+    protected void skipToFrame(int frameNumber) {
+        this.stateTime = frameNumber * animation.getAnimationDuration() / animation.getFrameDuration();
+    }
 }

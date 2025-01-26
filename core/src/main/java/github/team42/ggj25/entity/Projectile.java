@@ -65,13 +65,14 @@ public class Projectile extends AnimatedEntity {
     }
 
     public boolean checkCollisionWithEnemy(List<Enemy> enemies) {
-        if(!isActive() || !isHarmful()){
+        if (!isActive() || !isHarmful()) {
             return false;
         }
-        for(final Enemy enemy : enemies){
-            if(enemy.contains(this)){
+        for (final Enemy enemy : enemies) {
+            if (!enemy.isDead() && enemy.contains(this)) {
                 enemy.hit(this.damage);
                 this.remainingRange = 0;
+                this.skipToFrame(20);
                 return true;
             }
         }

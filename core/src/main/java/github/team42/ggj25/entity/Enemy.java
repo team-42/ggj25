@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.FrogueUtil;
@@ -59,6 +60,7 @@ public class Enemy extends AbstractEntity {
     private static final float BITE_DURATION_SECONDS = 3f;
     private static final int BITE_RADIUS = 50;
     private static final int START_HP = 100;
+    private final Texture enclosingBubble = new Texture(Gdx.files.internal("bubble/enclosing_bubble.png"));
     private float speed = BASE_SPEED;
     private final Vector2 direction;
     private Orientation orientation = Orientation.StraightAhead;
@@ -153,6 +155,10 @@ public class Enemy extends AbstractEntity {
         spriteBatch.draw(mode.textureRegion,
             getBoundingBox().x, getBoundingBox().y, getBoundingBox().width / 2f, getBoundingBox().height / 2f, getBoundingBox().width, getBoundingBox().height,
             1, 1, direction.angleDeg(IMAGE_DIRECTION));
+        if (mode.equals(Mode.Floating)) {
+            Rectangle boundingBoxForBubble = FrogueUtil.getBoundingBoxForCenter(getX(), getY(), 144, 144);
+            spriteBatch.draw(enclosingBubble, boundingBoxForBubble.x, boundingBoxForBubble.y, boundingBoxForBubble.width, boundingBoxForBubble.height);
+        }
     }
 
     @Override
