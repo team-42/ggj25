@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Drawable;
+import github.team42.ggj25.SoundManager;
 import github.team42.ggj25.buzzer.BuzzerState;
 import github.team42.ggj25.buzzer.WebSocketServerBuzzer;
 import github.team42.ggj25.entity.*;
@@ -21,11 +22,11 @@ import java.util.Map;
 import static github.team42.ggj25.gamestate.GamePhase.ON_LEAF;
 
 public class GameState implements Drawable, Disposable {
-    private final Frog player = new Frog(this);
+    private final Frog player;
     private final List<Enemy> enemies = new ArrayList<>();
     private final Background background = new Background();
-    private Leaf leaf = new Leaf();
-    private Pike pike = new Pike(this);
+    private Leaf leaf ;
+    private Pike pike;
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final DeathScreen deathScreen = new DeathScreen();
     private final List<Projectile> activeProjectiles = new ArrayList<>();
@@ -47,8 +48,13 @@ public class GameState implements Drawable, Disposable {
     private final LeafToSkillScreenHandler leafToSkillHandler = new LeafToSkillScreenHandler();
     private final SkillScreenHandler skillScreenHandler = new SkillScreenHandler();
     private final SkillScreenToLeafHandler skillScreenToLeafHandler = new SkillScreenToLeafHandler();
+    private final SoundManager sounds;
 
-    public GameState(Camera camera) {
+    public GameState(Camera camera,SoundManager sounds) {
+        this.sounds = sounds;
+        this.player = new Frog(this);
+        this.leaf = new Leaf();
+        this.pike = new Pike(this);
         this.buzzerState = new BuzzerState();
         this.webSocketServerBuzzer = new WebSocketServerBuzzer(13337, this.buzzerState);
         this.webSocketServerBuzzer.start();
@@ -56,6 +62,10 @@ public class GameState implements Drawable, Disposable {
         for (SkillTrees val : SkillTrees.values()) {
             levelPerSkilltree.put(val, 0);
         }
+    }
+
+    public SoundManager getSounds() {
+        return this.sounds;
     }
 
     public void prepareGameStateForOnLeaf() {
