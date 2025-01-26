@@ -29,6 +29,6 @@ public class BubbleGun extends Weapon {
         return new Projectile(
                 textureAtlas,
                 FrogueUtil.getBoundingBoxForCenter(frog.getX(), frog.getY(), getProjectileWidth(), getProjectileHeight()),
-                new Vector2(fireVector.x, fireVector.y), 200, 100, 500, 100, skills);
+                new Vector2(fireVector.x, fireVector.y), 200, 30, 500, 100, skills);
     }
 }

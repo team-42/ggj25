@@ -13,7 +13,7 @@ public class BubbleStream extends Skill {
 
     @Override
     public boolean manipulateWeapon(Weapon weapon) {
-        weapon.setFireRate(weapon.getFireRate() * 1.3f);
+        weapon.setFireRate(weapon.getFireRate() * 0.7f);
 
         return true;
     }

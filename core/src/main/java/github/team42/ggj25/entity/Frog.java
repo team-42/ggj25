@@ -1,7 +1,12 @@
 package github.team42.ggj25.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.Direction;
 import github.team42.ggj25.gamestate.GameState;
@@ -25,6 +30,7 @@ public class Frog extends TexturedEntity {
 
     @Override
     public void update(float deltaInSeconds) {
+        super.update(deltaInSeconds);
         final EnumSet<Direction> directions = EnumSet.noneOf(Direction.class);
         for (final Direction d : Direction.values()) {
             if (Gdx.input.isKeyPressed(d.key) || Gdx.input.isKeyPressed(d.alternateKey)) {
@@ -55,7 +61,25 @@ public class Frog extends TexturedEntity {
     }
 
     public boolean overlapsWith(TexturedEntity entity) {
-        return this.getBoundingBox().overlaps(entity.getBoundingBox());
+        Polygon polygon_frog = this.getAccurateHitbox();
+        Polygon polygon_other = entity.getAccurateHitbox();
+        if (polygon_frog.getBoundingRectangle().overlaps(polygon_other.getBoundingRectangle())){
+                return Intersector.overlapConvexPolygons(polygon_frog, polygon_other);
+        }
+        return false;
+        //return this.getBoundingBox().overlaps(entity.getBoundingBox());
+    }
+
+    @Override
+    public void drawShapes(ShapeRenderer shapeRenderer, boolean debugRenderingActive) {
+        super.drawShapes(shapeRenderer, debugRenderingActive);
+        if (debugRenderingActive) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.RED);
+            float[] vertices = this.getAccurateHitbox().getTransformedVertices();
+            shapeRenderer.polygon(vertices);
+            shapeRenderer.end();
+        }
     }
 
     public float getSpeed() {
@@ -68,5 +92,9 @@ public class Frog extends TexturedEntity {
 
     public void addSkillToWeapons() {
         weapons.forEach(weapon -> weapon.handleLeafTransition());
+    }
+
+    public Rectangle getOriginalSize() {
+        return new Rectangle(Constants.WIDTH / 2f, Constants.HEIGHT / 2f, 96, 54);
     }
 }
