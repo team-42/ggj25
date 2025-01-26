@@ -103,85 +103,10 @@ public final class FrogueUtil {
         }
 
         edge_points = sortVerticesByDistance(edge_points);
-        edge_points = simplify(edge_points, 30, 50);
         edge_points = sortPointsByCentroid(edge_points);
         return edge_points;
     }
 
-    private static List<GridPoint2> simplify(List<GridPoint2> edgePoints, float threshold, float maxDistance) {
-        if (edgePoints.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        Queue<GridPoint2> vertices = new ArrayDeque<>(edgePoints);
-        List<GridPoint2> result = new ArrayList<>();
-        while (!vertices.isEmpty()) {
-
-            final Set<GridPoint2> simplificationSet = new HashSet<>();
-            float distanceInSet = 0;
-            while (!vertices.isEmpty() && distanceInSet < maxDistance) {
-                GridPoint2 p1 = vertices.poll();
-                simplificationSet.add(p1);
-                if (vertices.isEmpty()) {
-                    break;
-                } else {
-                    float dstToNext = p1.dst(vertices.peek());
-                    if (dstToNext > threshold) {
-                        break;
-                    } else {
-                        distanceInSet += dstToNext;
-                    }
-                }
-            }
-            float x = 0;
-            float y = 0;
-            for (GridPoint2 p : simplificationSet) {
-                x += p.x;
-                y += p.y;
-            }
-            final GridPoint2 simplified = new GridPoint2((int) (x / simplificationSet.size()), (int) (y / simplificationSet.size()));
-            result.add(simplified);
-        }
-        return result;
-    }
-
-
-//    private static List<GridPoint2> simplify(List<GridPoint2> vertices) {
-//        double max = 10;
-//
-//        int size = vertices.size();
-//        GridPoint2 first = vertices.get(0);
-//        GridPoint2 last = vertices.get(size - 1);
-//
-//        double maxDistance = 0;
-//        int maxVertex = 0;
-//        for (int i = 1; i < size - 1; i++) {
-//            GridPoint2 v = vertices.get(i);
-//            // get the distance from v to the line created by first/last
-//            double d = Intersector.distanceLinePoint(first.x, first.y, last.x, last.y, v.x, v.y);
-//            if (d > maxDistance) {
-//                maxDistance = d;
-//                maxVertex = i;
-//            }
-//        }
-//
-//        if (maxDistance >= max) {
-//            // subdivide
-//            List<GridPoint2> one = simplify(vertices.subList(0, maxVertex + 1));
-//            List<GridPoint2> two = simplify(vertices.subList(maxVertex, size));
-//            // rejoin the two (TODO without repeating the middle point)
-//            List<GridPoint2> simplified = new ArrayList<GridPoint2>();
-//            simplified.addAll(one);
-//            simplified.addAll(two);
-//            return simplified;
-//        } else {
-//            // return only the first/last vertices
-//            List<GridPoint2> simplified = new ArrayList<GridPoint2>();
-//            simplified.add(first);
-//            simplified.add(last);
-//            return simplified;
-//        }
-//    }
 
     static boolean isEdge(GridPoint2 xy, Pixmap pixmap) {
         int x = xy.x;
@@ -219,8 +144,107 @@ public final class FrogueUtil {
         // close the polygon by repeating the first point
         verts[outline.size() * 2] = outline.get(0).x;
         verts[outline.size() * 2 + 1] = outline.get(0).y;
-        return new Polygon(verts);
+        Polygon polygon = new Polygon(verts);
+        Polygon smooth_polygon = processPolygon(polygon, 100, 1f);
+        return smooth_polygon;
     }
+
+     public static Polygon processPolygon(Polygon polygon, float windowSize, float outlierThreshold) {
+            float[] vertices = polygon.getVertices();
+            int numVertices = vertices.length / 2;
+
+            // Store processed points
+            List<Float> smoothedPoints = new ArrayList<>();
+
+            // Iterate over points with a step matching the window size
+            for (int i = 0; i < numVertices; i++) {
+                float sumX = 0;
+                float sumY = 0;
+                int count = 0;
+
+                List<Float> localDistances = new ArrayList<>();
+
+                // Rolling window: collect nearby points within the window
+                for (int j = 0; j < numVertices; j++) {
+                    float dx = vertices[j * 2] - vertices[i * 2];
+                    float dy = vertices[j * 2 + 1] - vertices[i * 2 + 1];
+                    float distance = (float) Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance <= windowSize) {
+                        sumX += vertices[j * 2];
+                        sumY += vertices[j * 2 + 1];
+                        localDistances.add(distance);
+                        count++;
+                    }
+                }
+
+                // Remove outliers in the rolling window
+                if (!localDistances.isEmpty()) {
+                    float meanDistance = (float) localDistances.stream().mapToDouble(Double::valueOf).average().orElse(0);
+                    float maxAllowedDistance = meanDistance * outlierThreshold;
+
+                    sumX = 0;
+                    sumY = 0;
+                    count = 0;
+
+                    for (int j = 0; j < numVertices; j++) {
+                        float dx = vertices[j * 2] - vertices[i * 2];
+                        float dy = vertices[j * 2 + 1] - vertices[i * 2 + 1];
+                        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance <= windowSize && distance <= maxAllowedDistance) {
+                            sumX += vertices[j * 2];
+                            sumY += vertices[j * 2 + 1];
+                            count++;
+                        }
+                    }
+                }
+
+                // Calculate the smoothed point
+                if (count > 0) {
+                    smoothedPoints.add(sumX / count);
+                    smoothedPoints.add(sumY / count);
+                }
+
+                // Move to the next step in the rolling window
+                i += (int) (windowSize / getPolygonAverageEdgeLength(vertices));
+            }
+
+            // Convert smoothed points back into a float array
+            float[] finalVertices = new float[smoothedPoints.size()];
+            for (int i = 0; i < smoothedPoints.size(); i++) {
+                finalVertices[i] = smoothedPoints.get(i);
+            }
+
+            return reconstructPolygon(polygon, finalVertices);
+        }
+
+        private static float getPolygonAverageEdgeLength(float[] vertices) {
+            int numVertices = vertices.length / 2;
+            float totalLength = 0;
+
+            for (int i = 0; i < numVertices; i++) {
+                int next = (i + 1) % numVertices;
+                float dx = vertices[next * 2] - vertices[i * 2];
+                float dy = vertices[next * 2 + 1] - vertices[i * 2 + 1];
+                totalLength += Math.sqrt(dx * dx + dy * dy);
+            }
+
+            return totalLength / numVertices;
+        }
+
+        private static Polygon reconstructPolygon(Polygon original, float[] vertices) {
+            Polygon newPolygon = new Polygon(vertices);
+            newPolygon.setPosition(original.getX(), original.getY());
+            newPolygon.setOrigin(original.getOriginX(), original.getOriginY());
+            newPolygon.setRotation(original.getRotation());
+            newPolygon.setScale(original.getScaleX(), original.getScaleY());
+            return newPolygon;
+        }
+
+
+
+
 
     static public Vector2 calculateBezier(float t, Vector2 p0, Vector2 p1, Vector2 p2) {
         float u = 1 - t;

@@ -62,8 +62,7 @@ public class Frog extends TexturedEntity {
         Polygon polygon_frog = this.getAccurateHitbox();
         Polygon polygon_other = entity.getAccurateHitbox();
         if (polygon_frog.getBoundingRectangle().overlaps(polygon_other.getBoundingRectangle())){
-            return true;
-                //Intersector.overlapConvexPolygons(polygon_frog, polygon_other);
+                return Intersector.overlapConvexPolygons(polygon_frog, polygon_other);
         }
         return false;
         //return this.getBoundingBox().overlaps(entity.getBoundingBox());
