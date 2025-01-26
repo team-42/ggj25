@@ -3,7 +3,7 @@ package github.team42.ggj25.buzzer;
 import java.time.Instant;
 
 public class BuzzerState {
-    private long lastBuzzerCheck;
+    protected long lastBuzzerCheck;
     private boolean isTriggered;
     private boolean isConnected;
 
@@ -16,8 +16,11 @@ public boolean getIsTriggered() {
         return this.isTriggered;
 }
 public void setIsTriggered(boolean value) {
+
         this.isTriggered = value;
 }
+
+
     public boolean getIsConnected() {
         return this.isConnected;
     }
@@ -27,8 +30,7 @@ public void setIsTriggered(boolean value) {
     }
 
     public boolean triggeredSinceLastCheck() {
-        if (Instant.now ().getEpochSecond () - this.lastBuzzerCheck > 0.5f
-            && this.getIsTriggered()) {
+        if (this.isTriggered) {
             this.setIsTriggered(false);
             return true;
         }

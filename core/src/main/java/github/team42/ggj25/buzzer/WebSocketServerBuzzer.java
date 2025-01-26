@@ -31,6 +31,8 @@ private final BuzzerState buzzerState;
         @Override
         public void onMessage(WebSocket conn, String message) {
             if (message.equals("buzzerHit")) {
+                System.out.println(message);
+                System.out.println("Buzzer wurde betätigt");
                 buzzerState.setIsTriggered(true);
             }
         }
