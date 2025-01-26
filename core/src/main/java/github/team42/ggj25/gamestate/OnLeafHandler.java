@@ -20,7 +20,7 @@ public class OnLeafHandler {
 
     // Score Handling
     private final int bonusPoints = 3;
-    private final float bonusPointsInterval = 1;
+    private float bonusPointsInterval = 1f;
     private float bonusPointCooldown = 1;
     private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
 

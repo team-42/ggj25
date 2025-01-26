@@ -39,10 +39,6 @@ public class GameState implements Drawable, Disposable {
     private final BuzzerState buzzerState;
     private final WebSocketServerBuzzer webSocketServerBuzzer;
 
-    private float bonusPointsInterval = 1f;
-    private float bonusPointCooldown = 1;
-    private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
-
     private final Map<SkillTrees, Integer> levelPerSkilltree = new EnumMap<>(SkillTrees.class);
     private Skill skillInLastTransition = null;
     private final List<Skill> frogSkills = new ArrayList<>();
@@ -251,7 +247,7 @@ public class GameState implements Drawable, Disposable {
         leaf.dispose();
         pike.dispose();
         scoreBoard.dispose();
-        killScreen.dispose();
+        deathScreen.dispose();
         try {
             this.webSocketServerBuzzer.stop();
         } catch (InterruptedException e) {
