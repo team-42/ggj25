@@ -3,8 +3,10 @@ package github.team42.ggj25.gamestate;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
+import github.team42.ggj25.entity.AnimatedPike;
 import github.team42.ggj25.entity.Enemy;
 import github.team42.ggj25.entity.Projectile;
 
@@ -23,7 +25,7 @@ public class OnLeafHandler {
     private float bonusPointCooldown = 1;
     private float timeSinceLastEnemySpawnSeconds = ENEMY_SPAWN_RATE_SECONDS;
 
-    // level handling
+   // level handling
     private GameLevel currentLevel;
 
     public void init(GameLevel level) {
@@ -43,6 +45,9 @@ public class OnLeafHandler {
         gs.getLeaf().update(deltaInSeconds);
         for (final Enemy enemy : gs.getEnemies()) {
             enemy.update(deltaInSeconds);
+            if(enemy.checkScored()){
+                gs.getScoreBoard().addPointsToScore((long) (10 / bonusPointsInterval));
+            }
         }
         gs.getPlayer().update(deltaInSeconds);
         for (Projectile p : gs.getActiveProjectiles()) {
@@ -109,7 +114,7 @@ public class OnLeafHandler {
         }
         else {
             // draw animation pike
-            gs.getPike().drawSprites(spriteBatch);
+            gs.getAnimatedPike().drawSprites(spriteBatch);
             }
         gs.getPlayer().drawSprites(spriteBatch);
         for (Projectile p : gs.getActiveProjectiles()) {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import github.team42.ggj25.FrogueUtil;
+import github.team42.ggj25.SoundManager;
 import github.team42.ggj25.gamestate.GameState;
 import github.team42.ggj25.skills.Skill;
 
@@ -20,7 +21,7 @@ public class BubbleGun extends Weapon {
     }
 
     @Override
-    protected Projectile createProjectile(List<Skill> skills) {
+    protected Projectile createProjectile(List<Skill> skills, SoundManager sounds) {
         final Vector3 fireVector = getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         System.out.println(fireVector);
         fireVector.sub(frog.getX(), frog.getY(), 0);
@@ -29,6 +30,7 @@ public class BubbleGun extends Weapon {
         return new Projectile(
                 textureAtlas,
                 FrogueUtil.getBoundingBoxForCenter(frog.getX(), frog.getY(), getProjectileWidth(), getProjectileHeight()),
-                new Vector2(fireVector.x, fireVector.y), 200, 30, 500, 100, skills);
+                new Vector2(fireVector.x, fireVector.y), 200, 30, 500, 100, skills, sounds);
+
     }
 }

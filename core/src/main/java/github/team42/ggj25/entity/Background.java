@@ -15,31 +15,29 @@ import github.team42.ggj25.gamestate.GameLevel;
 public class Background implements Drawable, Disposable {
 
     private final Texture m_blue_background;
-    private final Texture m_water;
     private final Texture m_water_dark;
     private final Texture m_white_puddle;
     private final Texture m_water_lily_ambient;
     private final Texture m_water_lily_shadow;
 
+    private final FileHandle water_dark;
+    private final FileHandle blue_background = Gdx.files.internal("blue_background.png");
+    private final FileHandle water_white_puddle = Gdx.files.internal("white_puddle.png");
+    private final FileHandle water_lily_ambient = Gdx.files.internal("water_lily_ambient.png");
+    private final FileHandle water_lily_shadow = Gdx.files.internal("water_lily_shadow_only.png");
 
     public Background(GameLevel currentLevel) {
-        FileHandle blue_background = Gdx.files.internal("blue_background.png");
-        FileHandle water = Gdx.files.internal("water.png");
-        FileHandle water_white_puddle = Gdx.files.internal("white_puddle.png");
-        FileHandle water_lily_ambient = Gdx.files.internal("water_lily_ambient.png");
-        FileHandle water_lily_shadow = Gdx.files.internal("water_lily_shadow_only.png");
         if (currentLevel == GameLevel.LEVEL_ONE) {
-            FileHandle water_dark = Gdx.files.internal("water_dark.png");
-            m_water_dark = new Texture(water_dark);
+            water_dark = Gdx.files.internal("water_dark.png");
         } else if (currentLevel == GameLevel.LEVEL_TWO) {
-            FileHandle water_dark = Gdx.files.internal("oil_traces_transparent.png");
-            m_water_dark = new Texture(water_dark);
+            water_dark = Gdx.files.internal("oil_traces_transparent.png");
         } else {
-            m_water_dark = null;
+            water_dark = Gdx.files.internal("water_dark.png");
         }
 
+        m_water_dark = new Texture(water_dark);
+
         m_blue_background = new Texture(blue_background);
-        m_water = new Texture(water);
         m_white_puddle = new Texture(water_white_puddle);
         m_water_lily_ambient = new Texture(water_lily_ambient);
         m_water_lily_shadow = new Texture(water_lily_shadow);
@@ -49,10 +47,8 @@ public class Background implements Drawable, Disposable {
     public void drawSprites(SpriteBatch spriteBatch) {
         // store the worldWidth and worldHeight as local variables for brevity
         spriteBatch.draw(m_blue_background, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-        spriteBatch.draw(m_water, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-        spriteBatch.draw(m_white_puddle, 0, 0, Constants.WIDTH, Constants.HEIGHT);
         spriteBatch.draw(m_water_dark, 0, 0, Constants.WIDTH, Constants.HEIGHT);
-
+        spriteBatch.draw(m_white_puddle, 0, 0, Constants.WIDTH, Constants.HEIGHT);
     }
 
     public void drawAmbient(SpriteBatch spriteBatch) {
@@ -64,7 +60,6 @@ public class Background implements Drawable, Disposable {
     @Override
     public void dispose() {
         m_blue_background.dispose();
-        m_water.dispose();
         m_water_dark.dispose();
         m_white_puddle.dispose();
         m_water_lily_ambient.dispose();

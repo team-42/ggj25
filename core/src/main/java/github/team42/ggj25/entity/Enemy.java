@@ -68,6 +68,7 @@ public class Enemy extends AbstractEntity {
     private float chewTime = 0;
     private Mode mode = Mode.Moving;
     private int hp = START_HP;
+    private boolean scored = false;
 
     public Enemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection) {
         super(FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * IMAGE_SCALE, IMAGE_HEIGHT * IMAGE_SCALE));
@@ -183,5 +184,14 @@ public class Enemy extends AbstractEntity {
 
     public Mode getMode() {
         return mode;
+    }
+
+    public boolean checkScored(){
+        if(isDead() && ! scored){
+            scored = true;
+            return true;
+        }else{
+            return false;
+        }
     }
 }
