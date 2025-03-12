@@ -11,14 +11,13 @@ import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
 import github.team42.ggj25.FrogueUtil;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
  * An enemy.
  */
-public class Enemy extends AbstractEntity {
-    private final Leaf leaf;
-
+public abstract class AbstractEnemy extends AbstractEntity {
     private enum Orientation {
         TurningClockwise(-1),
         TurningCounterClockwise(1),
@@ -32,15 +31,13 @@ public class Enemy extends AbstractEntity {
     }
 
     public enum Mode {
-        Moving("tortoise_swimming.png", false),
-        Eating("tortoise_eating.png", true),
-        Floating("tortoise_floating.png", true);
+        Moving(false),
+        Eating( true),
+        Floating(true);
 
-        final TextureRegion textureRegion;
         final boolean isForeground;
 
-        Mode(String fileName, boolean isForeground) {
-            this.textureRegion = new TextureRegion(new Texture(Gdx.files.internal(fileName)));
+        Mode(boolean isForeground) {
             this.isForeground = isForeground;
         }
 
@@ -49,30 +46,41 @@ public class Enemy extends AbstractEntity {
         }
     }
 
-    private static final Random R = new Random();
+    /** Constants */
     private static final int IMAGE_WIDTH = 1920;
     private static final int IMAGE_HEIGHT = 1080;
-    private static final float IMAGE_SCALE = 0.1f;
     private static final Vector2 IMAGE_DIRECTION = new Vector2(0, -1);
-    private static final float BASE_SPEED = 50;
     private static final float TURN_RATE_DEGREES_PER_SECOND = 20;
     private static final float ORIENTATION_CHANGE_COOLDOWN_SECONDS = 1f;
-    private static final float BITE_DURATION_SECONDS = 3f;
-    private static final int BITE_RADIUS = 50;
-    private static final int START_HP = 100;
+    /** Static members */
+    private static final Random R = new Random();
+    /** Final instance members */
     private final Texture enclosingBubble = new Texture(Gdx.files.internal("bubble/enclosing_bubble.png"));
-    private float speed = BASE_SPEED;
+    private final Leaf leaf;
     private final Vector2 direction;
+    private final float biteDuration;
+    private final int biteRadius;
+    private final Map<Mode, TextureRegion> textures;
+    private final float speed;
+    /** Non-final instance members */
     private Orientation orientation = Orientation.StraightAhead;
     private float timeSinceLastOrientationChangeSeconds = 0;
     private float chewTime = 0;
     private Mode mode = Mode.Moving;
-    private int hp = START_HP;
+    private int hp;
     private boolean scored = false;
 
-    public Enemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection) {
-        super(FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * IMAGE_SCALE, IMAGE_HEIGHT * IMAGE_SCALE));
+
+    public AbstractEnemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection,
+                         float imageScale, int startHp, float baseSpeed, float biteDuration, int biteRadius,
+                         final Map<Mode, TextureRegion> textures) {
+        super(FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * imageScale, IMAGE_HEIGHT * imageScale));
         this.leaf = toAttack;
+        hp = startHp;
+        speed = baseSpeed;
+        this.biteDuration = biteDuration;
+        this.biteRadius = biteRadius;
+        this.textures = textures;
         if (!initialDirection.isUnit(Constants.UNIT_VECTOR_MARGIN)) {
             throw new IllegalArgumentException("Initial direction must be a unit vector");
         }
@@ -126,8 +134,8 @@ public class Enemy extends AbstractEntity {
 
     private void eat(float deltaInSeconds) {
         chewTime += deltaInSeconds;
-        if (chewTime > BITE_DURATION_SECONDS) {
-            leaf.bite(getHead(), BITE_RADIUS);
+        if (chewTime > biteDuration) {
+            leaf.bite(getHead(), biteRadius);
             chewTime = 0;
         }
     }
@@ -153,7 +161,7 @@ public class Enemy extends AbstractEntity {
 
     @Override
     public void drawSprites(SpriteBatch spriteBatch) {
-        spriteBatch.draw(mode.textureRegion,
+        spriteBatch.draw(textures.get(mode),
             getBoundingBox().x, getBoundingBox().y, getBoundingBox().width / 2f, getBoundingBox().height / 2f, getBoundingBox().width, getBoundingBox().height,
             1, 1, direction.angleDeg(IMAGE_DIRECTION));
         if (mode.equals(Mode.Floating)) {
