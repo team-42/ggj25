@@ -17,8 +17,6 @@ import java.util.Random;
  * An enemy.
  */
 public abstract class AbstractEnemy extends AbstractEntity {
-    private final Leaf leaf;
-
     private enum Orientation {
         TurningClockwise(-1),
         TurningCounterClockwise(1),
@@ -49,7 +47,7 @@ public abstract class AbstractEnemy extends AbstractEntity {
         }
     }
 
-    private static final Random R = new Random();
+    /** Constants */
     private static final int IMAGE_WIDTH = 1920;
     private static final int IMAGE_HEIGHT = 1080;
     private static final float IMAGE_SCALE = 0.1f;
@@ -60,15 +58,21 @@ public abstract class AbstractEnemy extends AbstractEntity {
     private static final float BITE_DURATION_SECONDS = 3f;
     private static final int BITE_RADIUS = 50;
     private static final int START_HP = 100;
+    /** Static members */
+    private static final Random R = new Random();
+    /** Final instance members */
     private final Texture enclosingBubble = new Texture(Gdx.files.internal("bubble/enclosing_bubble.png"));
-    private float speed = BASE_SPEED;
+    private final Leaf leaf;
     private final Vector2 direction;
+    /** Non-final instance members */
+    private float speed = BASE_SPEED;
     private Orientation orientation = Orientation.StraightAhead;
     private float timeSinceLastOrientationChangeSeconds = 0;
     private float chewTime = 0;
     private Mode mode = Mode.Moving;
     private int hp = START_HP;
     private boolean scored = false;
+
 
     public AbstractEnemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection) {
         super(FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * IMAGE_SCALE, IMAGE_HEIGHT * IMAGE_SCALE));
