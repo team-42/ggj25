@@ -16,7 +16,7 @@ import java.util.Random;
 /**
  * An enemy.
  */
-public class Enemy extends AbstractEntity {
+public abstract class AbstractEnemy extends AbstractEntity {
     private final Leaf leaf;
 
     private enum Orientation {
@@ -70,7 +70,7 @@ public class Enemy extends AbstractEntity {
     private int hp = START_HP;
     private boolean scored = false;
 
-    public Enemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection) {
+    public AbstractEnemy(Leaf toAttack, final float x, final float y, Vector2 initialDirection) {
         super(FrogueUtil.getBoundingBoxForCenter(x, y, IMAGE_WIDTH * IMAGE_SCALE, IMAGE_HEIGHT * IMAGE_SCALE));
         this.leaf = toAttack;
         if (!initialDirection.isUnit(Constants.UNIT_VECTOR_MARGIN)) {

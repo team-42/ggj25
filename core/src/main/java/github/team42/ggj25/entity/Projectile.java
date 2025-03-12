@@ -66,11 +66,11 @@ public class Projectile extends AnimatedEntity {
         return remainingRange > 0;
     }
 
-    public boolean checkCollisionWithEnemy(List<Enemy> enemies) {
+    public boolean checkCollisionWithEnemy(List<AbstractEnemy> enemies) {
         if (!isActive() || !isHarmful()) {
             return false;
         }
-        for (final Enemy enemy : enemies) {
+        for (final AbstractEnemy enemy : enemies) {
             if (!enemy.isDead() && enemy.contains(this)) {
                 enemy.hit(this.damage);
                 this.remainingRange = 0;

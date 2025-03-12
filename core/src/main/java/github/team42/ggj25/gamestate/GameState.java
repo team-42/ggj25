@@ -21,7 +21,7 @@ import java.util.*;
 
 public class GameState implements Drawable, Disposable {
     private final Frog player;
-    private final List<Enemy> enemies = new ArrayList<>();
+    private final List<AbstractEnemy> enemies = new ArrayList<>();
 
     private GameLevel currentLevel = GameLevel.LEVEL_ONE;
     private Background background = new Background(currentLevel);
@@ -194,7 +194,7 @@ public class GameState implements Drawable, Disposable {
         background.drawShapes(shapeRenderer, debugRenderingActive);
         pike.drawShapes(shapeRenderer, debugRenderingActive);
         leaf.drawShapes(shapeRenderer, debugRenderingActive);
-        for (final Enemy enemy : this.enemies) {
+        for (final AbstractEnemy enemy : this.enemies) {
             enemy.drawShapes(shapeRenderer, debugRenderingActive);
         }
         player.drawShapes(shapeRenderer, debugRenderingActive);
@@ -301,7 +301,7 @@ public class GameState implements Drawable, Disposable {
         this.leaf = leaf;
     }
 
-    public List<Enemy> getEnemies() {
+    public List<AbstractEnemy> getEnemies() {
         return enemies;
     }
 

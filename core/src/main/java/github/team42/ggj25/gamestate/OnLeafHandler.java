@@ -3,12 +3,11 @@ package github.team42.ggj25.gamestate;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import github.team42.ggj25.Constants;
-import github.team42.ggj25.entity.AnimatedPike;
-import github.team42.ggj25.entity.Enemy;
+import github.team42.ggj25.entity.AbstractEnemy;
 import github.team42.ggj25.entity.Projectile;
+import github.team42.ggj25.entity.StandardTurtle;
 
 import java.util.Random;
 
@@ -43,7 +42,7 @@ public class OnLeafHandler {
         gs.getBackground().update(deltaInSeconds);
         gs.getPike().update(deltaInSeconds);
         gs.getLeaf().update(deltaInSeconds);
-        for (final Enemy enemy : gs.getEnemies()) {
+        for (final AbstractEnemy enemy : gs.getEnemies()) {
             enemy.update(deltaInSeconds);
             if(enemy.checkScored()){
                 gs.getScoreBoard().addPointsToScore((long) (10 / bonusPointsInterval));
@@ -98,7 +97,7 @@ public class OnLeafHandler {
         spawnVectorFromCenter.add(new Vector2(Constants.WIDTH / 2f, Constants.HEIGHT / 2f));
         initialDirection.rotateDeg(180);
         initialDirection.setLength(1);
-        gs.getEnemies().add(new Enemy(gs.getLeaf(), spawnVectorFromCenter.x, spawnVectorFromCenter.y, initialDirection));
+        gs.getEnemies().add(new StandardTurtle(gs.getLeaf(), spawnVectorFromCenter.x, spawnVectorFromCenter.y, initialDirection));
         Gdx.app.log("Spawn Enemy", "direction: " + spawnDirection + "; initialDirection: " + initialDirection);
 
     }
